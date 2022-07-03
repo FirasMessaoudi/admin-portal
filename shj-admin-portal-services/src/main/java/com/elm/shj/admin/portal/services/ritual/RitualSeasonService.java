@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Service handling  ritual seasons
@@ -29,5 +30,17 @@ public class RitualSeasonService extends GenericService<JpaRitualSeason, RitualS
 
     public List<Integer> listRitualSeasonYears() {
         return ritualSeasonRepository.listRitualSeasonYears();
+    }
+
+    public boolean existsByBasicInfo(String ritualTypeCode, int seasonYear) {
+        return ritualSeasonRepository.existsByRitualTypeCodeAndSeasonYear(ritualTypeCode, seasonYear);
+    }
+
+    public RitualSeasonDto findByRitualTypeAndSeason(String ritualType, int seasonYear) {
+        Optional<JpaRitualSeason> ritualSeason = ritualSeasonRepository.findByRitualTypeCodeAndSeasonYear(ritualType, seasonYear);
+        if (ritualSeason.isPresent()) {
+            return getMapper().fromEntity(ritualSeason.get(), mappingContext);
+        }
+        return null;
     }
 }

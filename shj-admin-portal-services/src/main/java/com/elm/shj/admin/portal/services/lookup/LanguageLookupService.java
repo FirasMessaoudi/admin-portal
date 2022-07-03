@@ -27,6 +27,7 @@ public class LanguageLookupService extends GenericService<JpaLanguageLookup, Lan
      * @return if the language is found
      */
     public boolean existsByCode(String languageCode) {
+        log.info("start existsByCode in LanguageLookupService with languageCode: {}", languageCode);
         return ((LanguageLookupRepository) getRepository()).existsByCode(languageCode);
     }
 }

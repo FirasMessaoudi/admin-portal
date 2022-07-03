@@ -5,9 +5,12 @@ package com.elm.shj.admin.portal.services.digitalid;
 
 import com.elm.shj.admin.portal.orm.entity.JpaApplicantDigitalId;
 import com.elm.shj.admin.portal.orm.repository.ApplicantDigitalIdRepository;
-import com.elm.shj.admin.portal.services.dto.*;
+import com.elm.shj.admin.portal.services.dto.ApplicantBasicDto;
+import com.elm.shj.admin.portal.services.dto.ApplicantDigitalIdDto;
+import com.elm.shj.admin.portal.services.dto.EDigitalIdStatus;
+import com.elm.shj.admin.portal.services.dto.NationalityLookupDto;
 import com.elm.shj.admin.portal.services.generic.GenericService;
-import com.elm.shj.admin.portal.services.lookup.CountryLookupService;
+import com.elm.shj.admin.portal.services.lookup.NationalityLookupService;
 import com.elm.shj.admin.portal.services.utils.DateUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -48,7 +51,16 @@ public class DigitalIdService extends GenericService<JpaApplicantDigitalId, Appl
     private static ThreadLocal<List<String>> threadLocalLatestSerialList = ThreadLocal.withInitial(() -> new ArrayList<>());
 
     private final ApplicantDigitalIdRepository applicantDigitalIdRepository;
-    private final CountryLookupService countryLookupService;
+    private final NationalityLookupService nationalityLookupService;
+
+    private List<NationalityLookupDto> nationalityLookupList;
+
+    private void loadNationalityLookup() {
+        log.info("start loading nationalities in digital id scheduler.");
+        //load nationality lookup
+        nationalityLookupList = nationalityLookupService.findAll();
+        log.info("finish loading nationalities in digital id scheduler.");
+    }
 
     /**
      * Generates smart id for specific applicant
@@ -63,17 +75,20 @@ public class DigitalIdService extends GenericService<JpaApplicantDigitalId, Appl
      * @param applicant the applicant to generate smart id for
      * @return the generated smart id
      */
-    public String generate(ApplicantLiteDto applicant) {
+    public String generate(ApplicantBasicDto applicant) {
         // check inputs
         Assert.isTrue(Arrays.asList("M", "F").contains(applicant.getGender().toUpperCase()), "Invalid Applicant Gender!");
-        Assert.notNull(applicant.getDateOfBirthGregorian(), "Invalid Applicant Date of Birth!");
+        Assert.isTrue(applicant.getDateOfBirthGregorian() != null || (applicant.getDateOfBirthHijri() != null && applicant.getDateOfBirthHijri() != 0), "Invalid Applicant Date of Birth!");
         Assert.hasText(applicant.getNationalityCode(), "Invalid Applicant Nationality!");
         // generate gender digit
         String genderDigit = String.valueOf(GENDER_DIGITS.get(applicant.getGender().toUpperCase()).get(ThreadLocalRandom.current().nextInt(0, "F".equalsIgnoreCase(applicant.getGender()) ? 4 : 5)));
         // generate country digits
         // retrieve country
-        CountryLookupDto countryLookupDto = countryLookupService.findByCode(applicant.getNationalityCode());
-        String countryDigits = StringUtils.leftPad(StringUtils.right(countryLookupDto.getCountryPhonePrefix().replaceAll("-", "").replaceAll(",", ""), 3), 3, "0");
+        if (this.nationalityLookupList == null || this.nationalityLookupList.isEmpty()) {
+            loadNationalityLookup();
+        }
+        NationalityLookupDto nationalityLookupDto = nationalityLookupList.stream().filter(nationality -> nationality.getCode().equals(applicant.getNationalityCode())).findFirst().get();
+        String countryDigits = StringUtils.leftPad(StringUtils.right(nationalityLookupDto.getCountryPhonePrefix().replaceAll("-", "").replaceAll(",", ""), 3), 3, "0");
         // generate date of birth digits
         Date dobGregorian = applicant.getDateOfBirthGregorian() != null ? applicant.getDateOfBirthGregorian() : DateUtils.toGregorian(applicant.getDateOfBirthHijri());
         String dobDigits = YEAR_FORMATTER.format(dobGregorian);
@@ -156,5 +171,15 @@ public class DigitalIdService extends GenericService<JpaApplicantDigitalId, Appl
     @Transactional(isolation = Isolation.READ_UNCOMMITTED)
     public String findApplicantUin(long applicantId) {
         return applicantDigitalIdRepository.findUinByApplicantIdAndStatusCode(applicantId, EDigitalIdStatus.VALID.name());
+    }
+
+    @Transactional
+    public void validateDigitalId(String uin) {
+        applicantDigitalIdRepository.updateDigitalIdStatus(EDigitalIdStatus.VALID.name(), uin);
+    }
+
+    @Transactional
+    public void inValidateDigitalId(String uin) {
+        applicantDigitalIdRepository.updateDigitalIdStatus(EDigitalIdStatus.INVALID.name(), uin);
     }
 }

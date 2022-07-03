@@ -30,7 +30,7 @@ public class ApplicantInfoEmergencyDto implements Serializable {
     @CellIndex(index = 7)
     private String gender;
 
-    @CountryCode
+    @NationalityCode
     @CellIndex(index = 8)
     private String nationalityCode;
 
@@ -56,11 +56,11 @@ public class ApplicantInfoEmergencyDto implements Serializable {
     @CellIndex(index = 3)
     private Long dateOfBirthHijri;
 
-    @OnlyCharacters(min = 6, max = 150, arabic = true)
+//    //@OnlyCharacters(min = 6, max = 150)
     @CellIndex(index = 5)
     private String fullNameAr;
 
-    @OnlyCharacters(min = 10, max = 150, allowEmpty = false)
+//    //@OnlyCharacters(min = 10, max = 150, allowEmpty = false)
     @CellIndex(index = 4)
     private String fullNameEn;
 

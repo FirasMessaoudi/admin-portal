@@ -36,14 +36,17 @@ public class JpaCompany implements Serializable {
     @Column(name = "code", nullable = false)
     private String code;
 
+    @Column(name = "company_uid", nullable = false)
+    private String uid;
+
     @Column(name = "label_ar", nullable = false)
     private String labelAr;
 
     @Column(name = "label_en")
     private String labelEn;
 
-    @Column(name = "mission_id")
-    private Integer missionId;
+    @Column(name = "mission_ref_code")
+    private Long missionRefCode;
 
     @Column(name = "contact_number")
     private String contactNumber;
@@ -73,13 +76,19 @@ public class JpaCompany implements Serializable {
     private String crNumber;
 
     @Column(name = "type_code")
-    private Integer typeCode;
+    private String typeCode;
 
     @Column(name = "creation_date", nullable = false, updatable = false)
     private Date creationDate;
 
     @Column(name = "update_date")
     private Date updateDate;
+
+    @Column(name = "country_code")
+    private String countryCode;
+
+    @Column(name = "establishment_ref_code")
+    private Integer establishmentRefCode;
 
     @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true, mappedBy = "company")
     private List<JpaCompanyRitualSeason> companyRitualSeasons;

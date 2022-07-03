@@ -5,7 +5,6 @@ package com.elm.shj.admin.portal.services.data.validators;
 
 import com.elm.shj.admin.portal.services.applicant.RitualPackageService;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.validation.ConstraintValidator;
@@ -26,10 +25,8 @@ public class WithRitualPackageValidator implements ConstraintValidator<WithRitua
     @Override
     public boolean isValid(Object value, ConstraintValidatorContext constraintValidatorContext) {
 
-        if (value == null || StringUtils.isBlank(value.toString())) {
-            return false;
-        } else {
-            return ritualPackageService.existRitualPackageByReferenceNumber(value.toString());
-        }
+
+        return value == null || ritualPackageService.existRitualPackageByReferenceNumber(value.toString());
+
     }
 }

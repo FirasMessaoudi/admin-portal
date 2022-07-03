@@ -35,7 +35,7 @@ create table shc_portal.shc_user
     last_login_date          smalldatetime null,
     creation_date            smalldatetime not null default current_timestamp,
     update_date              smalldatetime null,
-    avatar                   nvarchar( max),
+    avatar                   nvarchar(max),
     constraint shc_user_user_name_unique unique (user_name),
     constraint shc_user_nin_unique unique (nin)
 );
@@ -317,7 +317,7 @@ if not exists (select * from sys.tables where name = 'shc_decision_rule')
 create table shc_portal.shc_decision_rule
 (
     id              int PRIMARY KEY NOT NULL identity(1,1),
-    dmn             NVARCHAR( MAX) NOT NULL,
+    dmn             NVARCHAR(max) NOT NULL,
     data_segment_id INT             NOT NULL,
     label_ar        NVARCHAR(50) NOT NULL,
     label_en        VARCHAR(50)     NOT NULL,
@@ -387,8 +387,7 @@ create table shc_portal.shc_applicant
     full_name_en            VARCHAR(150) NULL,
     full_name_origin        NVARCHAR(150) NULL,
     marital_status_code     VARCHAR(20) NULL,
-    photo                   varchar(max
-) NULL,
+    photo                   varchar(max) NULL,
     biometric_data_finger varchar(max) NULL,
     biometric_data_face varchar(max) NULL,
     education_level_code varchar(20) NULL,

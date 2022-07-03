@@ -1,3 +1,6 @@
+import {ApplicantDigitalId} from "@model/applicant-digital-id.model";
+import {CompanyStaffDigitalId} from "@model/company-staff-digital-id.model";
+
 export class CompanyStaff {
     id: number;
     fullNameAr: string;
@@ -15,6 +18,7 @@ export class CompanyStaff {
     fullNameOrigin: string;
     mobileNumber: string;
     mobileNumberIntl: string;
+    digitalIds: CompanyStaffDigitalId [];
     email: string;
     creationDate: Date;
     updateDate: Date;

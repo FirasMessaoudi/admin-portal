@@ -54,12 +54,16 @@ public class Navigation {
 	public static final String API_INTEGRATION = "/api/ws";
 	// Notification Integration
 	public static final String API_NOTIFICATION_INTEGRATION = "/api/ws/notification";
+
+	public static final String API_USER_NOTIFICATION_INTEGRATION = "/api/ws/user-notifications";
 	// notification template management
 	public static final String API_NOTIFICATION_TEMPLATE = "/api/notification/template";
 	// Incidents
 	public static final String API_INCIDENTS = "/api/incidents";
 	// Incident Integration
 	public static final String API_INCIDENTS_INTEGRATION = "/api/ws/incidents";
+	// Complaint Integration
+	public static final String API_COMPLAINTS_INTEGRATION = "/api/ws/complaints";
 	// Chat Contact Integration
 	public static final String API_CHAT_CONTACT_INTEGRATION = "/api/ws/chat-contact";
 	public static final String API_STAFF_INTEGRATION = "/api/ws/staff";
@@ -78,5 +82,14 @@ public class Navigation {
 	public static final String API_SUPPLICATIONS ="/api/ws/supplications";
 	//Rosary
 	public static final String API_ROSARY_INTEGRATION  = "/api/ws/rosary";
+
+	public static final String API_COMPANY  = "/api/ws/company";
+
+	//Company Staff
+	public static final String API_COMPANY_STAFF = "/api/company-staff";
+
+	// Tawakkalna
+	public static final String API_TAWAKKALNA_INTEGRATION = "/api/tawakkalna-integration";
+
 
 }

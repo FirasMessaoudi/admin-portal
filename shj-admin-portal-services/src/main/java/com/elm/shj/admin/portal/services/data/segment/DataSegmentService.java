@@ -4,7 +4,9 @@
 package com.elm.shj.admin.portal.services.data.segment;
 
 import com.elm.shj.admin.portal.orm.entity.JpaDataSegment;
+import com.elm.shj.admin.portal.orm.repository.DataSegmentRepository;
 import com.elm.shj.admin.portal.services.dto.DataSegmentDto;
+import com.elm.shj.admin.portal.services.dto.EOrganizerTypes;
 import com.elm.shj.admin.portal.services.generic.GenericService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,6 +18,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * Service handling data segments
  *
@@ -26,6 +31,8 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor(onConstructor_ = {@Autowired})
 public class DataSegmentService extends GenericService<JpaDataSegment, DataSegmentDto, Long> {
+
+    private final DataSegmentRepository dataSegmentRepository;
 
     /**
      * Find all data segments.
@@ -54,5 +61,21 @@ public class DataSegmentService extends GenericService<JpaDataSegment, DataSegme
      */
     public Resource loadTemplateFile(DataSegmentDto dataSegment) {
         return new ClassPathResource("/templates/excel/" + dataSegment.getId() + "/" + dataSegment.getTemplateFileName());
+    }
+
+    public Resource loadOrganizerTemplateFile(DataSegmentDto dataSegment, String organizerType) {
+        if(organizerType.equals(EOrganizerTypes.GOVERNMENT_AGENCY.name())){
+            String fileName[] = dataSegment.getTemplateFileName().split("\\.");
+            dataSegment.setTemplateFileName(fileName[0] + "-gov." + fileName[1]);
+        }
+        return new ClassPathResource("/templates/excel/" + dataSegment.getId() + "/" + dataSegment.getTemplateFileName());
+    }
+
+    public List<DataSegmentDto> findOrganizerSegments() {
+        return mapList(dataSegmentRepository.findSegments(Arrays.asList(11L, 12L, 13L, 14L)));
+    }
+
+    public List<DataSegmentDto> findCommandSegments() {
+        return mapList(dataSegmentRepository.findSegments(Arrays.asList(1L, 2L, 3L,4L, 5L, 6L,7L, 8L, 9L)));
     }
 }

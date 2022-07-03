@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
@@ -182,12 +183,34 @@ public class ApplicantPackageService extends GenericService<JpaApplicantPackage,
     public ApplicantPackageDto findJpaApplicantPackageByApplicantUin(String applicantUin) {
         log.info("Start findJpaApplicantPackageByApplicantUin ::: applicantUin: {}", applicantUin);
         Optional<JpaApplicantPackage> applicantPackage = applicantPackageRepository.findJpaApplicantPackageByApplicantUin(Long.parseLong(applicantUin));
-        if(applicantPackage.isPresent()){
+        if (applicantPackage.isPresent()) {
             log.info("Finish findJpaApplicantPackageByApplicantUin ::: StartDate: {}, EndDate:{}", applicantPackage.get().getStartDate(), applicantPackage.get().getEndDate());
-            return getMapper().fromEntity(applicantPackage.get(),mappingContext);
+            return getMapper().fromEntity(applicantPackage.get(), mappingContext);
         }
         log.info("Finish findJpaApplicantPackageByApplicantUin ::: not found with applicantUin: {}", applicantUin);
-        return  null;
+        return null;
     }
 
+    public ApplicantPackageDto findJpaApplicantPackageByApplicantId(long applicantId) {
+        log.info("Start findJpaApplicantPackageByApplicantId ::: applicantId: {}", applicantId);
+        Optional<JpaApplicantPackage> applicantPackage = applicantPackageRepository.findTopByApplicantRitualApplicantIdOrderByCreationDateDesc(applicantId);
+        if (applicantPackage.isPresent()) {
+            log.info("Finish findJpaApplicantPackageByApplicantId ::: StartDate: {}, EndDate:{}", applicantPackage.get().getStartDate(), applicantPackage.get().getEndDate());
+            return getMapper().fromEntity(applicantPackage.get(), mappingContext);
+        }
+        log.info("Finish findJpaApplicantPackageByApplicantId ::: not found with applicantId: {}", applicantId);
+        return null;
+    }
+
+    @Transactional(isolation = Isolation.READ_UNCOMMITTED)
+    public Long findIdByApplicantRitualId(Long applicantRitualId) {
+        log.info("Start findIdByApplicantRitualId for {} applicant ritual id.", applicantRitualId);
+        Optional<Long> applicantPackageId = applicantPackageRepository.findIdByApplicantRitualId(applicantRitualId);
+        if (applicantPackageId.isPresent()) {
+            log.info("Finish findIdByApplicantRitualId for {} applicant ritual id and found {} applicant package id.", applicantRitualId, applicantPackageId.get());
+            return applicantPackageId.get();
+        }
+        log.info("Finish findIdByApplicantRitualId for {} applicant ritual id and not applicant package is found.", applicantRitualId);
+        return null;
+    }
 }

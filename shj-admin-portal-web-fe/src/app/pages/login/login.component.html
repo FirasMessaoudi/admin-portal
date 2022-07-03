@@ -11,7 +11,11 @@
 <div class="login__box">
 
   <div class="text-center">
-    <img class="my-4" src="assets/images/logo.png" alt="logo" />
+    <img class="my-4" src="assets/images/login_logo.png" alt="logo" />
+  </div>
+
+  <div class="flex-center">
+    <div class="bg-dcc-light text-black-50 h5 py-2 px-4">{{'general.app_tag' | translate}}</div>
   </div>
 
   <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-box__wrapper">

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 ELM. All rights reserved.
+ * Copyright (c) 2022 ELM. All rights reserved.
  */
 package com.elm.shj.admin.portal.services.lookup;
 
@@ -17,8 +17,8 @@ import java.util.List;
 /**
  * Service handling country lookup
  *
- * @author Slim Ben Hadj
- * @since 1.0.0
+ * @author ahmad flaifel
+ * @since 1.1.0
  */
 @Service
 @Slf4j
@@ -34,7 +34,7 @@ public class CountryLookupService extends GenericService<JpaCountryLookup, Count
      * @return if the country is found
      */
     public boolean existsByCode(String countryCode) {
-        return ((CountryLookupRepository) getRepository()).existsByCode(countryCode);
+        return countryLookupRepository.existsByCode(countryCode);
     }
 
     /**

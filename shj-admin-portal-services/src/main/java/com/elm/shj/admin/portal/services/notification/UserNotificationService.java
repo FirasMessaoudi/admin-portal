@@ -42,9 +42,12 @@ public class UserNotificationService extends GenericService<JpaUserNotification,
      * @return the found Notifications  or empty structure
      */
     public List<DetailedUserNotificationDto> findUserNotifications(String userId) {
+        log.info("start findUserNotifications with userId: {}", userId);
         List<DetailedUserNotificationDto> detailedUserNotifications = new ArrayList<>();
+        log.info("query for findByUserIdAndStatusCodeNotOrderByCreationDateDesc with userId: {}", userId);
         List<JpaUserNotification> userNotifications = userNotificationRepository
                 .findByUserIdAndStatusCodeNotOrderByCreationDateDesc(userId, EUserNotificationStatus.EXPIRED.name());
+        log.info("result for findByUserIdAndStatusCodeNotOrderByCreationDateDesc {}", userNotifications);
 
         if (userNotifications.isEmpty())
             return Collections.emptyList();
@@ -66,6 +69,7 @@ public class UserNotificationService extends GenericService<JpaUserNotification,
                             .creationDate(notification.getCreationDate())
                             .build());
                 });
+        log.info("end findUserNotifications with userId: {}", userId);
         return detailedUserNotifications;
     }
 
@@ -100,16 +104,20 @@ public class UserNotificationService extends GenericService<JpaUserNotification,
      * @return number of un-read user notifications.
      */
     public UserNewNotificationsCountVo retrieveUserNewNotificationsCount(String userId) {
+        log.info("start retrieveUserNewNotificationsCount with userId: {}", userId);
         int userSpecificNewNotificationsCount = userNotificationRepository.countByUserIdAndStatusCodeAndNotificationTemplateUserSpecific(userId, EUserNotificationStatus.NEW.name(), true);
+        log.info("count userSpecificNewNotificationsCount: {}", userSpecificNewNotificationsCount);
         int userNotSpecificNewNotificationsCount = userNotificationRepository.countByUserIdAndStatusCodeAndNotificationTemplateUserSpecific(userId, EUserNotificationStatus.NEW.name(), false);
+        log.info("count userNotSpecificNewNotificationsCount: {}", userNotSpecificNewNotificationsCount);
         UserNewNotificationsCountVo userNewNotificationsCountVo = UserNewNotificationsCountVo
                 .builder().userSpecificNewNotificationsCount(userSpecificNewNotificationsCount)
                 .userNotSpecificNewNotificationsCount(userNotSpecificNewNotificationsCount).build();
-
+        log.info("end retrieveUserNewNotificationsCount with userId: {}", userId);
         return userNewNotificationsCountVo;
     }
 
     public Page<DetailedUserNotificationDto> findTypedUserNotifications(String userId, EUserNotificationType type, Pageable pageable) {
+        log.info("start findTypedUserNotifications with userId: {}", userId);
         List<DetailedUserNotificationDto> detailedUserNotifications = new ArrayList<>();
 
         Page<JpaUserNotification> userNotifications;
@@ -122,7 +130,7 @@ public class UserNotificationService extends GenericService<JpaUserNotification,
                     .findByUserIdAndNotificationTemplateUserSpecificAndStatusCodeNotOrderByCreationDateDesc(
                             userId, EUserNotificationType.USER_SPECIFIC.equals(type), EUserNotificationStatus.EXPIRED.name(), pageable);
         }
-
+        log.info("user notification found with all or user specific: {}", userNotifications);
         userNotifications.stream().forEach(
                 notification -> {
                     Optional<JpaNotificationTemplateContent> notificationTemplateContent = notification.getNotificationTemplate()
@@ -141,6 +149,8 @@ public class UserNotificationService extends GenericService<JpaUserNotification,
                             .creationDate(notification.getCreationDate())
                             .build());
                 });
+        log.info("end findTypedUserNotifications with userId: {}", userId);
         return new PageImpl<>(detailedUserNotifications, pageable, userNotifications.getTotalElements());
     }
+
 }

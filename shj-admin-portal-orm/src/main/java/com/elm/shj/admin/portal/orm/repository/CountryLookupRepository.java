@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) 2021 ELM. All rights reserved.
+ *  Copyright (c) 2022 ELM. All rights reserved.
  */
 package com.elm.shj.admin.portal.orm.repository;
 
@@ -12,7 +12,7 @@ import java.util.List;
  * Repository for JpaCountryLookup.
  *
  * @author ahmad flaifel
- * @since 1.0.0
+ * @since 1.1.0
  */
 public interface CountryLookupRepository extends JpaRepository<JpaCountryLookup, Long> {
 
@@ -22,3 +22,4 @@ public interface CountryLookupRepository extends JpaRepository<JpaCountryLookup,
 
     List<JpaCountryLookup> findAllByCode(String countryCode);
 }
+

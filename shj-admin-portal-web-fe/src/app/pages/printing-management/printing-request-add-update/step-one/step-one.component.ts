@@ -4,7 +4,7 @@ import {Subscription} from "rxjs";
 import {Page} from "@shared/model";
 import {CardService} from "@core/services";
 import {ApplicantCard} from "@model/applicant-card.model";
-import {CountryLookup} from "@model/country-lookup.model";
+import {NationalityLookup} from "@model/nationality-lookup.model";
 import {LookupService} from "@core/utilities/lookup.service";
 import {Lookup} from "@model/lookup.model";
 import {PrintService} from "@core/services/printing/print.service";
@@ -29,7 +29,7 @@ export class StepOneComponent implements OnInit {
   addedCards: Array<ApplicantCard> = [];
   addedCardsCurrentPage: number = 1;
   addedCardsPageSize: number = 10;
-  nationalities: CountryLookup[];
+  nationalities: NationalityLookup[];
   localizedNationalities: Lookup[];
   searchForm: FormGroup;
   isAllSelected: boolean;

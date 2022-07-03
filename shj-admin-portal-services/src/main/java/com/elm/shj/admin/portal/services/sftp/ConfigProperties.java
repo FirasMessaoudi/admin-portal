@@ -20,6 +20,12 @@ public class ConfigProperties {
     }
 
     @Bean
+    @ConfigurationProperties(ignoreUnknownFields = false, prefix = "sftp.complaint.client")
+    public SftpProperties applicantComplaintSftpProperties() {
+        return new SftpProperties();
+    }
+
+    @Bean
     @ConfigurationProperties(ignoreUnknownFields = false, prefix = "sftp.card.client")
     public SftpProperties cardsSftpProperties() {
         return new SftpProperties();

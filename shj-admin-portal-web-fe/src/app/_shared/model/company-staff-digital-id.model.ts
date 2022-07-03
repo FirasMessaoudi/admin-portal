@@ -6,7 +6,7 @@ import {ApplicantPackageHousing} from "@model/applicant-package-housing.model";
 import {ApplicantPackageTransportation} from "@model/applicant-package-transportation.model";
 import {CompanyLite} from "@model/company-lite.model";
 import {CompanyRitualSeason} from "@model/company-ritual-season.model";
-import {CompanyStaff} from "@model/company-staff.model";
+import {CompanyStaff} from '@model/company-staff.model';
 
 export class CompanyStaffDigitalId {
     id: number;

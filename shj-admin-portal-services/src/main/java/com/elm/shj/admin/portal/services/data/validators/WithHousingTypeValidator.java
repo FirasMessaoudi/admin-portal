@@ -3,10 +3,9 @@
  */
 package com.elm.shj.admin.portal.services.data.validators;
 
-import com.elm.shj.admin.portal.services.lookup.HousingTypeLookupService;
+import com.elm.shj.admin.portal.services.dto.EHousingType;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
@@ -20,8 +19,6 @@ import javax.validation.ConstraintValidatorContext;
 @Slf4j
 public class WithHousingTypeValidator implements ConstraintValidator<WithHousingType, Object> {
 
-    @Autowired
-    private HousingTypeLookupService housingTypeLookupService;
 
     @Override
     public boolean isValid(Object value, ConstraintValidatorContext constraintValidatorContext) {
@@ -29,7 +26,7 @@ public class WithHousingTypeValidator implements ConstraintValidator<WithHousing
         if (value == null || StringUtils.isBlank(value.toString())) {
             return false;
         } else {
-            return housingTypeLookupService.existsByCode(value.toString());
+            return EHousingType.fromId((Integer) value) != null;
         }
     }
 }

@@ -6,9 +6,7 @@ package com.elm.shj.admin.portal.services.dto;
 import com.elm.shj.admin.portal.services.data.mapper.CellIndex;
 import com.elm.shj.admin.portal.services.data.validators.*;
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
@@ -22,8 +20,10 @@ import java.util.List;
  * @since 1.1.0
  */
 @NoArgsConstructor
+@AllArgsConstructor
 @Getter
 @Setter
+@Builder
 @UniqueCompanyStaff
 @FieldDependency.List({
         @FieldDependency(first = "idNumber", second = "passportNumber"),
@@ -34,10 +34,10 @@ public class CompanyStaffDto {
     private long id;
 
     @CellIndex(index = 5)
-    @OnlyCharacters(min = 6, max = 150, arabic = true)
+    //@OnlyCharacters(min = 6, max = 650)
     private String fullNameAr;
 
-    @OnlyCharacters(min = 10, max = 150, allowEmpty = false)
+    //@OnlyCharacters(min = 10, max = 650, allowEmpty = false)
     @CellIndex(index = 4)
     private String fullNameEn;
 
@@ -50,7 +50,7 @@ public class CompanyStaffDto {
     @CellIndex(index = 1)
     private String passportNumber;
 
-    @GregorianDate(minOffset = -120, maxOffset = -10 ,allowNull = false)
+    @GregorianDate(minOffset = -120, maxOffset = -10 ,allowNull = true)
     @CellIndex(index = 2)
     private Date dateOfBirthGregorian;
 
@@ -62,7 +62,7 @@ public class CompanyStaffDto {
     @CellIndex(index = 7)
     private String gender;
 
-    @CountryCode
+    @NationalityCode
     @CellIndex(index = 8)
     private String nationalityCode;
 
@@ -74,8 +74,6 @@ public class CompanyStaffDto {
     @IdNumber(minLength = 10, maxLength = 16, ninOrIqama = true)
     @CellIndex(index = 0)
     private String idNumber;
-
-    private String suin;
 
     @JsonBackReference(value = "applicantGroups")
     private List<ApplicantGroupDto> applicantGroups;
@@ -89,7 +87,7 @@ public class CompanyStaffDto {
     @CellIndex(index = 15)
     private int season;
 
-    @NullOrNotBlank(min = 10, max = 150)
+    @NullOrNotBlank(min = 10, max = 650)
     @CellIndex(index = 6)
     private String fullNameOrigin;
 
@@ -106,13 +104,20 @@ public class CompanyStaffDto {
     @CellIndex(index = 12)
     private String email;
 
+    private String preferredLanguage;
+
     private Long dataRequestRecordId;
 
     @JsonBackReference(value = "digitalIds")
     private List<CompanyStaffDigitalIdDto> digitalIds;
 
+    private String customJobTitle;
     private String countryCode;
     private boolean registered;
     private Date creationDate;
     private Date updateDate;
+    private Boolean deleted;
+    private String countryPhonePrefix;
+    private Double latitude;
+    private Double longitude;
 }

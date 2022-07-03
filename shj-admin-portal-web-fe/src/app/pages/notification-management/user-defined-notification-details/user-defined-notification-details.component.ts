@@ -482,7 +482,7 @@ export class UserDefinedNotificationDetailsComponent implements OnInit {
   }
 
   createNotificationTemplate(): NotificationTemplate {
-    let notificationTemplate: NotificationTemplate =
+    const notificationTemplate: NotificationTemplate =
       this.notificationForm.value;
 
     if (this.canEdit) {
@@ -503,7 +503,7 @@ export class UserDefinedNotificationDetailsComponent implements OnInit {
         .map((applicant) => applicant.id)
         .join(',');
       let notificationTemplateCategorizing =
-        new NotificationTemplateCategorizing(selectedApplicantsCSV);
+        new NotificationTemplateCategorizing(selectedApplicantsCSV,null,null);
       notificationTemplate.notificationTemplateCategorizing =
         notificationTemplateCategorizing;
       notificationTemplateCategorizing.selectedApplicants =

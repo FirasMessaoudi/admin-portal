@@ -4,10 +4,7 @@
 package com.elm.shj.admin.portal.services.dto;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -22,14 +19,13 @@ import java.util.List;
 @Getter
 @Setter
 @AllArgsConstructor
+@NoArgsConstructor
 @Builder
 public class PackageTransportationDto implements Serializable {
 
 
     private static final long serialVersionUID = 2025548600075831276L;
 
-    public PackageTransportationDto(){
-    }
     private long id;
     private String typeCode;
     private String locationFromNameAr;
@@ -39,6 +35,7 @@ public class PackageTransportationDto implements Serializable {
     private String ritualStepCode;
     private Date validityStart;
     private Date validityEnd;
+    private String routeDetails;
     @JsonBackReference("applicantPackageTransportations")
     private List<ApplicantPackageTransportationDto> applicantPackageTransportations;
     private RitualPackageDto ritualPackage;

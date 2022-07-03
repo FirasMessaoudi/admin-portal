@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * Value object class for returned applicant Basic Info.
@@ -27,5 +28,49 @@ public class ApplicantBasicInfoVo implements Serializable {
     private String fullNameAr;
     private String fullNameEn;
     private String serialNumber;
+    private String preferredLanguage;
+    private String idNumber;
+    private String passportNumber;
+    private String fullNameOrigin;
+    private Date dateOfBirthGregorian;
+    private Long dateOfBirthHijri;
+    private String gender;
+    private String nationalityCode;
+    private String email;
+    private String localMobileNumber;
+    private String intlMobileNumber;
+    private String countryCode;
 
+
+    public ApplicantBasicInfoVo(String fullNameAr, String fullNameEn, String uin){
+        this.fullNameAr = fullNameAr;
+        this.fullNameEn = fullNameEn;
+        this.uin = uin;
+    }
+
+    public ApplicantBasicInfoVo(String fullNameAr, String fullNameEn, String fullNameOrigin, String idNumber, String passportNumber, Long dateOfBirthHijri,
+                                Date dateOfBirthGregorian, String gender, String nationalityCode, String email,
+                                String localMobileNumber, String intlMobileNumber, String countryCode, String uin){
+        this.fullNameAr = fullNameAr;
+        this.fullNameEn = fullNameEn;
+        this.fullNameOrigin = fullNameOrigin;
+        this.idNumber = idNumber;
+        this.passportNumber = passportNumber;
+        this.dateOfBirthHijri = dateOfBirthHijri;
+        this.dateOfBirthGregorian = dateOfBirthGregorian;
+        this.gender = gender;
+        this.nationalityCode = nationalityCode;
+        this.email = email;
+        this.localMobileNumber = localMobileNumber;
+        this.intlMobileNumber = intlMobileNumber;
+        this.countryCode = countryCode;
+        this.uin = uin;
+    }
+
+    public ApplicantBasicInfoVo(String fullNameAr, String fullNameEn, String uin, String preferredLanguage){
+        this.fullNameAr = fullNameAr;
+        this.fullNameEn = fullNameEn;
+        this.uin = uin;
+        this.preferredLanguage = preferredLanguage;
+    }
 }

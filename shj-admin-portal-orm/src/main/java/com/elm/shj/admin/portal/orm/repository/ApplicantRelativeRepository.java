@@ -20,7 +20,7 @@ import java.util.Optional;
  */
 public interface ApplicantRelativeRepository extends JpaRepository<JpaApplicantRelative, Long> {
 
-    Optional<JpaApplicantRelative> findByApplicantIdAndRelativeApplicantId(long applicantId, long relativeApplicantId);
+    Optional<JpaApplicantRelative> findTopByApplicantIdAndRelativeApplicantIdOrderByCreationDateDesc(long applicantId, long relativeApplicantId);
 
     @Modifying
     @Query("UPDATE JpaApplicantRelative ar SET ar.applicantRitual.id = :applicantRitualId, " +

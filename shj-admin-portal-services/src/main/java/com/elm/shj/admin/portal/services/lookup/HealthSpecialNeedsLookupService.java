@@ -27,6 +27,7 @@ public class HealthSpecialNeedsLookupService extends GenericService<JpaHealthSpe
      * @return if the special needs is found
      */
     public boolean existsByCode(String specialNeedsCode) {
+        log.info("start existsByCode in HealthSpecialNeedsLookupService with specialNeedsCode: {}", specialNeedsCode);
         return ((HealthSpecialNeedsTypeLookupRepository) getRepository()).existsByCode(specialNeedsCode);
     }
 }

@@ -3,8 +3,7 @@
  */
 package com.elm.shj.admin.portal.web.ws;
 
-import com.elm.shj.admin.portal.services.data.huicIntegration.ErrorResponse;
-import com.elm.shj.admin.portal.services.data.huicIntegration.ValidationService;
+import com.elm.shj.admin.portal.services.data.huic.*;
 import com.elm.shj.admin.portal.services.dto.*;
 import com.elm.shj.admin.portal.web.navigation.Navigation;
 import com.elm.shj.admin.portal.web.security.jwt.JwtTokenService;
@@ -15,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -39,12 +39,25 @@ public class DataRequestWsController {
     private final ValidationService validationService;
 
     @PostMapping(value = "/save-applicant-main-data")
-    public ResponseEntity<WsResponse<?>> saveApplicantMainData(@RequestBody List<ApplicantDto> applicantDtos) {
-        log.info("Start saveApplicantMainData ApplicantDtosSize {}", applicantDtos == null? null:applicantDtos.size());
-        List<ErrorResponse> errorResponses = validationService.validateData(applicantDtos);
+    public ResponseEntity<WsResponse<?>> saveApplicantMainData(@RequestBody List<HuicApplicantMainData> huicApplicantMainDataList) {
+        log.info("Start saveApplicantMainData ApplicantDtosSize {}", huicApplicantMainDataList == null ? null : huicApplicantMainDataList.size());
+        huicApplicantMainDataList.forEach(huicApplicantMainData -> {
+            if (huicApplicantMainData.getLanguageList() != null) {
+                List<String> languageList = Arrays.asList(huicApplicantMainData.getLanguageList().split(","));
+                StringBuilder languages = new StringBuilder();
+                languageList.forEach(language -> {
+                    ELanguageCode eLanguageCode = isNumeric(language) ? ELanguageCode.fromId(Integer.parseInt(language)) : null;
+                    languages.append(eLanguageCode != null ? eLanguageCode.name() : "N/A");
+                    languages.append(",");
+                });
+                huicApplicantMainData.setLanguageList(languages.toString());
+            }
+
+        });
+        List<ErrorResponse> errorResponses = validationService.validateData(huicApplicantMainDataList);
 
         if (!errorResponses.isEmpty()) {
-            log.info("Finish saveApplicantMainData {}, errorResponses: {}","FAILURE" ,errorResponses);
+            log.info("Finish saveApplicantMainData {}, errorResponses: {}", "FAILURE", errorResponses);
             return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode()).body(
                     errorResponses).build());
         }
@@ -54,12 +67,12 @@ public class DataRequestWsController {
     }
 
     @PostMapping(value = "/save-applicant-ritual-data")
-    public ResponseEntity<WsResponse<?>> saveApplicantRitualData(@RequestBody List<ApplicantRitualDto> applicantRitualDtos) {
-        log.info("Start saveApplicantRitualData applicantRitualDtosSize: {}", applicantRitualDtos == null? null:applicantRitualDtos.size());
+    public ResponseEntity<WsResponse<?>> saveApplicantRitualData(@RequestBody List<HuicApplicantRitual> applicantRitualDtos) {
+        log.info("Start saveApplicantRitualData applicantRitualDtosSize: {}", applicantRitualDtos == null ? null : applicantRitualDtos.size());
         List<ErrorResponse> errorResponses = validationService.validateData(applicantRitualDtos);
 
         if (!errorResponses.isEmpty()) {
-            log.info("Finish saveApplicantRitualData {}, errorResponses: {}","FAILURE" ,errorResponses);
+            log.info("Finish saveApplicantRitualData {}, errorResponses: {}", "FAILURE", errorResponses);
             return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode()).body(
                     errorResponses).build());
         }
@@ -84,12 +97,12 @@ public class DataRequestWsController {
     }
 
     @PostMapping(value = "/save-applicant-relative-data")
-    public ResponseEntity<WsResponse<?>> saveApplicantRelativeData(@RequestBody List<ApplicantRelativeDto> applicantRelativeDtos) {
-        log.info("Start saveApplicantRelativeData applicantRelativeDtosSize: {}",  applicantRelativeDtos == null? null:applicantRelativeDtos.size());
+    public ResponseEntity<WsResponse<?>> saveApplicantRelativeData(@RequestBody List<HuicApplicantRelative> applicantRelativeDtos) {
+        log.info("Start saveApplicantRelativeData applicantRelativeDtosSize: {}", applicantRelativeDtos == null ? null : applicantRelativeDtos.size());
         List<ErrorResponse> errorResponses = validationService.validateData(applicantRelativeDtos);
 
         if (!errorResponses.isEmpty()) {
-            log.info("Finish saveApplicantRelativeData {}, errorResponses: {}","FAILURE" ,errorResponses);
+            log.info("Finish saveApplicantRelativeData {}, errorResponses: {}", "FAILURE", errorResponses);
             return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode()).body(
                     errorResponses).build());
         }
@@ -167,12 +180,13 @@ public class DataRequestWsController {
     }
 
     @PostMapping(value = "/save-ritual-seasons")
-    public ResponseEntity<WsResponse<?>> saveRitualSeasons(@RequestBody List<RitualSeasonDto> ritualSeasons) {
-        log.info("Start saveRitualSeasons RitualSeasonDtosSize: {}", ritualSeasons == null? null:ritualSeasons.size());
+    public ResponseEntity<WsResponse<?>> saveRitualSeasons(@RequestBody List<HuicRitualSeason> ritualSeasons) {
+
+        log.info("Start saveRitualSeasons RitualSeasonDtosSize: {}", ritualSeasons == null ? null : ritualSeasons.size());
         List<ErrorResponse> errorResponses = validationService.validateData(ritualSeasons);
 
         if (!errorResponses.isEmpty()) {
-            log.info("Finish saveRitualSeasons {}, errorResponses: {}","FAILURE" ,errorResponses);
+            log.info("Finish saveRitualSeasons {}, errorResponses: {}", "FAILURE", errorResponses);
             return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode()).body(
                     errorResponses).build());
         }
@@ -181,13 +195,13 @@ public class DataRequestWsController {
                 Collections.emptyList()).build());
     }
 
-    @PostMapping(value = "/save-housing-data")
-    public ResponseEntity<WsResponse<?>> saveHousingData(@RequestBody List<PackageHousingDto> packageHousings) {
-        log.info("Start saveHousingData PackageHousingDtosSize: {}", packageHousings == null? null:packageHousings.size());
-        List<ErrorResponse> errorResponses = validationService.validateData(packageHousings);
+    @PostMapping(value = "/save-housing-master-data")
+    public ResponseEntity<WsResponse<?>> saveHousingData(@RequestBody List<HuicHousingMaster> housingMasterDtos) {
+        log.info("Start saveHousingMasterData housingMasterDtosSize: {}", housingMasterDtos == null ? null : housingMasterDtos.size());
+        List<ErrorResponse> errorResponses = validationService.validateData(housingMasterDtos);
 
         if (!errorResponses.isEmpty()) {
-            log.info("Finish saveRitualSeasons {}, errorResponses: {}","FAILURE" ,errorResponses);
+            log.info("Finish saveRitualSeasons {}, errorResponses: {}", "FAILURE", errorResponses);
             return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode()).body(
                     errorResponses).build());
         }
@@ -198,12 +212,12 @@ public class DataRequestWsController {
     }
 
     @PostMapping(value = "/save-companies")
-    public ResponseEntity<WsResponse<?>> saveCompanies(@RequestBody List<CompanyDto> companies) {
-        log.info("Start saveCompanies CompanyDtosSize: {}", companies == null? null:companies.size());
+    public ResponseEntity<WsResponse<?>> saveCompanies(@RequestBody List<HuicCompany> companies) {
+        log.info("Start saveCompanies CompanyDtosSize: {}", companies == null ? null : companies.size());
         List<ErrorResponse> errorResponses = validationService.validateData(companies);
 
         if (!errorResponses.isEmpty()) {
-            log.info("Finish saveCompanies {}, errorResponses: {}","FAILURE" ,errorResponses);
+            log.info("Finish saveCompanies {}, errorResponses: {}", "FAILURE", errorResponses);
             return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode()).body(
                     errorResponses).build());
         }
@@ -213,12 +227,12 @@ public class DataRequestWsController {
     }
 
     @PostMapping(value = "/save-planned-packages")
-    public ResponseEntity<WsResponse<?>> savePlannedPackages() {
+    public ResponseEntity<WsResponse<?>> savePlannedPackages(@RequestBody List<HuicPlannedPackage> ritualPackageDtos) {
         log.info("Start savePlannedPackages");
-        List<ErrorResponse> errorResponses = validationService.validateData(new ArrayList<>());
+        List<ErrorResponse> errorResponses = validationService.validateData(ritualPackageDtos);
 
         if (!errorResponses.isEmpty()) {
-            log.info("Finish savePlannedPackages {}, errorResponses: {}","FAILURE" ,errorResponses);
+            log.info("Finish savePlannedPackages {}, errorResponses: {}", "FAILURE", errorResponses);
             return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode()).body(
                     errorResponses).build());
         }
@@ -243,12 +257,12 @@ public class DataRequestWsController {
     }
 
     @PostMapping(value = "/save-pre-arrival-data")
-    public ResponseEntity<WsResponse<?>> savePreArrivalData() {
+    public ResponseEntity<WsResponse<?>> savePreArrivalData(@RequestBody List<HuicArrivalData> huicArrivalData) {
         log.info("Start savePreArrivalData");
-        List<ErrorResponse> errorResponses = validationService.validateData(new ArrayList<>());
+        List<ErrorResponse> errorResponses = validationService.validateData(huicArrivalData);
 
         if (!errorResponses.isEmpty()) {
-            log.info("Finish savePreArrivalData {}, errorResponses: {}","FAILURE" ,errorResponses);
+            log.info("Finish savePreArrivalData {}, errorResponses: {}", "FAILURE", errorResponses);
             return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode()).body(
                     errorResponses).build());
         }
@@ -278,13 +292,22 @@ public class DataRequestWsController {
         List<ErrorResponse> errorResponses = validationService.validateData(new ArrayList<>());
 
         if (!errorResponses.isEmpty()) {
-            log.info("Finish saveGroupMainData {}, errorResponses: {}","FAILURE" ,errorResponses);
+            log.info("Finish saveGroupMainData {}, errorResponses: {}", "FAILURE", errorResponses);
             return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode()).body(
                     errorResponses).build());
         }
         log.info("Finish saveGroupMainData {}", "SUCCESS");
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(
                 Collections.emptyList()).build());
+    }
+
+    private static boolean isNumeric(String str) {
+        try {
+            Long.parseLong(str);
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
     }
 
 }

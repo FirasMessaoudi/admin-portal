@@ -7,6 +7,7 @@ import net.javacrumbs.shedlock.core.LockProvider;
 import net.javacrumbs.shedlock.provider.jdbctemplate.JdbcTemplateLockProvider;
 import net.javacrumbs.shedlock.spring.annotation.EnableSchedulerLock;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -32,12 +33,15 @@ import java.util.concurrent.ThreadPoolExecutor;
 @EnableTransactionManagement
 @EnableAspectJAutoProxy(proxyTargetClass = true)
 @ComponentScan(basePackages = {"com.elm.shj.admin.portal.services", "com.elm.dcc.foundation.commons.core.mapper"})
-@EnableSchedulerLock(defaultLockAtMostFor = "180s")
+@EnableSchedulerLock(defaultLockAtMostFor = "2h")
 public class ServiceConfig {
+
+    @Value("${spring.jpa.default_schema}")
+    private String databaseSchemaName;
 
     @Bean
     public LockProvider lockProvider(@Autowired DataSource dataSource) {
-        return new JdbcTemplateLockProvider(dataSource, "shc_portal.shc_scheduled_tasks_lock");
+        return new JdbcTemplateLockProvider(dataSource, databaseSchemaName + ".shc_scheduled_tasks_lock");
     }
 
     @Bean

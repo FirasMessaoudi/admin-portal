@@ -66,6 +66,9 @@ public class JpaPackageTransportation implements Serializable {
     @Column(name = "UPDATE_DATE")
     private Date updateDate;
 
+    @Column(name = "route_details")
+    private String routeDetails;
+
 
     @LazyCollection(LazyCollectionOption.TRUE)
     @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true, mappedBy = "packageTransportation")

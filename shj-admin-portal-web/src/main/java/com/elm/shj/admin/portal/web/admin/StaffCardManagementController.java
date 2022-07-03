@@ -5,9 +5,7 @@ package com.elm.shj.admin.portal.web.admin;
 
 import com.elm.shj.admin.portal.services.card.ApplicantCardService;
 import com.elm.shj.admin.portal.services.card.CompanyStaffCardService;
-import com.elm.shj.admin.portal.services.dto.AuthorityConstants;
-import com.elm.shj.admin.portal.services.dto.CompanyStaffCardDto;
-import com.elm.shj.admin.portal.services.dto.CompanyStaffCardFilterDto;
+import com.elm.shj.admin.portal.services.dto.*;
 import com.elm.shj.admin.portal.web.error.CardDetailsNotFoundException;
 import com.elm.shj.admin.portal.web.navigation.Navigation;
 import com.elm.shj.admin.portal.web.security.jwt.JwtToken;
@@ -111,6 +109,9 @@ public class StaffCardManagementController {
         if (companyStaffCardDto == null) {
             throw new CardDetailsNotFoundException("no card found with id : " + cardId);
         }
+        if(companyStaffCardDto.getCompanyRitualSeason() != null)
+            companyStaffCardDto.getCompanyRitualSeason().getCompany().setCode(companyStaffCardDto.getCompanyRitualSeason().getCompany().getCode().contains("_") ?
+                    companyStaffCardDto.getCompanyRitualSeason().getCompany().getCode().substring(0, companyStaffCardDto.getCompanyRitualSeason().getCompany().getCode().indexOf("_")) : companyStaffCardDto.getCompanyRitualSeason().getCompany().getCode());
         return companyStaffCardDto;
     }
 
@@ -157,5 +158,53 @@ public class StaffCardManagementController {
         }
         return true;
     }
+
+    @PostMapping("/generate-card")
+    public boolean generateCard(@RequestBody StaffCreateCardDto staffCreateCardDto,Authentication authentication)  {
+
+        CompanyStaffCardDto card = companyStaffCardService.findById(staffCreateCardDto.getCardId());
+        if (card == null) {
+            throw new CardDetailsNotFoundException("no card found with id : " + staffCreateCardDto.getCardId());
+        }
+
+        // Reissued The Card
+        // Check IF Allowed to Reiisue
+        boolean isUserAllowed = isUserAuthorizedToChangeCardStatus(card, ECardStatusAction.REISSUE_CARD.name(), authentication);
+        if (!isUserAllowed) {
+            log.error("this user does not have the authority to take this action on  card status");
+            return false;
+        }
+        // Check IF Allowed to Reiisue
+        isUserAllowed = isUserAuthorizedToChangeCardStatus(card, ECardStatusAction.ACTIVATE_CARD.name(), authentication);
+        if (!isUserAllowed) {
+            log.error("this user does not have the authority to take this action on  card status");
+            return false;
+        }
+
+        JwtToken loggedInUser = (JwtToken) authentication;
+        Optional<Long> userId = jwtTokenService.retrieveUserIdFromToken(loggedInUser.getToken());
+
+        // Old Card Marked as Reissued
+        card.setStatusCode(ECardStatus.REISSUED.name());
+        companyStaffCardService.save(card);
+
+
+        CompanyStaffCardDto companyStaffCardDto = companyStaffCardService.save(card
+                .builder()
+                .referenceNumber(card.getReferenceNumber())
+                .companyRitualSeason(card.getCompanyRitualSeason())
+                .companyStaffDigitalId(card.getCompanyStaffDigitalId())
+                .statusCode(ECardStatus.READY_TO_PRINT.name())
+                .build());
+
+        CompanyStaffCardDto newCard = companyStaffCardService.findById(companyStaffCardDto.getId());
+        newCard.setStatusCode(ECardStatus.ACTIVE.name());
+        companyStaffCardService.save(newCard);
+
+        return true;
+    }
+
+
+
 
 }

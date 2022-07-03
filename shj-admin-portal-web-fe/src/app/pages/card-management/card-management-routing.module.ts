@@ -6,6 +6,7 @@ import { CardDetailsComponent } from '@pages/card-management/card-details/card-d
 import { MainDetailsComponent } from '@pages/card-management/card-details/main-details/main-details.component';
 import { StaffCardListComponent } from '@pages/card-management/staff-card-list/staff-card-list.component';
 import { StaffCardDetailsComponent } from '@pages/card-management/staff-card-details/staff-card-details.component';
+import { PrintCardComponent } from '@pages/card-management/print-card/print-card.component';
 
 const routes: Routes = [
   {
@@ -33,6 +34,11 @@ const routes: Routes = [
     component: StaffCardDetailsComponent,
     canActivate: [AuthenticationGuard],
   },
+  {
+    path: 'card/print/:id/:type',
+    component: PrintCardComponent,
+    canActivate: [AuthenticationGuard],
+  }
 ];
 
 @NgModule({

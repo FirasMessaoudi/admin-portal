@@ -12,10 +12,14 @@ import com.elm.shj.admin.portal.services.dashboard.*;
 import com.elm.shj.admin.portal.services.dto.AuthorityConstants;
 import com.elm.shj.admin.portal.services.dto.CompanyLiteDto;
 import com.elm.shj.admin.portal.services.dto.ECampSite;
+import com.elm.shj.admin.portal.services.token.TokenService;
 import com.elm.shj.admin.portal.web.navigation.Navigation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.http.HttpHost;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.configurationprocessor.json.JSONObject;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -35,13 +39,22 @@ import java.util.List;
 @RequiredArgsConstructor(onConstructor_ = {@Autowired})
 public class DashboardController {
 
-    private final DashboardService dashboardService;
-    private final CompanyService companyService;
     public enum EPeriodType {
         D, // daily
         W, // Weekly
         M, // Monthly
     }
+
+    private static final String ADMIN_BI_UID = "SMT-HC-3LM-2BB3028E-DA11-4600-81FE-74D79EF00E58-ADM";
+
+    private final DashboardService dashboardService;
+    private final CompanyService companyService;
+    private final TokenService tokenService;
+    @Value("${bi.server.url}")
+    private String biServerUrl;
+
+    @Value("${bi.dashboard.uri}")
+    private String biDashboardUri;
 
     @GetMapping
     @PreAuthorize("hasAuthority('" + AuthorityConstants.ADMIN_DASHBOARD + "')")
@@ -216,6 +229,12 @@ public class DashboardController {
     public List<CompanyLiteDto> loadCompaniesFromCurrentHajjSeasons(@PathVariable("seasonYear") int seasonYear) {
         log.info("Handling loadCompanies.");
         return companyService.findCompaniesBySeasonAndRitualType(seasonYear);
+    }
+
+    @GetMapping("/bi")
+    @PreAuthorize("hasAuthority('" + AuthorityConstants.ADMIN_DASHBOARD + "')")
+    public String buildDashboardUrl() {
+        return JSONObject.quote(HttpHost.DEFAULT_SCHEME_NAME + "://" + biServerUrl + "/trusted/" + tokenService.generateTrustedToken() + "/" + biDashboardUri + "?&:embed=y&COMPANY_UID=" + ADMIN_BI_UID);
     }
 
 }

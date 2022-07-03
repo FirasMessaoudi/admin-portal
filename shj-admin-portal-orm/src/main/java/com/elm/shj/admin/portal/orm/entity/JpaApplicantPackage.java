@@ -31,7 +31,7 @@ public class JpaApplicantPackage implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(unique = true, nullable = false)
     private long id;
-
+//TODO should be String not long
     @Column(name = "applicant_uin", nullable = false)
     private long applicantUin;
 
@@ -46,6 +46,12 @@ public class JpaApplicantPackage implements Serializable {
 
     @Column(name = "end_date")
     private Date endDate;
+
+    @Column(name = "arrival_date")
+    private Date arrivalDate;
+
+    @Column(name = "arrival_city")
+    private String arrivalCity;
 
     @ManyToOne
     @JoinColumn(name = "ritual_package_id")

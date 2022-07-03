@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Repository for Package Housing
@@ -50,5 +51,9 @@ public interface PackageHousingRepository extends JpaRepository<JpaPackageHousin
     @Query("SELECT h FROM JpaPackageHousing h JOIN h.ritualPackage r JOIN r.companyRitualSeason c " +
             " WHERE c.id = :companyRitualSeasonsId AND CURRENT_TIMESTAMP BETWEEN h.validityStart AND h.validityEnd")
     JpaPackageHousing findStaffPackageHousingByCompanyRitualSeason(@Param("companyRitualSeasonsId") long companyRitualSeasonsId);
+
+    Optional<JpaPackageHousing> findTopByRitualPackageIdAndSiteCode(long id, String siteCode);
+
+    List<JpaPackageHousing> findAllByRitualPackageIdAndSiteCode(long id, String siteCode);
 
 }

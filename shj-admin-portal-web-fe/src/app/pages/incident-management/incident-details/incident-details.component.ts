@@ -58,7 +58,7 @@ export class IncidentDetailsComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    
+
     combineLatest([this.route.params, this.route.queryParams])
       .pipe(
         map((results) => ({
@@ -219,14 +219,14 @@ export class IncidentDetailsComponent implements OnInit {
     let confirmationText, successText;
     if (this.incidentForm.controls.operation.value === this.MARK_AS_RESOLVED) {
       confirmationText =
-        'incident-management.dialog_resolve_complaint_confirmation_text';
-      successText = 'incident-management.dialog_resolve_complaint_success_text';
+        'incident-management.dialog_resolve_incident_confirmation_text';
+      successText = 'incident-management.dialog_resolve_incident_success_text';
     } else if (
       this.incidentForm.controls.operation.value === this.MARK_AS_CLOSED
     ) {
       confirmationText =
-        'incident-management.dialog_close_complaint_confirmation_text';
-      successText = 'incident-management.dialog_close_complaint_success_text';
+        'incident-management.dialog_close_incident_confirmation_text';
+      successText = 'incident-management.dialog_close_incident_success_text';
     }
     this.confirmDialogService
       .confirm(

@@ -86,10 +86,9 @@ public class ApplicantHealthService extends GenericService<JpaApplicantHealth, A
      */
     @Transactional
     public int updateApplicantHealthApplicantRitual(long applicantRitualId, long applicantId, String packageReferenceNumber) {
-        log.info("Start updateApplicantHealthApplicantRitual applicantId:{}, packageReferenceNumber:{}, applicantRitualId:{}", applicantId, packageReferenceNumber, applicantRitualId);
-
+        log.info("Start updateApplicantHealthApplicantRitual applicantId: {}, packageReferenceNumber: {}, applicantRitualId: {}", applicantId, packageReferenceNumber, applicantRitualId);
         int numberOfAffectedRows = applicantHealthRepository.updateApplicantHealthApplicantRitual(applicantRitualId, applicantId, packageReferenceNumber);
-        log.info("Finish updateApplicantHealthApplicantRitual  numberOfAffectedRows:{}",numberOfAffectedRows);
+        log.info("Finish updateApplicantHealthApplicantRitual  numberOfAffectedRows: {}",numberOfAffectedRows);
         return  numberOfAffectedRows;
     }
 

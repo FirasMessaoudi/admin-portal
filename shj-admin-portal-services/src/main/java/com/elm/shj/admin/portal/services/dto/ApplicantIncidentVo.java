@@ -20,7 +20,7 @@ public class ApplicantIncidentVo implements Serializable {
 
     private static final long serialVersionUID = 6800775521807599452L;
 
-    private EIncidentResolutionType operation;
+    private String operation;
 
     private String resolutionComment;
 }

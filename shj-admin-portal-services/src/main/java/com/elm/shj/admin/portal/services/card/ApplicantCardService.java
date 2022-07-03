@@ -63,14 +63,14 @@ public class ApplicantCardService extends GenericService<JpaApplicantCard, Appli
     @PostConstruct
     private void postConstruct() {
         //build map of allowed actions per current status for the card
-        CARD_STATUS_ALLOWED_ACTION.put(ECardStatus.ACTIVE.name(), new String[]{ECardStatusAction.SUSPEND_CARD.name(), ECardStatusAction.CANCEL_CARD.name()});
-        CARD_STATUS_ALLOWED_ACTION.put(ECardStatus.CANCELLED.name(), new String[]{ECardStatusAction.REISSUE_CARD.name()});
-        CARD_STATUS_ALLOWED_ACTION.put(ECardStatus.SUSPENDED.name(), new String[]{ECardStatusAction.ACTIVATE_CARD.name(), ECardStatusAction.CANCEL_CARD.name()});
-        CARD_STATUS_ALLOWED_ACTION.put(ECardStatus.READY_TO_PRINT.name(), new String[]{ECardStatusAction.CANCEL_CARD.name()});
-        CARD_STATUS_ALLOWED_ACTION.put(ECardStatus.SENT_FOR_PRINT.name(), new String[]{ECardStatusAction.CANCEL_CARD.name()});
-        CARD_STATUS_ALLOWED_ACTION.put(ECardStatus.PRINTED.name(), new String[]{ECardStatusAction.CANCEL_CARD.name(), ECardStatusAction.ACTIVATE_CARD.name()});
-        CARD_STATUS_ALLOWED_ACTION.put(ECardStatus.DISTRIBUTED.name(), new String[]{ECardStatusAction.CANCEL_CARD.name(), ECardStatusAction.ACTIVATE_CARD.name()});
-        CARD_STATUS_ALLOWED_ACTION.put(ECardStatus.WAITING_TO_SEND.name(), new String[]{ECardStatusAction.CANCEL_CARD.name()});
+        CARD_STATUS_ALLOWED_ACTION.put(ECardStatus.ACTIVE.name(), new String[]{ECardStatusAction.SUSPEND_CARD.name(), ECardStatusAction.CANCEL_CARD.name(),ECardStatusAction.REISSUE_CARD.name()});
+        CARD_STATUS_ALLOWED_ACTION.put(ECardStatus.CANCELLED.name(), new String[]{ECardStatusAction.REISSUE_CARD.name(),ECardStatusAction.REISSUE_CARD.name()});
+        CARD_STATUS_ALLOWED_ACTION.put(ECardStatus.SUSPENDED.name(), new String[]{ECardStatusAction.ACTIVATE_CARD.name(), ECardStatusAction.CANCEL_CARD.name(),ECardStatusAction.REISSUE_CARD.name()});
+        CARD_STATUS_ALLOWED_ACTION.put(ECardStatus.READY_TO_PRINT.name(), new String[]{ECardStatusAction.CANCEL_CARD.name(),ECardStatusAction.REISSUE_CARD.name(),ECardStatusAction.ACTIVATE_CARD.name()});
+        CARD_STATUS_ALLOWED_ACTION.put(ECardStatus.SENT_FOR_PRINT.name(), new String[]{ECardStatusAction.CANCEL_CARD.name(),ECardStatusAction.REISSUE_CARD.name(),ECardStatusAction.ACTIVATE_CARD.name()});
+        CARD_STATUS_ALLOWED_ACTION.put(ECardStatus.PRINTED.name(), new String[]{ECardStatusAction.CANCEL_CARD.name(), ECardStatusAction.ACTIVATE_CARD.name(),ECardStatusAction.REISSUE_CARD.name()});
+        CARD_STATUS_ALLOWED_ACTION.put(ECardStatus.DISTRIBUTED.name(), new String[]{ECardStatusAction.CANCEL_CARD.name(), ECardStatusAction.ACTIVATE_CARD.name(),ECardStatusAction.REISSUE_CARD.name()});
+        CARD_STATUS_ALLOWED_ACTION.put(ECardStatus.WAITING_TO_SEND.name(), new String[]{ECardStatusAction.CANCEL_CARD.name(),ECardStatusAction.REISSUE_CARD.name()});
 
     }
 
@@ -122,13 +122,20 @@ public class ApplicantCardService extends GenericService<JpaApplicantCard, Appli
      * @return the list of applicant cards
      */
     public Page<ApplicantCardDto> searchApplicantCards(ApplicantCardSearchCriteriaDto criteria, Pageable pageable) {
-        return mapPage(applicantCardRepository.findAll(withApplicantCardFilter(criteria), pageable));
+        Page<ApplicantCardDto> applicantCardDtos = mapPage(applicantCardRepository.findAll(withApplicantCardFilter(criteria), pageable));
+        applicantCardDtos.getContent().forEach(applicantCardDto -> {
+            ApplicantRitualDto applicantRitualDto = applicantRitualService.findApplicantRitualWithContactsAndRelatives(applicantCardDto.getApplicantRitual().getId());
+            ApplicantPackageDto applicantPackageDto = applicantRitualDto.getApplicantPackage();
+            applicantCardDto.getApplicantRitual().setTypeCode(applicantPackageDto.getRitualPackage().getCompanyRitualSeason().getRitualSeason().getRitualTypeCode());
+        });
+        return applicantCardDtos;
     }
 
     private Specification<JpaApplicantCard> withApplicantCardFilter(final ApplicantCardSearchCriteriaDto criteria) {
         return (root, criteriaQuery, criteriaBuilder) -> {
             //Create atomic predicates
             List<Predicate> predicates = new ArrayList<>();
+            predicates.add(criteriaBuilder.equal(root.join("applicantRitual").join("applicant").get("deleted"), Boolean.FALSE));
 
             if (criteria.getRitualSeason() != null) {
                 predicates.add(criteriaBuilder.equal(root.get("applicantRitual").get("applicantPackage").get("ritualPackage").get("companyRitualSeason").get("ritualSeason").get("seasonYear"), criteria.getRitualSeason()));
@@ -236,10 +243,16 @@ public class ApplicantCardService extends GenericService<JpaApplicantCard, Appli
                 applicantCardDto.setApplicantPackageCaterings(applicantPackageCateringService.findApplicantPackageCateringByUinAndApplicantPackageId(Long.parseLong(uin), applicantPackageId));
                 applicantCardDto.setApplicantPackageTransportations(applicantPackageTransportationService.findApplicantPackageTransportationByUinAndApplicantPackageId(Long.parseLong(uin), applicantPackageId));
                 applicantCardDto.setCompanyLite(companyService.findCompanyByCompanyRitualSeasonsIdAndApplicantUin(applicantPackageDto.getRitualPackage().getCompanyRitualSeason().getId(), Long.parseLong(uin)));
+                if(applicantCardDto.getCompanyLite() != null)
+                    applicantCardDto.getCompanyLite().setCode(applicantCardDto.getCompanyLite().getCode().contains("_") ?
+                            applicantCardDto.getCompanyLite().getCode().substring(0, applicantCardDto.getCompanyLite().getCode().indexOf("_")) : applicantCardDto.getCompanyLite().getCode());
+
                 List<CompanyRitualStepDto> companyRitualSteps = companyRitualStepService.findCompanyRitualStepsByApplicantUin(uin);
                 applicantCardDto.setCompanyRitualSteps(companyRitualSteps);
-                List<CompanyStaffDto> groupLeaders = companyStaffService.findRelatedEmployeesByApplicantUinAndSeasonId(uin, applicantPackageDto.getRitualPackage().getCompanyRitualSeason().getId());
-                applicantCardDto.setGroupLeaders(groupLeaders);
+                Optional<CompanyStaffDto> groupLeader = companyStaffService.findGroupLeaderByApplicantUin(uin);
+                if (groupLeader.isPresent()) {
+                    applicantCardDto.setGroupLeaders(Collections.singletonList(groupLeader.get()));
+                }
             }
         }
         return applicantCardDto;
@@ -291,7 +304,7 @@ public class ApplicantCardService extends GenericService<JpaApplicantCard, Appli
     }
 
     public ApplicantCardDto findApplicantCardByApplicantRitualId(long applicantRitualId) {
-        return getMapper().fromEntity(applicantCardRepository.findByApplicantRitualId(applicantRitualId), mappingContext);
+        return getMapper().fromEntity(applicantCardRepository.findByApplicantRitualIdAndStatusCodeNotIn(applicantRitualId, Arrays.asList(ECardStatus.CANCELLED.name(), ECardStatus.EXPIRED.name(), ECardStatus.SUSPENDED.name(), ECardStatus.REISSUED.name())), mappingContext);
     }
 
     public void updateCardStatus(List<Long> cardsIds){

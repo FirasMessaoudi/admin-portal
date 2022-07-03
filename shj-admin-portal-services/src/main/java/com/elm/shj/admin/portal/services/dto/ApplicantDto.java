@@ -43,7 +43,7 @@ public class ApplicantDto implements Serializable {
     @CellIndex(index = 7)
     private String gender;
 
-    @CountryCode
+    @NationalityCode
     @CellIndex(index = 8)
     private String nationalityCode;
 
@@ -62,7 +62,7 @@ public class ApplicantDto implements Serializable {
     private String passportNumber;
 
     @JsonFormat(pattern = "yyyy-MM-dd")
-    @GregorianDate(minOffset = -120, maxOffset = -10)
+    @GregorianDate(minOffset = -120, maxOffset = -10, allowNull = true)
     @CellIndex(index = 2)
     private Date dateOfBirthGregorian;
 
@@ -70,15 +70,15 @@ public class ApplicantDto implements Serializable {
     @CellIndex(index = 3)
     private Long dateOfBirthHijri;
 
-    @OnlyCharacters(min = 6, max = 150, arabic = true)
+//    //@OnlyCharacters(min = 5, max = 650)
     @CellIndex(index = 5)
     private String fullNameAr;
 
-    @OnlyCharacters(min = 10, max = 150, allowEmpty = false)
+//    //@OnlyCharacters(min = 5, max = 650, allowEmpty = false)
     @CellIndex(index = 4)
     private String fullNameEn;
 
-    @NullOrNotBlank(min = 10, max = 150)
+    @NullOrNotBlank(min = 5, max = 650)
     @CellIndex(index = 6)
     private String fullNameOrigin;
 
@@ -120,6 +120,16 @@ public class ApplicantDto implements Serializable {
     private boolean registered;
     private Date creationDate;
     private Date updateDate;
+    private boolean deleted;
+    private String companyCode;
+    private Integer establishmentRefCode;
+    private Integer missionRefCode;
+    private Long serviceGroupMakkahCode;
+    private Long serviceGroupMadinaCode;
+    private Double latitude;
+    private Double longitude;
+    private String emergencyContactMobileNumber;
+    private String emergencyContactName;
 
     /**
      * Get applicant object from applicant lite object.
@@ -133,7 +143,7 @@ public class ApplicantDto implements Serializable {
                 .packageReferenceNumber(applicantLiteDto.getPackageReferenceNumber()).dateOfBirthGregorian(applicantLiteDto.getDateOfBirthGregorian())
                 .dateOfBirthHijri(applicantLiteDto.getDateOfBirthHijri()).fullNameAr(applicantLiteDto.getFullNameAr()).fullNameEn(applicantLiteDto.getFullNameEn())
                 .fullNameOrigin(applicantLiteDto.getFullNameOrigin()).preferredLanguage(applicantLiteDto.getPreferredLanguage()).gender(applicantLiteDto.getGender())
-                .photo(applicantLiteDto.getPhoto()).contacts(applicantLiteDto.getContacts()).digitalIds(applicantLiteDto.getDigitalIds())
+                .contacts(applicantLiteDto.getContacts()).digitalIds(applicantLiteDto.getDigitalIds())
                 .build();
     }
 }

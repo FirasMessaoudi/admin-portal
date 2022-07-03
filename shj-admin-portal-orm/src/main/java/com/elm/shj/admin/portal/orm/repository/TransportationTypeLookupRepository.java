@@ -13,4 +13,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
  * @since 1.1.0
  */
 public interface TransportationTypeLookupRepository extends JpaRepository<JpaTransportationTypeLookup, Long> {
+    boolean existsByCode(String code);
 }

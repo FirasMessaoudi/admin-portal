@@ -21,6 +21,9 @@ import {DateFormatterService} from '@shared/modules/hijri-gregorian-datepicker/d
 import {HijriGregorianDatetimepickerComponent} from '@shared/modules/hijri-gregorian-datepicker/datetimepicker/hijri-gregorian-datetimepicker.component';
 import {ageRangeValidator, validateIsRequired,} from '@pages/notification-management/notification-custom-validator';
 import {NotificationTemplateCategorizing} from '@model/notification-template-categorizing.model';
+import {CompanyStaffTitleLookup} from '@model/company-staff-title-lookup';
+import {CompanyStaff} from "@model/company-staff.model";
+import {StaffService} from "@core/services/staff/staff.service";
 
 @Component({
   selector: 'app-user-defined-notification-add',
@@ -40,29 +43,35 @@ export class UserDefinedNotificationAddComponent implements OnInit {
   activeId;
   checkedCriteria: number = 0;
   creationDate: Date = new Date();
-  notificationTemplate: NotificationTemplate;
   isLoading: boolean;
   nationalities: Lookup[] = [];
   companies: CompanyLite[] = [];
   camps: PackageHousing[] = [];
-  searchForm: FormGroup;
+  staffTitles: CompanyStaffTitleLookup[] = [];
+  searchApplicantForm: FormGroup;
+  searchStaffForm: FormGroup;
   pageArray: Array<number>;
   page: Page;
   selectedApplicants: Array<Applicant> = [];
   applicants: Array<Applicant> = [];
   addedApplicants: Array<Applicant> = [];
+  selectedStaff: Array<CompanyStaff> = [];
+  companyStaff: Array<CompanyStaff> = [];
+  addedStaff: Array<CompanyStaff> = [];
   addedApplicantsCurrentPage: number = 1;
   addedApplicantsPageSize: number = 10;
+  addedStaffCurrentPage: number = 1;
+  addedStaffPageSize: number = 10;
   isSelectAllClicked: boolean;
   isSelectLoading: boolean;
-  selectedSendingDate: NgbDateStruct;
   minSendingDateGregorian: NgbDateStruct;
   minSendingDateHijri: NgbDateStruct;
   dateString: string;
   selectedDateType: any;
   applicantsCount: number;
+  staffCount: number;
+  usersCount: number;
   show: boolean;
-
   @ViewChild('datePicker') datePicker: HijriGregorianDatetimepickerComponent;
 
   private listSubscription: Subscription;
@@ -81,7 +90,8 @@ export class UserDefinedNotificationAddComponent implements OnInit {
     private confirmDialogService: ConfirmDialogService,
     private toastr: ToastService,
     private modalService: NgbModal,
-    private dateFormatterService: DateFormatterService
+    private dateFormatterService: DateFormatterService,
+    private staffService: StaffService
   ) {
   }
 
@@ -96,7 +106,8 @@ export class UserDefinedNotificationAddComponent implements OnInit {
     this.loadLookups();
     this.initCreateForm();
     this.initCategorizingForm();
-    this.initSearchForm();
+    this.initSearchApplicantForm();
+    this.initSearchStaffForm();
 
     this.translate.onLangChange.subscribe((event: LangChangeEvent) => {
       this.translatedLanguages = this.languages.filter(
@@ -135,6 +146,7 @@ export class UserDefinedNotificationAddComponent implements OnInit {
       campId: null,
       companyId: null,
       nationalityCode: null,
+      notificationCategory: 0,
       age: this.formBuilder.group(
         {
           minAge: ['', [Validators.min(0), Validators.max(120)]],
@@ -146,11 +158,17 @@ export class UserDefinedNotificationAddComponent implements OnInit {
     });
   }
 
-  initSearchForm(): void {
-    this.searchForm = this.formBuilder.group({
+  initSearchApplicantForm(): void {
+    this.searchApplicantForm = this.formBuilder.group({
       uin: '',
       idNumber: '',
       passportNumber: '',
+    });
+  }
+  initSearchStaffForm(): void {
+    this.searchStaffForm = this.formBuilder.group({
+      suin: '',
+      staffTitle: null,
     });
   }
 
@@ -207,7 +225,9 @@ export class UserDefinedNotificationAddComponent implements OnInit {
       .loadCompanies()
       .subscribe((res) => (this.companies = res));
     this.notificationService.loadCamps().subscribe((res) => (this.camps = res));
-  }
+    this.staffService.loadStaffRoles().subscribe(
+      (res) => ( this.staffTitles = res.filter(value => this.i18nService.language.startsWith(value.lang))));
+    }
 
   get currentLanguage(): string {
     return this.i18nService.language;
@@ -231,7 +251,37 @@ export class UserDefinedNotificationAddComponent implements OnInit {
     let notificationTemplate = this.createNotificationTemplate();
     if (this.DRAFT === statusCode) {
       this.notificationForm.markAllAsTouched();
-      if (this.checkedCriteria === 1) {
+      if (this.checkedCriteria === 1){
+        notificationTemplate.statusCode = this.DRAFT;
+        this.confirmDialogService
+          .confirm(
+            this.translate.instant(
+              'notification-management.save_changes_confirmation_text'
+            ),
+            this.translate.instant('general.dialog_confirmation_title')
+          )
+          .then((confirm) => {
+            if (confirm) {
+              this.proceedSaving(notificationTemplate);
+            }
+          });
+      }
+      if (this.checkedCriteria === 2){
+        notificationTemplate.statusCode = this.DRAFT;
+        this.confirmDialogService
+          .confirm(
+            this.translate.instant(
+              'notification-management.save_changes_confirmation_text'
+            ),
+            this.translate.instant('general.dialog_confirmation_title')
+          )
+          .then((confirm) => {
+            if (confirm) {
+              this.proceedSaving(notificationTemplate);
+            }
+          });
+      }
+      if (this.checkedCriteria === 3) {
         this.categorizingForm.markAllAsTouched();
         if (this.categorizingForm.invalid) {
           return;
@@ -251,23 +301,12 @@ export class UserDefinedNotificationAddComponent implements OnInit {
         }
         return;
       }
-      if (this.checkedCriteria === 2 && this.addedApplicants.length === 0) {
+      if (this.checkedCriteria === 4 && this.addedApplicants.length === 0) {
         return;
       }
-
-      notificationTemplate.statusCode = this.DRAFT;
-      this.confirmDialogService
-        .confirm(
-          this.translate.instant(
-            'notification-management.save_changes_confirmation_text'
-          ),
-          this.translate.instant('general.dialog_confirmation_title')
-        )
-        .then((confirm) => {
-          if (confirm) {
-            this.proceedSaving(notificationTemplate);
-          }
-        });
+      if (this.checkedCriteria === 5 && this.addedStaff.length === 0) {
+        return;
+      }
     } else if (this.CONFIRMED === statusCode) {
       notificationTemplate.statusCode = this.CONFIRMED;
       this.proceedSaving(notificationTemplate);
@@ -307,16 +346,21 @@ export class UserDefinedNotificationAddComponent implements OnInit {
   }
 
   getApplicantsCount() {
-    if (this.checkedCriteria === 0) {
-      this.applicantService
-        .countApplicantsHavingCurrentRitual()
-        .subscribe((res) => (this.applicantsCount = res));
-    } else if (this.checkedCriteria === 1) {
+    if (this.checkedCriteria === 3) {
       this.applicantService
         .countCategorizedApplicants(this.getCategorizing())
         .subscribe((res) => (this.applicantsCount = res));
-    } else if (this.checkedCriteria === 2) {
+    } else if (this.checkedCriteria === 4) {
       this.applicantsCount = this.addedApplicants.length;
+    }else if (this.checkedCriteria === 5) {
+      this.staffCount = this.addedStaff.length;
+    }else if (this.checkedCriteria === 1) {
+      this.applicantService
+        .countApplicantsHavingCurrentRitual()
+        .subscribe((res) => (this.applicantsCount = res));
+    } else if (this.checkedCriteria === 2) {
+      this.staffService.countRegisteredStaff()
+        .subscribe((res) => (this.staffCount = res));
     }
   }
 
@@ -326,6 +370,7 @@ export class UserDefinedNotificationAddComponent implements OnInit {
     const maxAge = this.categorizingForm.value.age.maxAge;
     if (minAge) categorizing.minAge = minAge;
     if (maxAge) categorizing.maxAge = maxAge;
+    categorizing.notificationCategory = 3;
     return categorizing;
   }
 
@@ -336,19 +381,39 @@ export class UserDefinedNotificationAddComponent implements OnInit {
       .get('notificationTemplateContents')
       .value.filter((c) => c.body.trim() !== '' || c.title.trim() !== '');
 
-    if (this.checkedCriteria === 1) {
+    if (this.checkedCriteria === 3) {
       notificationTemplate.notificationTemplateCategorizing =
         this.getCategorizing();
-    } else if (this.checkedCriteria === 2 && this.addedApplicants?.length > 0) {
+    }
+    else if (this.checkedCriteria === 1) {
+      notificationTemplate.notificationTemplateCategorizing =
+        new NotificationTemplateCategorizing(null, null, 1 );
+    }
+    else if (this.checkedCriteria === 2) {
+      notificationTemplate.notificationTemplateCategorizing =
+        new NotificationTemplateCategorizing(null, null, 2 );
+    }
+    else if (this.checkedCriteria === 4 && this.addedApplicants?.length > 0) {
       const selectedApplicantsCSV = this.addedApplicants
         .map((applicant) => applicant.id)
         .join(',');
-      let notificationTemplateCategorizing =
-        new NotificationTemplateCategorizing(selectedApplicantsCSV);
+      const notificationTemplateCategorizing =
+        new NotificationTemplateCategorizing(selectedApplicantsCSV, null,4 );
       notificationTemplate.notificationTemplateCategorizing =
         notificationTemplateCategorizing;
       notificationTemplateCategorizing.selectedApplicants =
         selectedApplicantsCSV;
+    }
+    else if (this.checkedCriteria === 5 && this.addedStaff?.length > 0) {
+      const selectedStaffCSV = this.addedStaff
+        .map((staff) => staff.id)
+        .join(',');
+      const notificationTemplateCategorizing =
+        new NotificationTemplateCategorizing(selectedStaffCSV, null,5);
+      notificationTemplate.notificationTemplateCategorizing =
+        notificationTemplateCategorizing;
+      notificationTemplateCategorizing.selectedApplicants =
+        selectedStaffCSV;
     }
 
     notificationTemplate.notificationTemplateContents.forEach((c) => {
@@ -383,25 +448,39 @@ export class UserDefinedNotificationAddComponent implements OnInit {
     this.isSelectAllClicked = false;
     this.modalService.dismissAll();
   }
+  addCompanyStaff(){
+    this.addedStaff = [
+      ...this.addedStaff,
+      ...this.selectedStaff,
+    ];
+    this.companyStaff = [];
+    this.selectedStaff = [];
+    this.modalService.dismissAll();
+  }
 
   resetSelectionModal() {
-    this.searchForm.reset();
+    this.searchApplicantForm.reset();
+    this.searchStaffForm.reset();
     this.applicants = [];
     this.selectedApplicants = [];
     this.isSelectAllClicked = false;
+    this.companyStaff = [];
+    this.selectedStaff = [];
     this.modalService.dismissAll();
   }
 
   resetConfirmationModal() {
     this.applicantsCount = null;
+    this.staffCount = null;
+    this.usersCount = null;
     this.modalService.dismissAll();
   }
 
-  search(pageNumber: number): void {
+  searchApplicants(pageNumber: number): void {
     this.isSelectLoading = true;
     this.searchSubscription = this.applicantService
       .search(
-        this.searchForm.value,
+        this.searchApplicantForm.value,
         this.addedApplicants.map((applicant) => applicant.id),
         pageNumber
       )
@@ -415,8 +494,31 @@ export class UserDefinedNotificationAddComponent implements OnInit {
           this.applicants = this.page.content;
         }
       });
+    console.log(this.page);
   }
-
+  searchCompanyStaff(pageNumber: number): void {
+    this.isSelectLoading = true;
+    console.log('*******************************');
+    console.log(this.searchStaffForm.value);
+    this.searchSubscription = this.staffService
+      .search(
+        this.searchStaffForm.value,
+        this.addedStaff.map((companyStaff) => companyStaff.id),
+        pageNumber
+      )
+      .subscribe((data) => {
+        this.isSelectLoading = false;
+        this.companyStaff = [];
+        this.pageArray = [];
+        this.page = data;
+        if (this.page != null) {
+          this.pageArray = Array.from(this.pageCounter(this.page.totalPages));
+          this.companyStaff = this.page.content;
+        }
+      });
+    console.log(this.companyStaff);
+    console.log(this.page);
+  }
   private getDismissReason(reason: any): string {
     if (reason === ModalDismissReasons.ESC) {
       return 'by pressing ESC';
@@ -448,11 +550,14 @@ export class UserDefinedNotificationAddComponent implements OnInit {
     return new Array(i);
   }
 
-  isChecked(applicant) {
+  isApplicantChecked(applicant) {
     return this.selectedApplicants.some((c) => c.id === applicant.id);
   }
+  isStaffChecked(staff) {
+    return this.selectedStaff.some((c) => c.id === staff.id);
+  }
 
-  selectOne(event, id) {
+  selectOneApplicant(event, id) {
     const selectedIndex = this.applicants.findIndex((card) => card.id === id);
 
     if (event.target.checked) {
@@ -464,7 +569,18 @@ export class UserDefinedNotificationAddComponent implements OnInit {
       );
     }
   }
+  selectOneStaff(event, id) {
+    const selectedIndex = this.companyStaff.findIndex((card) => card.id === id);
 
+    if (event.target.checked) {
+      this.selectedStaff.push(this.companyStaff[selectedIndex]);
+    } else {
+      this.selectedStaff.splice(
+        this.selectedStaff.findIndex((card) => card.id === id),
+        1
+      );
+    }
+  }
   openSearchModal(content) {
     this.modalService
       .open(content, {
@@ -486,7 +602,7 @@ export class UserDefinedNotificationAddComponent implements OnInit {
   openSendModal(content) {
     console.log(this.notificationForm.get('sendingDate'));
     this.notificationForm.markAllAsTouched();
-    if (this.checkedCriteria === 1) {
+    if (this.checkedCriteria === 3) {
       this.categorizingForm.markAllAsTouched();
       if (this.categorizingForm.invalid) {
         return;
@@ -495,7 +611,7 @@ export class UserDefinedNotificationAddComponent implements OnInit {
     if (this.notificationForm.invalid) {
       return;
     }
-    if (this.checkedCriteria === 2 && this.addedApplicants.length === 0) {
+    if (this.checkedCriteria === 4 && this.addedApplicants.length === 0) {
       return;
     }
     this.modalService
@@ -531,6 +647,9 @@ export class UserDefinedNotificationAddComponent implements OnInit {
 
   setCurrentPage(page: number) {
     this.addedApplicantsCurrentPage = page;
+  }
+  setCurrentStaffPage(page: number) {
+    this.addedStaffCurrentPage = page;
   }
 
   getTotalPages(total, size): number {

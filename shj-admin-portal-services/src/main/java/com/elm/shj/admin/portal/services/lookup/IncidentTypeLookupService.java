@@ -1,9 +1,7 @@
 package com.elm.shj.admin.portal.services.lookup;
 
 import com.elm.shj.admin.portal.orm.entity.JpaIncidentTypeLookup;
-import com.elm.shj.admin.portal.orm.repository.CountryLookupRepository;
 import com.elm.shj.admin.portal.orm.repository.IncidentTypeLookupRepository;
-import com.elm.shj.admin.portal.services.dto.CountryLookupDto;
 import com.elm.shj.admin.portal.services.dto.IncidentTypeLookupDto;
 import com.elm.shj.admin.portal.services.generic.GenericService;
 import lombok.extern.slf4j.Slf4j;
@@ -26,6 +24,7 @@ public class IncidentTypeLookupService extends GenericService<JpaIncidentTypeLoo
      * @return the found incident
      */
     public IncidentTypeLookupDto findByCode(String typeCode) {
+        log.info("start findByCode in IncidentTypeLookupService with typeCode: {}", typeCode);
         return getMapper().fromEntity(((IncidentTypeLookupRepository) getRepository()).findFirstByCode(typeCode), mappingContext);
     }
 }

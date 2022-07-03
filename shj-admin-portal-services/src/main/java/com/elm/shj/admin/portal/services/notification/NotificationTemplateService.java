@@ -14,8 +14,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.criteria.Join;
@@ -51,7 +53,9 @@ public class NotificationTemplateService extends GenericService<JpaNotificationT
      * @return the found Notification Template or empty structure
      */
     public Optional<NotificationTemplateDto> findEnabledNotificationTemplateByNameCode(String nameCode) {
+        log.info("start findEnabledNotificationTemplateByNameCode with nameCode: {}", nameCode);
         JpaNotificationTemplate jpaNotificationTemplate = notificationTemplateRepository.findByNameCodeAndEnabledTrue(nameCode);
+        log.info("end findEnabledNotificationTemplateByNameCode with nameCode: {}", nameCode);
         return (jpaNotificationTemplate != null) ? Optional.of(getMapper().fromEntity(jpaNotificationTemplate, mappingContext)) : Optional.empty();
     }
 
@@ -62,14 +66,14 @@ public class NotificationTemplateService extends GenericService<JpaNotificationT
      * @return the updated Notification Template
      */
     public NotificationTemplateDto updateNotificationTemplate(NotificationTemplateDto notificationTemplate) {
-
+        log.info("start updateNotificationTemplate");
         notificationTemplate.getNotificationTemplateContents().stream().forEach(content -> {
             content.setNotificationTemplate(notificationTemplate);
         });
         NotificationTemplateDto savedNotificationTemplate = findOne(notificationTemplate.getId());
         savedNotificationTemplate.setEnabled(notificationTemplate.isEnabled());
         savedNotificationTemplate.setNotificationTemplateContents(notificationTemplate.getNotificationTemplateContents());
-
+        log.info("end updateNotificationTemplate");
         return save(savedNotificationTemplate);
     }
 
@@ -139,6 +143,9 @@ public class NotificationTemplateService extends GenericService<JpaNotificationT
             if (notificationSearchCriteria.getSendingDateEnd() != null) {
                 predicates.add(criteriaBuilder.lessThanOrEqualTo(root.get("sendingDate"), atEndOfDay(notificationSearchCriteria.getSendingDateEnd())));
             }
+            if (notificationSearchCriteria.getCompanyCode() != null) {
+                predicates.add(criteriaBuilder.equal(root.get("companyCode"), notificationSearchCriteria.getCompanyCode()));
+            }
             criteriaQuery.distinct(true);
             return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
         };
@@ -160,22 +167,29 @@ public class NotificationTemplateService extends GenericService<JpaNotificationT
 
     @Transactional
     public NotificationTemplateDto create(NotificationTemplateDto notificationTemplate) {
+        log.info("start create Notification");
         notificationTemplate.setTypeCode(ENotificationTemplateType.USER_DEFINED.name());
-        notificationTemplate.setIsProcessed(false);
+        notificationTemplate.setProcessed(false);
         notificationTemplate.getNotificationTemplateContents().stream().forEach(content -> content.setNotificationTemplate(notificationTemplate));
         if (notificationTemplate.getNotificationTemplateCategorizing() != null) {
             notificationTemplate.getNotificationTemplateCategorizing().setNotificationTemplate(notificationTemplate);
         }
         notificationTemplate.setNotificationTemplateContents(notificationTemplate.getNotificationTemplateContents());
+        log.info("end create Notification");
         return save(notificationTemplate);
     }
-
-    public List<NotificationTemplateDto> findUnprocessedUserDefinedNotifications(String typeCode, Date date, Boolean isProcessed, boolean enabled) {
-        return mapList(notificationTemplateRepository.findByTypeCodeAndSendingDateBeforeAndIsProcessedAndEnabled(typeCode, date, isProcessed, enabled));
+    @Modifying
+    @Transactional
+    public List<NotificationTemplateDto> findUnprocessedUserDefinedNotifications(String typeCode, Date date, Boolean isProcessed, boolean enabled,int batchSize) {
+        log.info("start findUnprocessedUserDefinedNotifications with typeCode: {} and isProcessed: {} and enabled: {} and batchSize: {}", typeCode, isProcessed, enabled, batchSize);
+        List<JpaNotificationTemplate> pendingNotificationTemplate = notificationTemplateRepository
+                .findByTypeCodeAndSendingDateBeforeAndProcessedAndEnabled(typeCode,date,isProcessed,enabled, PageRequest.of(0,batchSize)).getContent();
+        log.info("end findUnprocessedUserDefinedNotifications");
+        return mapList(pendingNotificationTemplate);
     }
 
     public NotificationTemplateDto updateUserDefined(NotificationTemplateDto notificationTemplate) {
-
+        log.info("start updateUserDefined notification template");
         NotificationTemplateDto databaseNotificationTemplate = findOne(notificationTemplate.getId());
 
         // sets form fields to database notification template instance
@@ -209,22 +223,32 @@ public class NotificationTemplateService extends GenericService<JpaNotificationT
                 categorizing = notificationTemplate.getNotificationTemplateCategorizing();
                 categorizing.setSelectedApplicants(null);
             }
+            if(notificationTemplate.getNotificationTemplateCategorizing().getSelectedGroupId() != null) {
+                categorizing.setSelectedGroupId(notificationTemplate.getNotificationTemplateCategorizing().getSelectedGroupId());
+            }
             categorizing.setId(databaseNotificationTemplate.getNotificationTemplateCategorizing().getId());
             categorizing.setCreationDate(databaseNotificationTemplate.getNotificationTemplateCategorizing().getCreationDate());
             categorizing.setNotificationTemplate(databaseNotificationTemplate);
             databaseNotificationTemplate.setNotificationTemplateCategorizing(categorizing);
         }
+        log.info("end updateUserDefined notification template");
         return save(databaseNotificationTemplate);
     }
 
     public NotificationTemplateDto updateDescription(NotificationTemplateDto notificationTemplate) {
+        log.info("start updateDescription for notification template");
         NotificationTemplateDto databaseNotificationTemplate = findOne(notificationTemplate.getId());
         databaseNotificationTemplate.setDescription(notificationTemplate.getDescription());
+        log.info("end updateDescription for notification template");
         return save(databaseNotificationTemplate);
     }
 
+    @Modifying
     public NotificationTemplateDto updatedProcessed(NotificationTemplateDto notificationTemplateDto) {
-        notificationTemplateDto.setIsProcessed(true);
-        return save(notificationTemplateDto);
+        log.info("start updatedProcessed for notification template");
+        var notificationTemplate = findOne(notificationTemplateDto.getId());
+        notificationTemplate.setProcessed(true);
+        log.info("end updatedProcessed for notification template");
+        return save(notificationTemplate);
     }
 }

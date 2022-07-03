@@ -25,9 +25,8 @@ import java.util.Optional;
 public class ApplicantRelativeService extends GenericService<JpaApplicantRelative, ApplicantRelativeDto, Long> {
     private final ApplicantRelativeRepository applicantRelativeRepository;
 
-    //TODO not used
     public ApplicantRelativeDto findByApplicantIdAndRelativeApplicantId(long applicantId, long relativeApplicantId) {
-        Optional<JpaApplicantRelative> applicantRelative = applicantRelativeRepository.findByApplicantIdAndRelativeApplicantId(applicantId, relativeApplicantId);
+        Optional<JpaApplicantRelative> applicantRelative = applicantRelativeRepository.findTopByApplicantIdAndRelativeApplicantIdOrderByCreationDateDesc(applicantId, relativeApplicantId);
         return applicantRelative.map(r -> getMapper().fromEntity(r, mappingContext)).orElse(null);
     }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 ELM. All rights reserved.
+ * Copyright (c) 2022 ELM. All rights reserved.
  */
 package com.elm.shj.admin.portal.services.data.validators;
 
@@ -16,8 +16,8 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 /**
  * Validation annotation to validate that a value is a valid country code in the database
  *
- * @author Aymen DHAOUI
- * @since 1.0.0
+ * @author ahmad flaifel
+ * @since 1.1.0
  */
 @Target({METHOD, FIELD})
 @Retention(RUNTIME)

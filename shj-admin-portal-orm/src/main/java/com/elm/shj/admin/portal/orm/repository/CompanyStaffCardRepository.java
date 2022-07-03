@@ -63,14 +63,9 @@ public interface CompanyStaffCardRepository extends JpaRepository<JpaCompanyStaf
                                                 @Param("ritualCode") String ritualCode, @Param("excludedCardsIds") List<Long> excludedCardsIds,
                                                 Pageable pageable);
 
-    JpaCompanyStaffCard findByIdAndStatusCodeNot(long id, String statusCode);
-
     @Query("SELECT staffCard FROM JpaCompanyStaffCard staffCard WHERE   staffCard.id IN :cardsIds ")
     List<JpaCompanyStaffCard> findStaffCards(@Param("cardsIds") List<Long> cardsIds);
 
-    @Modifying
-    @Query("UPDATE JpaApplicantCard card SET card.statusCode = :newStatusCode WHERE card.id in :cardIdsList AND card.statusCode = :oldStatusCode")
-    int updateCardStatuses(@Param("newStatusCode") String newStatusCode, @Param("oldStatusCode") String oldStatusCode, @Param("cardIdsList") List<Long> cardIdsList);
 
     @Query("SELECT staffCard from JpaCompanyStaffCard staffCard " +
             "join staffCard.companyStaffDigitalId companyStaffDigitalId " +
@@ -90,4 +85,11 @@ public interface CompanyStaffCardRepository extends JpaRepository<JpaCompanyStaf
             "where card.statusCode not in :cardStatusCodeList " +
             "and digitalId.suin in :digitalIdList ")
     List<ApplicantBasicInfoVo> findAllByStaffDigitalIds(@Param("digitalIdList") List<String> digitalIdList,@Param("cardStatusCodeList") List<String> cardStatusCodeList);
+
+    @Query("SELECT staffCard.id FROM JpaCompanyStaffCard staffCard join staffCard.companyStaffDigitalId csd join csd.companyStaff cs WHERE cs.id = :staffId and staffCard.statusCode <> 'EXPIRED' ")
+    List<Long> findStaffCard(@Param("staffId") Long staffId);
+
+    @Modifying
+    @Query("UPDATE JpaCompanyStaffCard csc SET csc.statusCode= 'EXPIRED', csc.updateDate = CURRENT_TIMESTAMP WHERE csc.id in :staffCardId")
+    void updateCompanyStaffCardStatus(@Param("staffCardId") List<Long> staffCardIdList);
 }

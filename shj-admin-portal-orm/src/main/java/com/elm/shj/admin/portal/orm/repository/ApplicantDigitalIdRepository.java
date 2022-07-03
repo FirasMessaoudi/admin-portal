@@ -5,6 +5,7 @@ package com.elm.shj.admin.portal.orm.repository;
 
 import com.elm.shj.admin.portal.orm.entity.JpaApplicantDigitalId;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -26,5 +27,9 @@ public interface ApplicantDigitalIdRepository extends JpaRepository<JpaApplicant
 
     @Query("SELECT adi.uin FROM JpaApplicantDigitalId adi WHERE adi.applicantId = :applicantId AND adi.statusCode = :statusCode")
     String findUinByApplicantIdAndStatusCode(@Param("applicantId") long applicantId, @Param("statusCode") String statusCode);
+
+    @Modifying
+    @Query("UPDATE JpaApplicantDigitalId adi SET adi.statusCode = :statusCode WHERE adi.uin = :uin")
+    void updateDigitalIdStatus(@Param("statusCode") String statusCode, @Param("uin") String uin);
 
 }

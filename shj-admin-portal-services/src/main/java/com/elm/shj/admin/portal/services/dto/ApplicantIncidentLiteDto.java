@@ -11,7 +11,6 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.Date;
-import java.util.List;
 
 /**
  * Dto class for applicant incident domain.
@@ -38,7 +37,17 @@ public class ApplicantIncidentLiteDto implements Serializable {
     private Double locationLng;
     private String resolutionComment;
     private String areaCode;
-    private List<IncidentAttachmentLiteDto> incidentAttachments;
+    private String city;
+    private String campNumber;
+    private String crmTicketNumber;
+    private IncidentAttachmentLiteDto incidentAttachment;
     private Date creationDate;
     private Date updateDate;
+    private String mobileNumber;
+
+    public ApplicantIncidentLiteDto(long id) {
+        this.id = id;
+    }
+
+
 }

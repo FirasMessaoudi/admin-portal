@@ -7,6 +7,7 @@ import com.elm.shj.admin.portal.orm.entity.JpaApplicantIncidentLite;
 import com.elm.shj.admin.portal.orm.repository.ApplicantIncidentLiteRepository;
 import com.elm.shj.admin.portal.services.dto.*;
 import com.elm.shj.admin.portal.services.generic.GenericService;
+import com.elm.shj.admin.portal.services.integration.IntegrationService;
 import com.elm.shj.admin.portal.services.location.Location;
 import com.elm.shj.admin.portal.services.location.LocationService;
 import com.elm.shj.admin.portal.services.sftp.SftpService;
@@ -58,6 +59,8 @@ public class ApplicantIncidentLiteService extends GenericService<JpaApplicantInc
     private static ThreadLocal<List<String>> threadLocalLatestSerialList = ThreadLocal.withInitial(() -> new ArrayList<>());
     private final AreaLayerService areaLayerService;
     private final LocationService locationService;
+    private final IntegrationService integrationService;
+    private final IncidentAttachmentLiteService incidentAttachmentLiteService;
 
     /**
      * finds an incident by its ID
@@ -115,6 +118,7 @@ public class ApplicantIncidentLiteService extends GenericService<JpaApplicantInc
             }
         }
 
+        IncidentAttachmentLiteDto incidentAttachmentDto = null;
         // upload the file in the SFTP
         try {
             if (attachment != null && !attachment.isEmpty() && attachment.getSize() > 0) {
@@ -122,12 +126,9 @@ public class ApplicantIncidentLiteService extends GenericService<JpaApplicantInc
 
                 Path p = Paths.get(attachment.getOriginalFilename());
                 String sftpPath = sftpService.generateSftpFilePath(p.getFileName().toString(), referenceNumber, false);
-                List<IncidentAttachmentLiteDto> incidentAttachmentList = new ArrayList<>();
-                IncidentAttachmentLiteDto incidentAttachmentDto = new IncidentAttachmentLiteDto();
+                incidentAttachmentDto = new IncidentAttachmentLiteDto();
                 incidentAttachmentDto.setFilePath(sftpPath);
-                incidentAttachmentDto.setApplicantIncidentLite(applicantIncidentLiteDto);
-                incidentAttachmentList.add(incidentAttachmentDto);
-                applicantIncidentLiteDto.setIncidentAttachments(incidentAttachmentList);
+                incidentAttachmentDto.setApplicantIncident(applicantIncidentLiteDto);
                 sftpService.uploadFile(sftpPath, attachment.getInputStream(), APPLICANT_INCIDENTS_CONFIG_PROPERTIES);
                 log.info("file uploaded successfully to: {}", sftpPath);
             }
@@ -143,9 +144,20 @@ public class ApplicantIncidentLiteService extends GenericService<JpaApplicantInc
         ApplicantIncidentLiteDto createdApplicantIncident = super.save(applicantIncidentLiteDto);
         log.info("applicant incident created successfully with id# {}", createdApplicantIncident.getId());
         // return the persisted object
+
+        if (incidentAttachmentDto != null){
+            incidentAttachmentDto.setApplicantIncident(new ApplicantIncidentLiteDto(createdApplicantIncident.getId()));
+            createdApplicantIncident.setIncidentAttachment(incidentAttachmentLiteService.save(incidentAttachmentDto));
+        }
+        integrationService.callCRMIncident(createdApplicantIncident);
         return createdApplicantIncident;
     }
 
+
+    @Transactional(isolation = Isolation.READ_UNCOMMITTED)
+    public ApplicantIncidentLiteDto findByCrmTicketNumberOrSmartIDTicketNumber(String crmTicketNumber, String smartIDTicketNumber) {
+        return getMapper().fromEntity(applicantIncidentLiteRepository.findByCrmTicketNumberOrReferenceNumber(crmTicketNumber, smartIDTicketNumber), mappingContext);
+    }
 
     /**
      * Generates a unique identifier for the applicant incident
@@ -169,5 +181,14 @@ public class ApplicantIncidentLiteService extends GenericService<JpaApplicantInc
         return fileSize > maxFileSize ? false : true;
     }
 
+    /**
+     * List of applicant related incidents.
+     *
+     * @param applicantRitualId
+     * @return List of applicant related incidents
+     */
+    public List<ApplicantIncidentLiteDto> listApplicantRelatedIncidents(long applicantRitualId) {
+        return mapList(applicantIncidentLiteRepository.findByApplicantRitualId(applicantRitualId));
+    }
 }
 

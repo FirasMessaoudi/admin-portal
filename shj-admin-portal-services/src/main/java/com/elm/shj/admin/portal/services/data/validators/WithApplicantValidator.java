@@ -3,8 +3,14 @@
  */
 package com.elm.shj.admin.portal.services.data.validators;
 
+import com.elm.shj.admin.portal.services.applicant.ApplicantLiteService;
 import com.elm.shj.admin.portal.services.applicant.ApplicantService;
+import com.elm.shj.admin.portal.services.data.huic.HuicApplicantRelative;
+import com.elm.shj.admin.portal.services.data.huic.HuicApplicantRitual;
+import com.elm.shj.admin.portal.services.data.huic.HuicArrivalData;
 import com.elm.shj.admin.portal.services.dto.ApplicantBasicInfoDto;
+import com.elm.shj.admin.portal.services.dto.ApplicantHousingDataDto;
+import com.elm.shj.admin.portal.services.dto.GroupDataDto;
 import com.elm.shj.admin.portal.services.dto.StaffApplicantGroupDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +19,6 @@ import org.springframework.util.ReflectionUtils;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 import java.lang.reflect.Field;
-import java.util.Calendar;
 
 /**
  * Validator for {@link WithApplicant} annotation
@@ -26,6 +31,9 @@ public class WithApplicantValidator implements ConstraintValidator<WithApplicant
 
     @Autowired
     private ApplicantService applicantService;
+
+    @Autowired
+    private ApplicantLiteService applicantLiteService;
 
     /**
      * {@inheritDoc}
@@ -45,6 +53,38 @@ public class WithApplicantValidator implements ConstraintValidator<WithApplicant
             applicantBasicInfoDto.setDateOfBirthHijri(staffApplicantGroupDto.getDateOfBirthHijri());
             return applicantService.existsByBasicInfo(applicantBasicInfoDto);
         } else {
+            if (value.getClass().isAssignableFrom(ApplicantHousingDataDto.class)) {
+                if (((ApplicantHousingDataDto) value).getNationalityCode() == null) {
+                    return false;
+                }
+                return applicantLiteService.existsByBasicInfo(((ApplicantHousingDataDto) value).getIdNumber(), ((ApplicantHousingDataDto) value).getPassportNumber(), ((ApplicantHousingDataDto) value).getNationalityCode());
+            }
+            if (value.getClass().isAssignableFrom(GroupDataDto.class)) {
+                if (((GroupDataDto) value).getNationalityCode() == null) {
+                    return false;
+                }
+                return applicantLiteService.existsByBasicInfo(((GroupDataDto) value).getIdNumber(), ((GroupDataDto) value).getPassportNumber(), ((GroupDataDto) value).getNationalityCode());
+            }
+            if (value.getClass().isAssignableFrom(HuicApplicantRitual.class)) {
+                if (((HuicApplicantRitual) value).getNationality() == null) {
+                    return false;
+                }
+                return applicantLiteService.existsByBasicInfo(((HuicApplicantRitual) value).getIdNumber() != null ? ((HuicApplicantRitual) value).getIdNumber().toString() : null, ((HuicApplicantRitual) value).getPassportNo(), ((HuicApplicantRitual) value).getNationality().toString());
+            }
+            if (value.getClass().isAssignableFrom(HuicApplicantRelative.class)) {
+                if (((HuicApplicantRelative) value).getNationality() == null) {
+                    return false;
+                }
+                return applicantLiteService.existsByBasicInfo(((HuicApplicantRelative) value).getIdNumber() != null ? ((HuicApplicantRelative) value).getIdNumber().toString() : null, ((HuicApplicantRelative) value).getPassportNo(), ((HuicApplicantRelative) value).getNationality().toString());
+            }
+            if (value.getClass().isAssignableFrom(HuicArrivalData.class)) {
+                if (value.getClass().isAssignableFrom(HuicArrivalData.class)) {
+                    if (((HuicArrivalData) value).getNationality() == null) {
+                        return false;
+                    }
+                    return applicantLiteService.existsByBasicInfo(((HuicArrivalData) value).getIdNumber() != null ? ((HuicArrivalData) value).getIdNumber().toString() : null, ((HuicArrivalData) value).getPassportNo(), ((HuicArrivalData) value).getNationality().toString());
+                }
+            }
             Field applicantBasicInfoField = ReflectionUtils.findField(value.getClass(), "applicantBasicInfo");
             if (applicantBasicInfoField == null) {
                 return false;
@@ -54,12 +94,6 @@ public class WithApplicantValidator implements ConstraintValidator<WithApplicant
                 ReflectionUtils.makeAccessible(applicantBasicInfoField);
                 // get applicant basic info from the current object
                 ApplicantBasicInfoDto applicantBasicInfo = (ApplicantBasicInfoDto) applicantBasicInfoField.get(value);
-                if (applicantBasicInfo.getDateOfBirthGregorian() != null) {
-                    Calendar calendar = Calendar.getInstance();
-                    calendar.setTime(applicantBasicInfo.getDateOfBirthGregorian());
-                    calendar.set(Calendar.HOUR_OF_DAY, 0);
-                    applicantBasicInfo.setDateOfBirthGregorian(calendar.getTime());
-                }
                 // search applicant by his basic info from the database
                 return applicantService.existsByBasicInfo(applicantBasicInfo);
             } catch (IllegalAccessException e) {

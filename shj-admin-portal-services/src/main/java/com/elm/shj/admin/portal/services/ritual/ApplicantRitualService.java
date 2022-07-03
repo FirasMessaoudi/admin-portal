@@ -6,12 +6,15 @@ package com.elm.shj.admin.portal.services.ritual;
 import com.elm.shj.admin.portal.orm.entity.JpaApplicantRitual;
 import com.elm.shj.admin.portal.orm.repository.ApplicantRitualRepository;
 import com.elm.shj.admin.portal.services.dto.ApplicantDto;
+import com.elm.shj.admin.portal.services.dto.ApplicantLiteDto;
 import com.elm.shj.admin.portal.services.dto.ApplicantPackageDto;
 import com.elm.shj.admin.portal.services.dto.ApplicantRitualDto;
 import com.elm.shj.admin.portal.services.generic.GenericService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,15 +36,6 @@ public class ApplicantRitualService extends GenericService<JpaApplicantRitual, A
     private final ApplicantRitualRepository applicantRitualRepository;
 
     /**
-     * Find all applicants without digital IDs
-     *
-     * @return the list of applicants
-     */
-    public List<ApplicantRitualDto> findAllWithoutCards() {
-        return mapList(applicantRitualRepository.findWithExistingDigitalIdAndWithoutCard());
-    }
-
-    /**
      * finds an applicant ritual by its ID
      *
      * @param applicantRitualId the data request id to find
@@ -58,6 +52,10 @@ public class ApplicantRitualService extends GenericService<JpaApplicantRitual, A
             return getMapper().fromEntity(applicantRitual.get(), mappingContext);
         }
         return null;
+    }
+
+    public Long findIdByApplicantUinAndApplicantPackageId(String uin, Long applicantPackageId) {
+        return applicantRitualRepository.findIdByApplicantDigitalIdsUinAndApplicantPackageId(uin, applicantPackageId);
     }
 
 
@@ -96,18 +94,6 @@ public class ApplicantRitualService extends GenericService<JpaApplicantRitual, A
      */
     public ApplicantRitualDto findLatestApplicantRitual(String uin) {
         return getMapper().fromEntity(applicantRitualRepository.findFirstByApplicantDigitalIdsUinOrderByCreationDateDesc(uin), mappingContext);
-    }
-
-    /**
-     * Find uncommitted applicant ritual based on applicant id and package reference number.
-     *
-     * @param applicantId
-     * @param referenceNumber
-     * @return
-     */
-    @Transactional(isolation = Isolation.READ_UNCOMMITTED)
-    public ApplicantRitualDto findDirtyByApplicantIdAndPackageReferenceNumber(long applicantId, String referenceNumber) {
-        return getMapper().fromEntity(applicantRitualRepository.findByApplicantIdAndPackageReferenceNumber(applicantId, referenceNumber), mappingContext);
     }
 
     /**
@@ -164,5 +150,14 @@ public class ApplicantRitualService extends GenericService<JpaApplicantRitual, A
             applicantRitualId = applicantRitual.getId();
         }
         return applicantRitualId;
+    }
+
+    @Transactional(isolation = Isolation.READ_UNCOMMITTED)
+    public String findLatestPackageReferenceNumberByApplicantId(Long applicantId) {
+        List<String> packageReferenceNumberList = applicantRitualRepository.findPackageReferenceNumberByApplicantId(applicantId);
+        if (packageReferenceNumberList != null && !packageReferenceNumberList.isEmpty()) {
+            return packageReferenceNumberList.get(0);
+        }
+        return null;
     }
 }

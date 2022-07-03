@@ -1,12 +1,11 @@
 /*
- *  Copyright (c) 2021 ELM. All rights reserved.
+ *  Copyright (c) 2022 ELM. All rights reserved.
  */
 package com.elm.shj.admin.portal.orm.entity;
 
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
@@ -15,7 +14,7 @@ import javax.persistence.Table;
  * The persistent class for the shc_country_lk database table.
  *
  * @author ahmad flaifel
- * @since 1.0.0
+ * @since 1.1.0
  */
 @Entity
 @Table(name = "shc_country_lk")
@@ -24,11 +23,4 @@ import javax.persistence.Table;
 @Setter
 public class JpaCountryLookup extends JpaLocalizedLookup {
 
-    private static final long serialVersionUID = 722517589940056586L;
-
-    @Column(name = "nic_code")
-    private String nicCode;
-
-    @Column(name = "country_phone_prefix")
-    private String countryPhonePrefix;
 }

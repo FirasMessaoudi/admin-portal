@@ -27,6 +27,7 @@ public class HealthImmunizationLookupService extends GenericService<JpaHealthImm
      * @return if the immunization is found
      */
     public boolean existsByCode(String immunizationCode) {
+        log.info("start existsByCode in HealthImmunizationLookupService with immunizationCode: {}", immunizationCode);
         return ((HealthImmunizationLookupRepository) getRepository()).existsByCode(immunizationCode);
     }
 }

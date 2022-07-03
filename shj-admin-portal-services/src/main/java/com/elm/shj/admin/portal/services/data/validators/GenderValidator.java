@@ -21,7 +21,11 @@ public class GenderValidator implements ConstraintValidator<Gender, Object> {
     @Override
     public boolean isValid(final Object value, final ConstraintValidatorContext context) {
         // M or F
-        return "M".equalsIgnoreCase(Objects.toString(value)) || "F".equalsIgnoreCase(Objects.toString(value));
+        if (value.getClass().isAssignableFrom(String.class)) {
+            return "M".equalsIgnoreCase(Objects.toString(value)) || "F".equalsIgnoreCase(Objects.toString(value));
+        } else {
+            return value != null && ((value).equals(1) || ((value).equals(2)));
+        }
     }
 
 }

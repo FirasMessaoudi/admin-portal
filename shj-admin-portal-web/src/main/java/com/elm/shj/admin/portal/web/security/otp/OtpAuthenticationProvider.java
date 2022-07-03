@@ -46,6 +46,7 @@ public class OtpAuthenticationProvider implements AuthenticationProvider {
 
     private static final String RECAPTCHA_RESPONSE_PARAM_NAME = "grt";
     private static final long WS_USER_ID = 2;
+    private static final long WS_CRM_USER_NIN = 9553447526L;
     private static final long HUIC_USER_ID = 3;
 
     private final UserService userService;
@@ -68,7 +69,7 @@ public class OtpAuthenticationProvider implements AuthenticationProvider {
     public Authentication authenticate(final Authentication authentication) {
         log.debug("starting authentication process");
 
-        long idNumber = Long.parseLong(authentication.getName());
+        long idNumber = Long.parseLong(authentication.getName().trim());
         String password = (String) authentication.getCredentials();
 
         UserDto user = userService.findByNin(idNumber).orElseThrow(() ->
@@ -94,7 +95,7 @@ public class OtpAuthenticationProvider implements AuthenticationProvider {
         ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
         HttpServletRequest request = requestAttributes.getRequest();
 
-        if (!isWsUser(user.getId()) && !isHuicUser(user.getId())) {
+        if (!isWsUser(user.getId()) && !isHuicUser(user.getId()) && !isCrmUser(user.getNin())) {
             // Check captcha
             if (user.getNumberOfTries() > allowedFailedLogins) {
                 String recaptchaResponse = request.getParameter(RECAPTCHA_RESPONSE_PARAM_NAME);
@@ -115,7 +116,7 @@ public class OtpAuthenticationProvider implements AuthenticationProvider {
         }
 
         // check if user is already logged in if simultaneous login flag is disabled
-        if (!simultaneousLoginEnabled && !isWsUser(user.getId()) && !isHuicUser(user.getId())) {
+        if (!simultaneousLoginEnabled && !isWsUser(user.getId()) && !isHuicUser(user.getId()) && !isCrmUser(user.getNin())) {
             Date oldTokenExpiryDate = user.getTokenExpiryDate();
             if (oldTokenExpiryDate != null) {
                 LocalDateTime oldTokenExpiryDateTime = oldTokenExpiryDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
@@ -127,7 +128,7 @@ public class OtpAuthenticationProvider implements AuthenticationProvider {
         }
 
         // in case of WS user return JwtToken directly, otherwise return an OtpToken
-        if (isWsUser(user.getId()) || isHuicUser(user.getId())) {
+        if (isWsUser(user.getId()) || isHuicUser(user.getId()) || isCrmUser(user.getNin())) {
             List<String> grantedAuthorities = new ArrayList<>();
             Set<Long> userRoleIds = new HashSet<>();
             user.getUserRoles().forEach(userRoleDto -> {
@@ -148,7 +149,8 @@ public class OtpAuthenticationProvider implements AuthenticationProvider {
         }
 
         // generate OTP for the given principal
-        String otp = otpService.createOtp(Long.toString(idNumber), user.getMobileNumber());
+
+        String otp = otpService.createOtp(Long.toString(idNumber), 966, String.valueOf(user.getMobileNumber()));
         log.debug("###################### OTP for [{}] : {}", idNumber, otp);
 
         String maskedMobileNumber = user.getMobileNumber() == null ? null : Integer.toString(user.getMobileNumber()).replaceAll("\\b\\d+(\\d{3})", "*******$1");
@@ -176,6 +178,16 @@ public class OtpAuthenticationProvider implements AuthenticationProvider {
      */
     private boolean isHuicUser(long userId) {
         return userId == HUIC_USER_ID;
+    }
+
+    /**
+     * Check logged in user nin is CRM user or not
+     *
+     * @param userNin
+     * @return true if it is CRM user
+     */
+    private boolean isCrmUser(long userNin) {
+        return userNin == WS_CRM_USER_NIN;
     }
 
 

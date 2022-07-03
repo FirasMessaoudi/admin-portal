@@ -4,9 +4,7 @@
 package com.elm.shj.admin.portal.services.lookup;
 
 import com.elm.shj.admin.portal.orm.entity.JpaMaritalStatusLookup;
-import com.elm.shj.admin.portal.orm.repository.CountryLookupRepository;
 import com.elm.shj.admin.portal.orm.repository.MaritalStatusLookupRepository;
-import com.elm.shj.admin.portal.services.dto.CountryLookupDto;
 import com.elm.shj.admin.portal.services.dto.MaritalStatusLookupDto;
 import com.elm.shj.admin.portal.services.generic.GenericService;
 import lombok.extern.slf4j.Slf4j;
@@ -29,6 +27,10 @@ public class MaritalStatusLookupService extends GenericService<JpaMaritalStatusL
      * @return if the marital status is found
      */
     public boolean existsByCode(String maritalStatusCode) {
-        return ((MaritalStatusLookupRepository) getRepository()).existsByCode(maritalStatusCode);
+        log.info("start existsByCode in MaritalStatusLookupService with maritalStatusCode: {}", maritalStatusCode);
+        boolean maritalStatusCodeExits = ((MaritalStatusLookupRepository) getRepository()).existsByCode(maritalStatusCode);
+        log.info("marital status found {}", maritalStatusCodeExits);
+        log.info("start existsByCode in MaritalStatusLookupService with maritalStatusCode: {}", maritalStatusCode);
+        return maritalStatusCodeExits;
     }
 }

@@ -8,6 +8,7 @@ import com.elm.shj.admin.portal.orm.repository.ApplicantDigitalIdRepository;
 import com.elm.shj.admin.portal.services.applicant.ApplicantService;
 import com.elm.shj.admin.portal.services.company.CompanyRitualSeasonLiteService;
 import com.elm.shj.admin.portal.services.company.CompanyStaffService;
+import com.elm.shj.admin.portal.services.digitalid.CompanyStaffDigitalIdBasicService;
 import com.elm.shj.admin.portal.services.digitalid.CompanyStaffDigitalIdService;
 import com.elm.shj.admin.portal.services.dto.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +34,7 @@ public class SameSeasonValidator implements ConstraintValidator<SameSeason, Obje
     @Autowired
     private ApplicantDigitalIdRepository applicantDigitalIdRepository;
     @Autowired
-    private CompanyStaffDigitalIdService companyStaffDigitalIdService;
+    private CompanyStaffDigitalIdBasicService companyStaffDigitalIdBasicService;
 
     /**
      * {@inheritDoc}
@@ -50,14 +51,14 @@ public class SameSeasonValidator implements ConstraintValidator<SameSeason, Obje
         applicantBasicInfoDto.setPassportNumber(staffApplicantGroupDto.getPassportNumber());
         applicantBasicInfoDto.setDateOfBirthGregorian(staffApplicantGroupDto.getDateOfBirthGregorian());
         applicantBasicInfoDto.setDateOfBirthHijri(staffApplicantGroupDto.getDateOfBirthHijri());
-        ApplicantDto applicantDto = applicantService.findByBasicInfo(applicantBasicInfoDto);
-        Optional<JpaApplicantDigitalId> applicantDigitalId = applicantDigitalIdRepository.findByApplicantIdAndStatusCode(applicantDto.getId(), EDigitalIdStatus.VALID.name());
+        Long applicantDto = applicantService.findIdByBasicInfo(applicantBasicInfoDto);
+        Optional<JpaApplicantDigitalId> applicantDigitalId = applicantDigitalIdRepository.findByApplicantIdAndStatusCode(applicantDto, EDigitalIdStatus.VALID.name());
         if (applicantDigitalId.isPresent()) {
             CompanyRitualSeasonLiteDto latestCompanyRitualSeason = companyRitualSeasonLiteService.getLatestCompanyRitualSeasonByApplicantUin(Long.parseLong(applicantDigitalId.get().getUin()));
             if (latestCompanyRitualSeason != null) {
                 CompanyStaffDto groupLeader = companyStaffService.findGroupLeaderByBasicInfo(staffApplicantGroupDto.getStaffIdNumber(), staffApplicantGroupDto.getStaffPassportNumber(), staffApplicantGroupDto.getStaffDateOfBirthGregorian(), staffApplicantGroupDto.getStaffDateOfBirthHijri());
                 if (groupLeader != null) {
-                    CompanyStaffDigitalIdDto companyStaffDigitalIdDto = companyStaffDigitalIdService.findByBasicInfo(groupLeader.getId(), staffApplicantGroupDto.getSeason());
+                    CompanyStaffDigitalIdBasicDto companyStaffDigitalIdDto = companyStaffDigitalIdBasicService.findByBasicInfo(groupLeader.getId(), staffApplicantGroupDto.getSeason());
                     if (companyStaffDigitalIdDto != null && latestCompanyRitualSeason.getRitualSeason().getSeasonYear() == companyStaffDigitalIdDto.getSeasonYear()) {
                         return true;
                     }

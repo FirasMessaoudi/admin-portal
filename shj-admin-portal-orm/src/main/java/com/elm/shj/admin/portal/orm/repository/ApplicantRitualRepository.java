@@ -5,6 +5,8 @@ package com.elm.shj.admin.portal.orm.repository;
 
 import com.elm.shj.admin.portal.orm.entity.ApplicantBasicInfoVo;
 import com.elm.shj.admin.portal.orm.entity.JpaApplicantRitual;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -21,20 +23,17 @@ import java.util.Optional;
  */
 public interface ApplicantRitualRepository extends JpaRepository<JpaApplicantRitual, Long> {
 
-    @Query("select ar from JpaApplicantRitual ar where ar.id not in (select ac.applicantRitual.id from JpaApplicantCard ac) " +
-            "and ar.applicant.id in (select adi.applicantId from JpaApplicantDigitalId adi)")
-    List<JpaApplicantRitual> findWithExistingDigitalIdAndWithoutCard();
-
     @Query("select ar from JpaApplicantRitual ar join ar.applicant a join a.digitalIds di where di.uin=:uin and ar.id=:rid")
     JpaApplicantRitual findCardDetailsByUinAndRitualId(@Param("uin") String uin, @Param("rid") long rid);
 
     Optional<JpaApplicantRitual> findByApplicantDigitalIdsUinAndApplicantPackageId(String uin, Long applicantPackageId);
 
+    @Query("SELECT a.id FROM JpaApplicantRitual a JOIN a.applicant.digitalIds di WHERE di.uin = :uin AND a.applicantPackage.id = :applicantPackageId")
+    Long findIdByApplicantDigitalIdsUinAndApplicantPackageId(@Param("uin") String uin, @Param("applicantPackageId") Long applicantPackageId);
+
     List<JpaApplicantRitual> findAllByApplicantId(Long id);
 
     JpaApplicantRitual findFirstByApplicantDigitalIdsUinOrderByCreationDateDesc(String uin);
-
-    JpaApplicantRitual findByApplicantIdAndPackageReferenceNumber(long applicantId, String referenceNumber);
 
     @Modifying
     @Query("UPDATE JpaApplicantRitual ar SET ar.applicantPackage.id = :applicantPackageId, ar.updateDate = CURRENT_TIMESTAMP WHERE ar.id = :applicantRitualId")
@@ -54,4 +53,7 @@ public interface ApplicantRitualRepository extends JpaRepository<JpaApplicantRit
             "where card.statusCode not in :cardStatusCodeList " +
             "and digitalId.uin in :digitalIdList ")
     List<ApplicantBasicInfoVo> findAllByApplicantDigitalIds(@Param("digitalIdList") List<String> digitalIdList,@Param("cardStatusCodeList") List<String> cardStatusCodeList);
+
+    @Query("SELECT ar.packageReferenceNumber FROM JpaApplicantRitual ar WHERE ar.applicant.id = :applicantId ORDER BY ar.creationDate desc")
+    List<String> findPackageReferenceNumberByApplicantId(@Param("applicantId") Long applicantId);
 }

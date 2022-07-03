@@ -365,4 +365,11 @@ export class MainComponent implements OnInit, DashboardComponent {
 
   isFullScreen: boolean;
 
+  openBIDashboard() {
+    this.dashboardService.loadDashboardUrl()
+      .subscribe(result => {
+        window.open(result, "_blank",'directories=no,titlebar=no,toolbar=no,location=no,status=no,menubar=no,scrollbars=no,resizable=no,width=1564,height=920');
+      })
+  }
+
 }

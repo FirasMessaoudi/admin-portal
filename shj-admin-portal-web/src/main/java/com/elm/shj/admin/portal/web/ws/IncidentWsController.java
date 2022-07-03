@@ -4,9 +4,11 @@
 package com.elm.shj.admin.portal.web.ws;
 
 import com.elm.shj.admin.portal.services.dto.ApplicantIncidentLiteDto;
+import com.elm.shj.admin.portal.services.dto.ECity;
 import com.elm.shj.admin.portal.services.dto.IncidentTypeLookupDto;
 import com.elm.shj.admin.portal.services.incident.ApplicantIncidentLiteService;
 import com.elm.shj.admin.portal.services.incident.ApplicantIncidentService;
+import com.elm.shj.admin.portal.services.incident.IncidentAttachmentLiteService;
 import com.elm.shj.admin.portal.services.lookup.IncidentTypeLookupService;
 import com.elm.shj.admin.portal.web.navigation.Navigation;
 import com.elm.shj.admin.portal.web.security.jwt.JwtTokenService;
@@ -47,6 +49,7 @@ public class IncidentWsController {
     private static final int MAX_GEO_CORDINATES = 90;
 
     private final ApplicantIncidentService applicantIncidentService;
+    private final IncidentAttachmentLiteService incidentAttachmentLiteService;
     private final ApplicantIncidentLiteService applicantIncidentLiteService;
     private final IncidentTypeLookupService incidentTypeLookupService;
 
@@ -59,7 +62,7 @@ public class IncidentWsController {
     @GetMapping("/attachment/{attachmentId}")
     public ResponseEntity<Resource> downloadAttachment(@PathVariable long attachmentId) throws Exception {
         log.info("Start downloadAttachment attachmentId: {} ", attachmentId);
-        Resource attachment = applicantIncidentService.downloadApplicantIncidentAttachment(attachmentId);
+        Resource attachment = incidentAttachmentLiteService.downloadApplicantIncidentAttachment(attachmentId);
 
         if (attachment != null) {
             String attachmentName = "img.jpg";
@@ -84,7 +87,7 @@ public class IncidentWsController {
      */
     @PostMapping(value = "/create", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<WsResponse<?>> create(@RequestPart("incident") @Valid ApplicantIncidentLiteDto applicantIncidentRequest,
-                                                @RequestPart(value = "attachment", required = false) MultipartFile incidentAttachment) throws Exception {
+                                                @RequestPart(value = "attachment", required = false) MultipartFile incidentAttachment) {
 
         log.info("Start create Incident ApplicantIncidentLiteDto ReferenceNumber: {}", applicantIncidentRequest.getReferenceNumber());
         if (incidentAttachment != null) {
@@ -114,6 +117,12 @@ public class IncidentWsController {
             }
         }
 
+        // validate camp number, it should be provided if city is holy sites
+        if (applicantIncidentRequest.getCity().equals(ECity.HOLY_SITES.name()) && (applicantIncidentRequest.getCampNumber() == null || applicantIncidentRequest.getCampNumber().isEmpty())) {
+            log.info("Finish create Incident {}, {} ","FAILURE", WsError.EWsError.CAMP_NUMBER_NOT_PROVIDED.getCode());
+            return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode()).body(WsError.builder().error(WsError.EWsError.CAMP_NUMBER_NOT_PROVIDED.getCode()).build()).build());
+        }
+
         IncidentTypeLookupDto incidentTypeLookupDto = incidentTypeLookupService.findByCode(applicantIncidentRequest.getTypeCode());
         if (incidentTypeLookupDto == null) {
             log.info("Finish create Incident {}, {} ","FAILURE", WsError.EWsError.INCIDENT_TYPE_NOT_FOUND.getCode());
@@ -125,5 +134,12 @@ public class IncidentWsController {
 
     }
 
+
+    @GetMapping("/find/{id}")
+    private ResponseEntity<WsResponse<?>> findById(@PathVariable Long id){
+
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode())
+                .body(applicantIncidentLiteService.findById(id)).build());
+    }
 
 }

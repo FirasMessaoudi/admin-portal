@@ -1,5 +1,4 @@
-USE
-shc_portal
+USE shc_portal
 GO
 
 ALTER TABLE shc_portal.shc_applicant_health
@@ -1573,5 +1572,362 @@ alter table shc_portal.shc_company alter column accreditation_date smalldatetime
 go
 alter table shc_portal.shc_company alter column accreditation_expiry smalldatetime null
 go
+ALTER TABLE shc_portal.shc_area_layers ALTER COLUMN layer nvarchar(1000) not null
+GO
+ALTER TABLE shc_portal.shc_applicant_package
+    ADD arrival_date smalldatetime NULL;
+GO
+
+EXEC sp_rename 'shc_portal.shc_ritual_package.type_code', 'package_type_code', 'COLUMN';
+GO
+
+ALTER TABLE shc_portal.shc_applicant
+    ADD deleted bit NOT NULL default 0;
+GO
+
+/*---------------------------------------------------
+--  ddl for shc_housing_master table
+---------------------------------------------------*/
+if not exists(select * from sys.tables where name = 'shc_housing_master')
+CREATE TABLE shc_portal.shc_housing_master
+(
+    id               int           NOT NULL PRIMARY KEY IDENTITY (1,1),
+    housing_ref_code varchar(45)   NOT NULL,
+    category_code    varchar(45) NULL,
+    type_code        varchar(20)   NOT NULL,
+    site_code        varchar(20) NULL,
+    location_name_ar nvarchar(100) NOT NULL,
+    location_name_en varchar(100)  NOT NULL,
+    address_ar       nvarchar(100) NULL,
+    address_en       varchar(50) NULL,
+    lat              varchar(20) NULL,
+    lng              varchar(20) NULL,
+    zone_code        varchar(20) NULL,
+    creation_date    smalldatetime NOT NULL default current_timestamp,
+    update_date      smalldatetime NULL,
+);
+GO
+
+alter table shc_portal.shc_company
+    add country_code varchar(10) NULL;
+go
+--  ddl for shc_company_type_lk table
+---------------------------------------------------*/
+if not exists(select * from sys.tables where name = 'shc_company_type_lk')
+CREATE TABLE shc_portal.shc_company_type_lk
+(
+    id            int           NOT NULL PRIMARY KEY IDENTITY (1,1),
+    code          varchar(20)   NOT NULL,
+    lang          varchar(45)   NOT NULL,
+    label         nvarchar(50) NOT NULL,
+    creation_date smalldatetime NOT NULL DEFAULT current_timestamp,
+    CONSTRAINT company_type_lk_unique UNIQUE (code ASC, lang ASC)
+);
+GO
+
+ALTER TABLE shc_portal.shc_company ALTER COLUMN mission_id varchar(50);
+GO
+
+alter table shc_portal.shc_ritual_package
+    add hajj_office_makkah varchar(50) NULL;
+go
+alter table shc_portal.shc_ritual_package
+    add hajj_office_madina varchar(50) NULL;
+go
+alter table shc_portal.shc_ritual_package
+    add package_name_ar nvarchar(50) NULL;
+go
+alter table shc_portal.shc_ritual_package
+    add package_name_en varchar(50) NULL;
+go
 
 
+
+--  ddl for shc_meal_time_type_lk table
+---------------------------------------------------*/
+if not exists(select * from sys.tables where name = 'shc_meal_time_type_lk')
+CREATE TABLE shc_portal.shc_meal_time_type_lk
+(
+    id            int           NOT NULL PRIMARY KEY IDENTITY (1,1),
+    code          varchar(20)   NOT NULL,
+    lang          varchar(45)   NOT NULL,
+    label         nvarchar(50) NOT NULL,
+    creation_date smalldatetime NOT NULL DEFAULT current_timestamp,
+    CONSTRAINT meal_time_type_lk_unique UNIQUE (code ASC, lang ASC)
+);
+GO
+
+ALTER TABLE shc_portal.shc_package_catering ALTER COLUMN meal_description varchar(256) null;
+GO
+
+ALTER TABLE shc_portal.shc_package_catering ALTER COLUMN meal_time Time null;
+GO
+
+alter table shc_portal.shc_package_transportation
+    add route_details varchar(256) NULL;
+go
+
+alter table shc_portal.shc_company
+    add establishment_id varchar(45) NULL;
+go
+
+EXEC sp_rename 'shc_portal.shc_company.establishment_id', 'establishment_ref_code', 'COLUMN';
+GO
+
+alter table shc_portal.shc_company
+alter
+column establishment_ref_code int NULL;
+go
+
+ALTER TABLE shc_portal.shc_package_catering
+    add meal_type_code varchar(45) not null default '';
+GO
+
+EXEC sp_rename 'shc_portal.shc_package_catering.type', 'meal_time_code', 'COLUMN';
+GO
+
+
+alter table shc_portal.shc_company
+alter
+column code varchar(50) not null
+go
+
+
+alter table shc_portal.shc_applicant
+    add emergency_contact_name VARCHAR(255) null
+alter table shc_portal.shc_applicant
+    add emergency_contact_mobile_number VARCHAR(15) null
+GO
+
+alter table shc_portal.shc_company
+alter
+column label_ar nvarchar(256)
+go
+
+go
+alter table shc_portal.shc_company
+alter
+column contact_number varchar(45) null
+go
+
+EXEC sp_rename 'shc_portal.shc_company.mission_id', 'mission_ref_code', 'COLUMN';
+GO
+
+alter table shc_portal.shc_company
+alter
+column mission_ref_code int null
+go
+
+alter table shc_portal.shc_company
+alter
+column type_code varchar (45) null
+go
+
+alter table shc_portal.shc_company
+alter
+column label_en varchar(256)
+go
+
+
+ALTER TABLE shc_portal.shc_country_lk DROP CONSTRAINT country_lk_unique;
+GO
+
+ALTER TABLE shc_portal.shc_country_lk DROP COLUMN nic_code;
+ALTER TABLE shc_portal.shc_country_lk ADD country_name_prefix VARCHAR(10);
+GO
+
+if not exists(select * from sys.tables where name = 'shc_camp_site_lk')
+create table shc_portal.shc_camp_site_lk
+(
+    id            int           NOT NULL PRIMARY KEY IDENTITY (1, 1),
+    code          varchar(20)   NOT NULL,
+    lang          varchar(45)   NOT NULL,
+    label         nvarchar(100) NOT NULL,
+    creation_date smalldatetime NOT NULL default current_timestamp,
+    CONSTRAINT camp_site_lk_unique unique (code ASC, lang ASC)
+);
+GO
+
+if not exists(select * from sys.tables where name = 'shc_camp_category_lk')
+create table shc_portal.shc_camp_category_lk
+(
+    id            int           NOT NULL PRIMARY KEY IDENTITY (1, 1),
+    code          varchar(20)   NOT NULL,
+    lang          varchar(45)   NOT NULL,
+    label         nvarchar(100) NOT NULL,
+    creation_date smalldatetime NOT NULL default current_timestamp,
+    CONSTRAINT camp_category_lk_unique unique (code ASC, lang ASC)
+);
+GO
+
+if not exists(select * from sys.tables where name = 'shc_readiness_survey_question_category_lk')
+create table shc_portal.shc_readiness_survey_question_category_lk
+(
+    id            int           NOT NULL PRIMARY KEY IDENTITY (1, 1),
+    code          varchar(20)   NOT NULL,
+    lang          varchar(45)   NOT NULL,
+    label         nvarchar(100) NOT NULL,
+    creation_date smalldatetime NOT NULL default current_timestamp,
+    CONSTRAINT shc_readiness_survey_question_category_lk_unique unique (code ASC, lang ASC)
+);
+GO
+
+if not exists(select * from sys.tables where name = 'shc_readiness_survey_question_lk')
+create table shc_portal.shc_readiness_survey_question_lk
+(
+    id            int           NOT NULL PRIMARY KEY IDENTITY (1, 1),
+    code          varchar(20)   NOT NULL,
+    lang          varchar(45)   NOT NULL,
+    label         nvarchar(100) NOT NULL,
+    question_category_code      varchar(20)   NOT NULL,
+    creation_date smalldatetime NOT NULL default current_timestamp,
+    CONSTRAINT readiness_survey_question_lk_unique unique (code ASC, lang ASC)
+);
+GO
+
+if not exists(select * from sys.tables where name = 'shc_readiness_survey_question_description_lk')
+create table shc_portal.shc_readiness_survey_question_description_lk
+(
+    id            int           NOT NULL PRIMARY KEY IDENTITY (1, 1),
+    code          varchar(20)   NOT NULL,
+    lang          varchar(45)   NOT NULL,
+    label         nvarchar(100) NOT NULL,
+    creation_date smalldatetime NOT NULL default current_timestamp,
+    CONSTRAINT readiness_survey_question_description_lk_unique unique (code ASC, lang ASC)
+);
+GO
+
+if not exists(select * from sys.tables where name = 'shc_inspector_readiness_survey')
+CREATE TABLE shc_portal.shc_inspector_readiness_survey
+(
+    id                         int           NOT NULL PRIMARY KEY IDENTITY (1,1),
+    suin                       VARCHAR(45)   NOT NULL,
+    camp_number                varchar(20)   NOT NULL,
+    camp_site_code              varchar(20)   NOT NULL,
+    camp_category_code         varchar(20)   NOT NULL,
+    internal_company_code      varchar(20),
+    establishment_company_code varchar(20),
+    service_group_company_code varchar(20),
+    creation_date              smalldatetime NOT NULL DEFAULT current_timestamp
+);
+GO
+
+if not exists(select * from sys.tables where name = 'shc_readiness_site_camp_question')
+create table shc_portal.shc_readiness_site_camp_question
+(
+    id                          int           NOT NULL PRIMARY KEY IDENTITY (1, 1),
+    question_code               varchar(20)   NOT NULL,
+    site_code                   varchar(20)   NOT NULL,
+    camp_category_code          varchar(20)   NOT NULL,
+    question_order                       int NOT NULL,
+    creation_date smalldatetime NOT NULL default current_timestamp,
+);
+GO
+
+if not exists(select * from sys.tables where name = 'shc_readiness_site_camp_question_description')
+create table shc_portal.shc_readiness_site_camp_question_description
+(
+    id                          int           NOT NULL PRIMARY KEY IDENTITY (1, 1),
+    question_description_code   varchar(20)   NOT NULL,
+    question_code               varchar(20)   NOT NULL,
+    site_code                   varchar(20)   NOT NULL,
+    camp_category_code          varchar(20)   NOT NULL,
+    creation_date smalldatetime NOT NULL default current_timestamp,
+);
+GO
+
+if not exists(select * from sys.tables where name = 'shc_inspector_readiness_survey_result')
+create table shc_portal.shc_inspector_readiness_survey_result
+(
+    id                            int           NOT NULL PRIMARY KEY IDENTITY (1, 1),
+    inspector_readiness_survey_id int           NOT NULL,
+    question_code                 varchar(20)   NOT NULL,
+    rate                          int,
+    creation_date                 smalldatetime NOT NULL default current_timestamp,
+    update_date                   smalldatetime null,
+    CONSTRAINT fk_inspector_readiness_survey FOREIGN KEY (inspector_readiness_survey_id) REFERENCES shc_portal.shc_inspector_readiness_survey (id)
+);
+GO
+
+alter table shc_portal.shc_company alter column label_en varchar(256);
+go
+
+ALTER TABLE shc_portal.shc_company ALTER COLUMN label_ar NVARCHAR(600);
+ALTER TABLE shc_portal.shc_company ALTER COLUMN label_en NVARCHAR(600);
+ALTER TABLE shc_portal.shc_company ALTER COLUMN email VARCHAR(100);
+GO
+
+ALTER TABLE shc_portal.shc_applicant_package ADD arrival_city Varchar(45);
+GO
+
+ALTER TABLE shc_portal.shc_company_type_lk ADD main_type int;
+GO
+
+alter table shc_portal.shc_company alter column code varchar(100) not null;
+go
+
+ALTER TABLE shc_portal.shc_applicant alter column date_of_birth_gregorian DATE NULL;
+GO
+
+ALTER TABLE shc_portal.shc_company_staff ADD custom_job_title varchar(30)
+GO
+
+EXEC sp_rename 'shc_portal.shc_country_lk', 'shc_nationality_lk';
+GO
+
+if not exists(select * from sys.tables where name = 'shc_country_lk')
+create table shc_portal.shc_country_lk
+(
+    id            int           NOT NULL PRIMARY KEY IDENTITY (1, 1),
+    code          varchar(20)   NOT NULL,
+    lang          varchar(45)   NOT NULL,
+    label         nvarchar(100) NOT NULL,
+    creation_date smalldatetime NOT NULL default current_timestamp,
+    CONSTRAINT country_lk_unique unique (code ASC, lang ASC)
+);
+GO
+
+ALTER TABLE shc_portal.shc_readiness_survey_question_description_lk ALTER COLUMN label nvarchar(500) NOT NULL;
+ALTER TABLE shc_portal.shc_readiness_survey_question_lk ALTER COLUMN label nvarchar(400) NOT NULL;
+GO
+
+ALTER TABLE shc_portal.shc_applicant ADD company_code varchar(100)
+GO
+
+ALTER TABLE shc_portal.shc_applicant ADD establishment_ref_code int
+GO
+
+
+ALTER TABLE shc_portal.shc_applicant
+    ADD mission_ref_code int
+    GO
+
+ALTER TABLE shc_portal.shc_applicant
+    ADD makkah_service_group_ref_code int
+    GO
+
+ALTER TABLE shc_portal.shc_applicant
+    ADD madina_service_group_ref_code int
+    GO
+
+ALTER TABLE shc_portal.shc_applicant_group
+    ADD group_name nvarchar(50)  NULL;
+GO
+
+ALTER TABLE shc_portal.shc_applicant ADD huic_batch_number int;
+GO
+
+ALTER TABLE shc_portal.shc_ritual_package ADD huic_batch_number int;
+GO
+
+ALTER TABLE shc_portal.shc_ritual_package ALTER COLUMN package_name_ar NVARCHAR(400);
+ALTER TABLE shc_portal.shc_ritual_package ALTER COLUMN package_name_en VARCHAR(200);
+GO
+
+ALTER TABLE shc_portal.shc_company ADD huic_batch_number int;
+GO
+
+ALTER TABLE shc_portal.shc_notification_template_categorizing ADD notification_category int not null;
+GO
+ALTER TABLE shc_portal.shc_notification_template_categorizing ADD selected_staff nvarchar(max);
+GO

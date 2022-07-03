@@ -10,7 +10,7 @@ import java.io.Serializable;
  * Value object class for returned applicant.
  *
  * @author Jarray Jaafer
- * @since 1.4.0
+ * @since 1.1.0
  */
 @Getter
 @Setter
@@ -28,7 +28,8 @@ public class ApplicantVo implements Serializable {
     private String idNumber;
     private String passportNumber;
 
-    public ApplicantVo(String fullNameAr, String fullNameEn, String uin, String photo, Double lat, Double lng, String idNumber,
+
+    public ApplicantVo(String fullNameAr, String fullNameEn, String uin, String photo, String idNumber,
              String passportNumber) {
         this.fullNameAr = fullNameAr;
         this.fullNameEn = fullNameEn;
@@ -36,6 +37,11 @@ public class ApplicantVo implements Serializable {
         this.photo = photo;
         this.idNumber= idNumber;
         this.passportNumber= passportNumber;
+
+    }
+
+    public ApplicantVo(String uin,Double lat, Double lng) {
+        this.uin = uin;
         if (lat == null || lng == null) {
             this.lat = -200.0;
             this.lng = -200.0;

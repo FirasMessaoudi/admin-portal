@@ -89,7 +89,9 @@ export class StaffCardListComponent implements OnInit, OnDestroy {
       suin: '',
       cardNumber: '',
       cardStatus: null,
-      jobTitle: null
+      jobTitle: null,
+      idNumber: null,
+      passportNumber: null
     });
   }
 

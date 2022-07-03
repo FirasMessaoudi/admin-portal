@@ -41,4 +41,9 @@ public class ApplicantIncidentDto implements Serializable {
     private Date creationDate;
     private Date updateDate;
     private String areaCode;
+    private String city;
+    private String campNumber;
+    private String crmTicketNumber;
+    private String mobileNumber;
+
 }

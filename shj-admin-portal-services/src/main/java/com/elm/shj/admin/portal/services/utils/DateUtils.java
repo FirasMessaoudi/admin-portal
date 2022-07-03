@@ -43,7 +43,7 @@ public class DateUtils {
      * @param hijri the hijri date to transform
      * @return the resulted gregorian date
      */
-    public static Date toGregorian(long hijri) {
+    public static Date toGregorian(Long hijri) {
         HijrahDate hijrahDate = null;
         String hijriStr = "" + hijri;
         if (StringUtils.length(hijriStr) == 8) {

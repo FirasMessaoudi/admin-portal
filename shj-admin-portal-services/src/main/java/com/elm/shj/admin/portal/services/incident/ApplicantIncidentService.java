@@ -3,14 +3,13 @@
  */
 package com.elm.shj.admin.portal.services.incident;
 
-import com.elm.shj.admin.portal.orm.entity.JpaApplicant;
-import com.elm.shj.admin.portal.orm.entity.JpaApplicantDigitalId;
-import com.elm.shj.admin.portal.orm.entity.JpaApplicantIncident;
-import com.elm.shj.admin.portal.orm.entity.JpaIncidentAttachment;
+import com.elm.shj.admin.portal.orm.entity.*;
+import com.elm.shj.admin.portal.orm.repository.ApplicantIncidentLiteRepository;
 import com.elm.shj.admin.portal.orm.repository.ApplicantIncidentRepository;
 import com.elm.shj.admin.portal.orm.repository.IncidentAttachmentRepository;
 import com.elm.shj.admin.portal.services.dto.*;
 import com.elm.shj.admin.portal.services.generic.GenericService;
+import com.elm.shj.admin.portal.services.integration.IntegrationService;
 import com.elm.shj.admin.portal.services.notification.NotificationRequestService;
 import com.elm.shj.admin.portal.services.notification.NotificationTemplateService;
 import com.elm.shj.admin.portal.services.sftp.SftpService;
@@ -18,10 +17,13 @@ import javassist.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
@@ -49,6 +51,8 @@ import java.util.Optional;
 public class ApplicantIncidentService extends GenericService<JpaApplicantIncident, ApplicantIncidentDto, Long> {
 
     private final ApplicantIncidentRepository applicantIncidentRepository;
+    private final ApplicantIncidentLiteRepository applicantIncidentLiteRepository;
+    private final IntegrationService integrationService;
     private final SftpService sftpService;
     private final IncidentAttachmentRepository incidentAttachmentRepository;
     private final NotificationRequestService notificationRequestService;
@@ -59,6 +63,9 @@ public class ApplicantIncidentService extends GenericService<JpaApplicantInciden
     private static final SimpleDateFormat REF_NUMBER_FORMAT = new SimpleDateFormat("SSS");
     private static final int REQUEST_REF_NUMBER_LENGTH = 12;
     private static final String APPLICANT_INCIDENTS_CONFIG_PROPERTIES = "applicantIncidentsConfigProperties";
+
+    @Value("${crm.complaint.update.url}")
+    private String crmUpdateComplaintUrl;
 
     /**
      * Find all incidents.
@@ -145,21 +152,6 @@ public class ApplicantIncidentService extends GenericService<JpaApplicantInciden
         return mapList(applicantIncidentRepository.findByApplicantRitualId(applicantRitualId));
     }
 
-
-    /**
-     * fetches the original file of the data request
-     *
-     * @param incidentAttachmentId applicant Incident Attachment Id
-     * @return the attachment of the applicant incident
-     */
-    public Resource downloadApplicantIncidentAttachment(long incidentAttachmentId) throws Exception {
-        Optional<JpaIncidentAttachment> incidentAttachment = incidentAttachmentRepository.findById(incidentAttachmentId);
-        if (!incidentAttachment.isPresent()) {
-            return null;
-        }
-        return sftpService.downloadFile(incidentAttachment.get().getFilePath(), APPLICANT_INCIDENTS_CONFIG_PROPERTIES);
-    }
-
     /**
      * Updates applicant incident
      *
@@ -167,15 +159,53 @@ public class ApplicantIncidentService extends GenericService<JpaApplicantInciden
      */
     @Transactional(isolation = Isolation.READ_UNCOMMITTED)
     public void update(long incidentId, ApplicantIncidentVo applicantIncidentVo) throws NotFoundException {
-        if (EIncidentResolutionType.MARK_AS_RESOLVED.equals(applicantIncidentVo.getOperation())) {
+        if (EIncidentResolutionType.MARK_AS_RESOLVED.name().equals(applicantIncidentVo.getOperation())) {
             applicantIncidentRepository.update(incidentId, applicantIncidentVo.getResolutionComment(), EIncidentStatus.RESOLVED.name());
             sendIncidentNotification(incidentId, RESOLVE_INCIDENT_TEMPLATE_NAME);
         }
-        if (EIncidentResolutionType.MARK_AS_CLOSED.equals(applicantIncidentVo.getOperation())) {
+        if (EIncidentResolutionType.MARK_AS_CLOSED.name().equals(applicantIncidentVo.getOperation())) {
             applicantIncidentRepository.update(incidentId, applicantIncidentVo.getResolutionComment(), EIncidentStatus.CLOSED.name());
             sendIncidentNotification(incidentId, CLOSE_INCIDENT_TEMPLATE_NAME);
         }
+        JpaApplicantIncidentLite incident = applicantIncidentLiteRepository.findById(incidentId).orElse(null);
+        if (incident.getCrmTicketNumber() != null && !incident.getCrmTicketNumber().isEmpty()) {
+            //TODO: Update CRM Complaint status
+            ApplicantIncidentComplaintVoCRM applicantComplaintVoCRM = new ApplicantIncidentComplaintVoCRM();
+            applicantComplaintVoCRM.setCrmTicketNumber(incident.getCrmTicketNumber());
+            applicantComplaintVoCRM.setStatus(EIncidentResolutionType.valueOf(applicantIncidentVo.getOperation()).getCrmCode());
+            applicantComplaintVoCRM.setSmartIDTicketNumber(incident.getReferenceNumber());
+            applicantComplaintVoCRM.setResolutionComment(applicantIncidentVo.getResolutionComment());
+            try {
+                integrationService.callCRM(crmUpdateComplaintUrl, HttpMethod.POST, applicantComplaintVoCRM, null,
+                        new ParameterizedTypeReference<ComplaintUpdateCRMDto>() {
+                        });
+                applicantIncidentLiteRepository.updateCRMUpdateStatus(incident.getId());
+                log.info("complaint successfully updated #{}", incidentId);
+            } catch (Exception e){
+                log.error("Failed update the status on CRM of complaint #{}", incidentId);
+
+            }
+        }
     }
+
+    /**
+     * Updates applicant complaint
+     *
+     * @param incidentId the ID number of the incident to update
+     */
+    @Transactional(isolation = Isolation.READ_UNCOMMITTED)
+    public void updateByCrm(long incidentId, ApplicantIncidentComplaintVoCRM applicantComplaintVo) throws NotFoundException {
+
+        if (EIncidentStatus.RESOLVED.getCrmCode().equals(applicantComplaintVo.getStatus())) {
+            applicantIncidentRepository.updateByCrm(incidentId, applicantComplaintVo.getResolutionComment(), EIncidentStatus.RESOLVED.name());
+            sendIncidentNotification(incidentId, RESOLVE_INCIDENT_TEMPLATE_NAME);
+        } else if (EIncidentStatus.CLOSED.getCrmCode().equals(applicantComplaintVo.getStatus())) {
+            applicantIncidentRepository.updateByCrm(incidentId, applicantComplaintVo.getResolutionComment(), EIncidentStatus.CLOSED.name());
+            sendIncidentNotification(incidentId, CLOSE_INCIDENT_TEMPLATE_NAME);
+        }
+
+    }
+
 
     private void sendIncidentNotification(long incidentId, String closeIncidentTemplateName) throws NotFoundException {
         Optional<NotificationTemplateDto> notificationTemplate = notificationTemplateService.findEnabledNotificationTemplateByNameCode(closeIncidentTemplateName);
@@ -183,8 +213,8 @@ public class ApplicantIncidentService extends GenericService<JpaApplicantInciden
             throw new NotFoundException("no Template found for  " + closeIncidentTemplateName);
         }
 
-        ApplicantIncidentDto applicantIncident = findById(incidentId);
-        String uin = applicantIncident.getApplicantRitual().getApplicant().getDigitalIds().get(0).getUin();
+        com.elm.shj.admin.portal.orm.entity.ApplicantComplaintVo applicantIncident = applicantIncidentLiteRepository.findOneLite(incidentId);
+        String uin = applicantIncident.getApplicantRitual().getApplicant().getUin();
         String preferredLanguage = applicantIncident.getApplicantRitual().getApplicant().getPreferredLanguage();
         notificationRequestService.sendIncidentNotification(notificationTemplate.get(), uin, preferredLanguage);
     }

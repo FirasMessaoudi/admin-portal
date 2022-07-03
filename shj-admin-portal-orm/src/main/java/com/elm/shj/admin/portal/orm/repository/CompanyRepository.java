@@ -41,8 +41,18 @@ public interface CompanyRepository extends JpaRepository<JpaCompany, Long> {
             "AND rs.ritualTypeCode IN (:ritualTypeCodeList) ")
     List<JpaCompany> findCompaniesBySeasonAndRitualType(@Param("seasonYear") int seasonYear, @Param("ritualTypeCodeList") List<String> ritualTypeCodeList);
 
-    @Query("SELECT c FROM JpaCompany c JOIN c.companyRitualSeasons cr JOIN cr.ritualSeason rs  " +
+    @Query("SELECT distinct c FROM JpaCompany c JOIN c.companyRitualSeasons cr JOIN cr.ritualSeason rs  " +
             "WHERE rs.seasonYear = :seasonYear ")
     List<JpaCompany> findCompaniesBySeason(@Param("seasonYear") int seasonYear);
+
+    boolean existsByCode(String code);
+
+    @Query("select c.id from JpaCompany c where c.code = :code")
+    Long findIdByCode(@Param("code") String code);
+
+    JpaCompany findByCode(String code);
+
+    @Query("select c.uid from JpaCompany c where c.code = :code")
+    String findUidByCode(@Param("code") String code);
 
 }

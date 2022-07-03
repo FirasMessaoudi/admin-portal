@@ -21,4 +21,8 @@ public interface ApplicantPackageHousingRepository extends JpaRepository<JpaAppl
     List<JpaApplicantPackageHousing> findAllByApplicantPackageApplicantUinAndApplicantPackageId(long applicantUin, long applicantPackageId);
 
     Optional<JpaApplicantPackageHousing> findTopByApplicantPackageApplicantUinAndApplicantPackageIdOrderByCreationDateDesc(long applicantUin, long applicantPackageId);
+
+    Optional<JpaApplicantPackageHousing> findTopByApplicantPackageIdAndPackageHousingId(long applicantPackageId, long packageHousingId);
+
+    List<JpaApplicantPackageHousing> findByApplicantPackageIdAndPackageHousingId(long applicantPackageId, long packageHousingId);
 }

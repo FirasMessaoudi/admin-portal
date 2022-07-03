@@ -9,9 +9,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import static  java.util.AbstractMap.SimpleEntry;
-import java.util.Map;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * Service handling CompanyRitualSeason
@@ -41,5 +41,37 @@ public class CompanyRitualSeasonService extends GenericService<JpaCompanyRitualS
             return Optional.empty();
     }
 
+    public Optional<CompanyRitualSeasonDto> findLatestCompanyRitualSeasonBySuin(String suin) {
+        Optional<JpaCompanyRitualSeason> companyRitualSeason = companyRitualSeasonRepository.findTopByCompanyStaffCardsCompanyStaffDigitalIdSuin(suin);
+        if (companyRitualSeason.isPresent())
+            return Optional.of(getMapper().fromEntity(companyRitualSeason.get(), mappingContext));
+        else
+            return Optional.empty();
+    }
+
+    public CompanyRitualSeasonDto getCompanyRitualSeason(String companyCode, String typeCode, int seasonYear) {
+        Optional<JpaCompanyRitualSeason> companyRitualSeason = companyRitualSeasonRepository.findByCompanyCodeAndRitualTypeAndSeasonYear(companyCode, typeCode, seasonYear);
+        if (companyRitualSeason.isPresent())
+            return getMapper().fromEntity(companyRitualSeason.get(), mappingContext);
+        else
+            return null;
+    }
+
+    public Long getCompanyRitualSeasonId(String companyCode, String typeCode, int seasonYear) {
+        Long companyRitualSeasonId = companyRitualSeasonRepository.findIdByCompanyCodeAndRitualTypeAndSeasonYear(companyCode, typeCode, seasonYear);
+        log.info("companyRitualSeasonId .. {}", companyRitualSeasonId);
+        return companyRitualSeasonId;
+    }
+
+
+
+    public List<CompanyRitualSeasonDto> findByCompanyId(Long companyId) {
+        return mapList(companyRitualSeasonRepository.findByCompanyId(companyId));
+    }
+
+    public List<String> findByCompanyCode(String companyCode) {
+        List<CompanyRitualSeasonDto> companyRitualSeasons = mapList(companyRitualSeasonRepository.findCompanyRitualByCompanyCode(companyCode));
+        return companyRitualSeasons.stream().map(crs -> crs.getRitualSeason().getRitualTypeCode()).collect(Collectors.toList());
+    }
 
 }

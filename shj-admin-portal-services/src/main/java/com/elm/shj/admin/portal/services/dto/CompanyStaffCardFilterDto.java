@@ -30,4 +30,6 @@ public class CompanyStaffCardFilterDto implements Serializable {
     private String suin;
     private String cardNumber;
     private String jobTitle;
+    private String idNumber;
+    private String passportNumber;
 }

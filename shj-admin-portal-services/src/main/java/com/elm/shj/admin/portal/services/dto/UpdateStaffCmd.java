@@ -40,9 +40,12 @@ public class UpdateStaffCmd implements Serializable {
     @Length(max = 20)
     private String countryCode;
 
-    private int dateOfBirthHijri;
+    private Long dateOfBirthHijri;
 
     @Past
     private Date dateOfBirthGregorian;
+
+    private String mobileNumberIntl;
+    private String countryPhonePrefix;
 
 }

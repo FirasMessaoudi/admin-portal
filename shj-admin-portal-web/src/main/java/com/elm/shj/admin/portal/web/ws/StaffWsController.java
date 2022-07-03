@@ -58,10 +58,10 @@ public class StaffWsController {
      */
     @GetMapping("/find/{suin}")
     public ResponseEntity<WsResponse<?>> findCompanyStaffBySuin(@PathVariable String suin) {
-        log.info("Start findCompanyStaffBySuin  suin {}" , suin);
+        log.info("Start findCompanyStaffBySuin  suin {}", suin);
         Optional<CompanyStaffVO> staffRitualBySuin = companyStaffService.findStaffRitualBySuin(suin);
         if (staffRitualBySuin.isPresent()) {
-            log.info("Finish findCompanyStaffBySuin {},CompanyStaffVO Suin {}", "SUCCESS",staffRitualBySuin.isPresent()?staffRitualBySuin.get().getSuin(): null);
+            log.info("Finish findCompanyStaffBySuin {},CompanyStaffVO Suin {}", "SUCCESS", staffRitualBySuin.isPresent() ? staffRitualBySuin.get().getSuin() : null);
             return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode())
                     .body(staffRitualBySuin).build());
         }
@@ -81,7 +81,7 @@ public class StaffWsController {
      */
     @GetMapping("/search/{suin}/{value}/{valueType}")
     public ResponseEntity<WsResponse<?>> findApplicantOrStaff(@PathVariable String suin, @PathVariable String value, @PathVariable int valueType) {
-        log.info("Start findApplicantOrStaff  suin: {}, value: {},   valueType: {}" , suin,   value,   valueType);
+        log.info("Start findApplicantOrStaff  suin: {}, value: {},   valueType: {}", suin, value, valueType);
 
         if (value.length() == 13 || value.length() == 12) {
             Optional<ApplicantStaffVO> staff;
@@ -95,7 +95,7 @@ public class StaffWsController {
             if (staff.isPresent()) {
                 ApplicantStaffVO applicantStaffVO = staff.get();
                 applicantStaffVO.setUserType(EUserType.STAFF.getId());
-                log.info("Finish findCompanyStaffBySuin {}, applicantStaffVO FullNameEn {}", "SUCCESS", applicantStaffVO ==null? null: applicantStaffVO.getFullNameEn());
+                log.info("Finish findCompanyStaffBySuin {}, applicantStaffVO FullNameEn {}", "SUCCESS", applicantStaffVO == null ? null : applicantStaffVO.getFullNameEn());
                 return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode())
                         .body(applicantStaffVO).build());
             }
@@ -107,8 +107,8 @@ public class StaffWsController {
         if (value.length() == 14 || value.length() == 15) {
             Optional<ApplicantStaffVO> applicant;
 
-                log.debug("findApplicantOrStaff value: {} findApplicantRitualByUin ", value);
-                applicant = applicantLiteService.findApplicantRitualByUin(value);
+            log.debug("findApplicantOrStaff value: {} findApplicantRitualByUin ", value);
+            applicant = applicantLiteService.findApplicantRitualByUin(value);
 
             if (applicant.isPresent()) {
                 ApplicantStaffVO applicantStaffVO = applicant.get();
@@ -116,7 +116,7 @@ public class StaffWsController {
                 if (applicantStaffVO.getGroupLeaderSuin() != null && applicantStaffVO.getGroupLeaderSuin().equals(suin)) {
                     applicantStaffVO.setSameStaffGroup(true);
                 }
-                log.info("Finish findCompanyStaffBySuin {}, applicantStaffVO FullNameEn {}, SameStaffGroup {}", "SUCCESS", applicantStaffVO ==null? null: applicantStaffVO.getFullNameEn(), applicantStaffVO ==null? null: applicantStaffVO.isSameStaffGroup());
+                log.info("Finish findCompanyStaffBySuin {}, applicantStaffVO FullNameEn {}, SameStaffGroup {}", "SUCCESS", applicantStaffVO == null ? null : applicantStaffVO.getFullNameEn(), applicantStaffVO == null ? null : applicantStaffVO.isSameStaffGroup());
                 return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode())
                         .body(applicantStaffVO).build());
             }
@@ -136,7 +136,7 @@ public class StaffWsController {
         if (staff.isPresent()) {
             ApplicantStaffVO applicantStaffVO = staff.get();
             applicantStaffVO.setUserType(EUserType.STAFF.getId());
-            log.info("Finish findCompanyStaffBySuin {}, applicantStaffVO FullNameEn {}", "SUCCESS", applicantStaffVO ==null? null: applicantStaffVO.getFullNameEn());
+            log.info("Finish findCompanyStaffBySuin {}, applicantStaffVO FullNameEn {}", "SUCCESS", applicantStaffVO == null ? null : applicantStaffVO.getFullNameEn());
             return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode())
                     .body(applicantStaffVO).build());
         }
@@ -145,10 +145,10 @@ public class StaffWsController {
         if (applicant.isPresent()) {
             ApplicantStaffVO applicantStaffVO = applicant.get();
             applicantStaffVO.setUserType(EUserType.APPLICANT.getId());
-            if (applicantStaffVO.getGroupLeaderSuin().equals(suin)) {
+            if (applicantStaffVO.getGroupLeaderSuin() != null && applicantStaffVO.getGroupLeaderSuin().equals(suin)) {
                 applicantStaffVO.setSameStaffGroup(true);
             }
-            log.info("Finish findCompanyStaffBySuin {}, applicantStaffVO FullNameEn {}, SameStaffGroup {}", "SUCCESS", applicantStaffVO ==null? null: applicantStaffVO.getFullNameEn(), applicantStaffVO ==null? null: applicantStaffVO.isSameStaffGroup());
+            log.info("Finish findCompanyStaffBySuin {}, applicantStaffVO FullNameEn {}, SameStaffGroup {}", "SUCCESS", applicantStaffVO == null ? null : applicantStaffVO.getFullNameEn(), applicantStaffVO == null ? null : applicantStaffVO.isSameStaffGroup());
             return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode())
                     .body(applicantStaffVO).build());
         }
@@ -158,23 +158,30 @@ public class StaffWsController {
 
     }
 
-    @GetMapping("/applicant-group/{suin}")
-    public ResponseEntity<WsResponse<?>> loadApplicantGroupList(@PathVariable String suin) {
-        log.info("Start loadApplicantGroupList  suin: {}" , suin);
-        List<ApplicantVo> groupApplicantListBySuin = groupApplicantListService.findGroupApplicantListBySuin(suin);
-        log.info("Finish loadApplicantGroupList {} groupApplicantListBySuinSize: {}" ,"SUCCESS",  groupApplicantListBySuin == null?null: groupApplicantListBySuin.size());
+    @GetMapping("/applicant-group/{suin}/{includeLocations}")
+    public ResponseEntity<WsResponse<?>> loadApplicantGroupList(@PathVariable String suin, @PathVariable boolean includeLocations) {
+        log.info("Start loadApplicantGroupList  suin: {}, includeLocations:{}", suin, includeLocations);
+        List<ApplicantVo> groupApplicantListBySuin;
+        if (includeLocations) {
+            groupApplicantListBySuin = groupApplicantListService.findGroupApplicantsLastLocationsBySuin(suin);
+        } else {
+            groupApplicantListBySuin = groupApplicantListService.findGroupApplicantListBySuin(suin);
+        }
+        log.info("Finish loadApplicantGroupList {} groupApplicantListBySuinSize: {}", "SUCCESS", groupApplicantListBySuin == null ? null : groupApplicantListBySuin.size());
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode())
                 .body(groupApplicantListBySuin).build());
     }
 
     @GetMapping("/find/package-housing/{companyRitualSeason}")
     public ResponseEntity<WsResponse<?>> findStaffPackageHousingByCompanyRitualSeason(@PathVariable long companyRitualSeason) {
-        log.info("Start findStaffPackageHousingByCompanyRitualSeason  companyRitualSeason: {}" , companyRitualSeason);
+        log.info("Start findStaffPackageHousingByCompanyRitualSeason  companyRitualSeason: {}", companyRitualSeason);
         PackageHousingDto packageHousingDto = packageHousingService.findStaffPackageHousingByCompanyRitualSeason(companyRitualSeason);
-        log.info("Finish findStaffPackageHousingByCompanyRitualSeason  packageHousingDto: {}" ,"SUCCESS",  packageHousingDto == null?null: packageHousingDto.getReferenceNumber());
+        log.info("Finish findStaffPackageHousingByCompanyRitualSeason  packageHousingDto: {}", "SUCCESS", packageHousingDto == null ? null : packageHousingDto.getReferenceNumber());
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode())
                 .body(packageHousingDto).build());
     }
+
+
 
 
 }

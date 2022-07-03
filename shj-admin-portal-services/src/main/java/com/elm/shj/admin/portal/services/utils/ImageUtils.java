@@ -56,6 +56,38 @@ public class ImageUtils {
         return image;
     }
 
+    public static BufferedImage loadImageInCircle(String base64String) {
+        BufferedImage image = null;
+        try {
+            image = ImageIO.read(new ByteArrayInputStream(Base64.getDecoder().decode(base64String)));
+            int w = image.getWidth();
+            int h = image.getHeight();
+            image = createCircular(image, Math.min(w, h));
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+
+        return image;
+    }
+
+    private static BufferedImage createCircular(BufferedImage image, int size) {
+        BufferedImage output = new BufferedImage(size, size, BufferedImage.TYPE_INT_ARGB);
+
+        Graphics2D g2 = output.createGraphics();
+        try {
+            g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+            g2.fillOval(0, 0, size, size);
+
+            g2.setComposite(AlphaComposite.SrcIn);
+            g2.drawImage(image, 0, 0, null);
+        }
+        finally {
+            g2.dispose();
+        }
+
+        return output;
+    }
+
     public static void saveToFile(BufferedImage image, String filename) {
         File file = new File(filename);
         try {
@@ -161,6 +193,12 @@ public class ImageUtils {
     public static String imgToBase64String(final BufferedImage img) throws IOException {
         final ByteArrayOutputStream os = new ByteArrayOutputStream();
         ImageIO.write(img, "png", os);
+        return Base64.getEncoder().encodeToString(os.toByteArray());
+    }
+
+    public static String imgToBase64StringBmp(final BufferedImage img) throws IOException {
+        final ByteArrayOutputStream os = new ByteArrayOutputStream();
+        ImageIO.write(img, "bmp", os);
         return Base64.getEncoder().encodeToString(os.toByteArray());
     }
 }

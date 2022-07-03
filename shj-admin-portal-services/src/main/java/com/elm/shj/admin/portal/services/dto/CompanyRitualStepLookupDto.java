@@ -3,6 +3,7 @@
  */
 package com.elm.shj.admin.portal.services.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -19,6 +20,7 @@ import java.util.Date;
 @NoArgsConstructor
 @Getter
 @Setter
+@AllArgsConstructor
 public class CompanyRitualStepLookupDto implements Serializable {
 
     private static final long serialVersionUID = -5358244881018936417L;
@@ -30,5 +32,9 @@ public class CompanyRitualStepLookupDto implements Serializable {
     private String description;
     private Date creationDate;
     private String summary;
+    private long stepIndex;
+    private String editMode;
+    private double locationLat;
+    private double locationLng;
 
 }

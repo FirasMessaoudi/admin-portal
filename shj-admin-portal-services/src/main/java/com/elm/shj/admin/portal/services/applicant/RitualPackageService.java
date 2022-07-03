@@ -1,9 +1,7 @@
 package com.elm.shj.admin.portal.services.applicant;
 
-import com.elm.shj.admin.portal.orm.entity.JpaApplicantGroup;
 import com.elm.shj.admin.portal.orm.entity.JpaRitualPackage;
 import com.elm.shj.admin.portal.orm.repository.RitualPackageRepository;
-import com.elm.shj.admin.portal.services.dto.ApplicantGroupDto;
 import com.elm.shj.admin.portal.services.dto.RitualPackageDto;
 import com.elm.shj.admin.portal.services.generic.GenericService;
 import lombok.RequiredArgsConstructor;
@@ -28,13 +26,6 @@ public class RitualPackageService extends GenericService<JpaRitualPackage, Ritua
         Optional<JpaRitualPackage> ritualPackageOptional = ritualPackageRepository.findByReferenceNumber(referenceNumber);
         log.info("RitualPackageService ::: Finish existRitualPackageByReferenceNumber ::: isExist: {}", ritualPackageOptional.isPresent());
         return ritualPackageOptional.isPresent();
-    }
-
-    public Long findRitualPackageIdByReferenceNumber(String referenceNumber) {
-        log.info("RitualPackageService ::: Start findRitualPackageIdByReferenceNumber ::: referenceNumber: {}", referenceNumber);
-        Long idByReferenceNumber = ritualPackageRepository.findIdByReferenceNumber(referenceNumber);
-        log.info("RitualPackageService ::: Start findRitualPackageIdByReferenceNumber ::: RitualPackageId: {}", idByReferenceNumber);
-        return idByReferenceNumber;
     }
 
     @Transactional(isolation = Isolation.READ_UNCOMMITTED)
@@ -69,14 +60,28 @@ public class RitualPackageService extends GenericService<JpaRitualPackage, Ritua
         }
     }
 
-    public RitualPackageDto findByGroupLeaderDigitalId(String digitalId) {
-        log.info("RitualPackageService ::: Start findByGroupLeaderDigitalId ::: digitalId: {}", digitalId);
-        Optional<JpaRitualPackage> ritualPackage = ritualPackageRepository.findByCompanyRitualSeasonCompanyStaffCardsCompanyStaffDigitalIdSuin(digitalId);
+    public String findPackageReferenceNumber(String companyCode, String typeCode, int year) {
+        log.info("RitualPackageService ::: Start findReferenceNumberByTypeCode ::: typeCode: {}", typeCode);
+        return ritualPackageRepository.findReferenceNumberByRitualSeason(companyCode, typeCode, year);
+    }
+
+    public RitualPackageDto findByCodeAndRitual(String referenceCode, String typeCode, int year) {
+        log.info("RitualPackageService ::: Start findByCodeAndRitual ::: referenceCode: {}", referenceCode);
+        Optional<JpaRitualPackage> ritualPackage = ritualPackageRepository.findByReferenceNumberAndRitual(referenceCode, typeCode, year);
         if (ritualPackage.isPresent()) {
-            log.info("RitualPackageService ::: Finish findByGroupLeaderDigitalId ::: startDate: {}, endDate: {}", ritualPackage.get().getStartDate(), ritualPackage.get().getEndDate());
+            log.info("RitualPackageService ::: Finish findByCodeAndRitual ::: startDate: {}, endDate: {}", ritualPackage.get().getStartDate(), ritualPackage.get().getEndDate());
             return getMapper().fromEntity(ritualPackage.get(), mappingContext);
         }
-        log.info("RitualPackageService ::: Finish findByGroupLeaderDigitalId ::: not found and return null");
+        log.info("RitualPackageService ::: Finish findByCodeAndRitual ::: not found and return null");
         return null;
     }
+
+    @Transactional(isolation = Isolation.READ_UNCOMMITTED)
+    public Long findIdByReferenceAndRitualTypeAndSeason(String referenceCode, String typeCode, int year) {
+        log.info("Start findIdByReferenceAndRitualTypeAndSeason for {} reference number", referenceCode);
+        Long ritualPackageId = ritualPackageRepository.findIdByReferenceNumberAndRitualTypeAndSeason(referenceCode, typeCode, year);
+        log.info("Finish findIdByReferenceAndRitualTypeAndSeason and found {} ritual package id.", ritualPackageId);
+        return ritualPackageId;
+    }
+
 }

@@ -17,9 +17,14 @@ public interface RitualPackageRepository extends JpaRepository<JpaRitualPackage,
 
     Optional<JpaRitualPackage> findByReferenceNumber(String referenceNumber);
 
-    @Query("SELECT rp.id FROM JpaRitualPackage rp WHERE rp.referenceNumber = :referenceNumber")
-    Long findIdByReferenceNumber(@Param("referenceNumber") String referenceNumber);
+    @Query("SELECT rp.id FROM JpaRitualPackage rp WHERE rp.referenceNumber = :referenceNumber and rp.companyRitualSeason.ritualSeason.ritualTypeCode = :ritualTypeCode and rp.companyRitualSeason.ritualSeason.seasonYear = :seasonYear")
+    Long findIdByReferenceNumberAndRitualTypeAndSeason(@Param("referenceNumber") String referenceNumber, @Param("ritualTypeCode") String ritualTypeCode, @Param("seasonYear") int seasonYear);
 
-     JpaRitualPackage findTopByCompanyRitualSeasonIdOrderByStartDateDescCreationDateDesc(long companyRitualSeason);
-     Optional<JpaRitualPackage> findByCompanyRitualSeasonCompanyStaffCardsCompanyStaffDigitalIdSuin(String digitalId);
+    JpaRitualPackage findTopByCompanyRitualSeasonIdOrderByStartDateDescCreationDateDesc(long companyRitualSeason);
+
+    @Query("select rp.referenceNumber from JpaRitualPackage rp where rp.companyRitualSeason.company.code = :companyCode and rp.companyRitualSeason.ritualSeason.ritualTypeCode = :ritualTypeCode and rp.companyRitualSeason.ritualSeason.seasonYear = :seasonYear")
+    String findReferenceNumberByRitualSeason(@Param("companyCode") String companyCode, @Param("ritualTypeCode") String ritualTypeCode, @Param("seasonYear") int seasonYear);
+
+    @Query("select rp from JpaRitualPackage rp where rp.referenceNumber = :referenceNumber and rp.companyRitualSeason.ritualSeason.ritualTypeCode = :ritualTypeCode and rp.companyRitualSeason.ritualSeason.seasonYear = :seasonYear")
+    Optional<JpaRitualPackage> findByReferenceNumberAndRitual(@Param("referenceNumber") String referenceNumber, @Param("ritualTypeCode") String ritualTypeCode, @Param("seasonYear") int seasonYear);
 }

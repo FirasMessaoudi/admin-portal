@@ -17,6 +17,6 @@ import lombok.*;
 @Setter
 @Builder
 public class GeoLocationDto {
-    private double lat;
-    private double lng;
+    private Double lat;
+    private Double lng;
 }

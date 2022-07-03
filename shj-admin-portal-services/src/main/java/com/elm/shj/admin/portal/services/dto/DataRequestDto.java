@@ -36,4 +36,5 @@ public class DataRequestDto implements Serializable {
     private Date updateDate;
     private long itemCount;
     private long errorCount;
+    private String companyCode;
 }

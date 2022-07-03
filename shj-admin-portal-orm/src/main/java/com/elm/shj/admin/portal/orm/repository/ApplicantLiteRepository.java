@@ -3,10 +3,11 @@
  */
 package com.elm.shj.admin.portal.orm.repository;
 
+import com.elm.shj.admin.portal.orm.entity.ApplicantEmergencyContactDto;
 import com.elm.shj.admin.portal.orm.entity.ApplicantStaffVO;
-import com.elm.shj.admin.portal.orm.entity.ApplicantVo;
 import com.elm.shj.admin.portal.orm.entity.JpaApplicantLite;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -24,6 +25,12 @@ public interface ApplicantLiteRepository extends JpaRepository<JpaApplicantLite,
     @Query("SELECT a FROM JpaApplicantLite a JOIN a.digitalIds adi WHERE adi.uin = :uin")
     JpaApplicantLite findByUin(@Param("uin") String uin);
 
+    @Query("SELECT a FROM JpaApplicantLite a WHERE a.passportNumber = :passportNumber AND a.nationalityCode = :nationalityCode")
+    JpaApplicantLite findByPassportNumberAndCountryCode(@Param("passportNumber") String passportNumber, @Param("nationalityCode") String nationalityCode);
+
+    @Query("SELECT a FROM JpaApplicantLite a WHERE a.idNumber = :idNumber")
+    JpaApplicantLite findByIdNumber(@Param("idNumber") String passportNumber);
+
     @Query("SELECT CASE WHEN COUNT(a) > 0 THEN true ELSE false END FROM JpaApplicantLite a INNER JOIN a.digitalIds adi WHERE adi.uin = :uin")
     boolean existsByUin(@Param("uin") String uin);
 
@@ -34,8 +41,12 @@ public interface ApplicantLiteRepository extends JpaRepository<JpaApplicantLite,
     boolean existsByBasicInfo(@Param("idNumber") String idNumber, @Param("dateOfBirthHijri") Long dateOfBirthHijri,
                               @Param("passportNumber") String passportNumber, @Param("dateOfBirthGregorian") Date dateOfBirthGregorian);
 
-    @Query("SELECT a FROM JpaApplicantLite a WHERE a.id NOT IN (SELECT ad.applicantId FROM JpaApplicantDigitalId ad)")
-    List<JpaApplicantLite> findAllApplicantsWithoutDigitalId();
+    @Query("SELECT CASE WHEN COUNT(a)> 0 THEN TRUE ELSE FALSE END " +
+            "FROM JpaApplicantLite a WHERE a.deleted is false AND " +
+            "(a.idNumber = :idNumber OR " +
+            "(a.passportNumber = :passportNumber AND a.nationalityCode = :nationalityCode))")
+    boolean existsByBasicInfo(@Param("idNumber") String idNumber,
+                              @Param("passportNumber") String passportNumber, @Param("nationalityCode") String nationalityCode);
 
     @Query("select a from JpaApplicantLite a where " +
             "(a.idNumber = :idNumber and a.dateOfBirthHijri = :dateOfBirthHijri) or " +
@@ -43,9 +54,14 @@ public interface ApplicantLiteRepository extends JpaRepository<JpaApplicantLite,
     List<JpaApplicantLite> findByBasicInfo(@Param("idNumber") String idNumber, @Param("dateOfBirthHijri") Long dateOfBirthHijri,
                                            @Param("passportNumber") String passportNumber, @Param("dateOfBirthGregorian") Date dateOfBirthGregorian);
 
+    @Query("select a from JpaApplicantLite a where " +
+            "(a.idNumber = :idNumber) or " +
+            "(a.passportNumber = :passportNumber and a.nationalityCode = :nationalityCode)")
+    List<JpaApplicantLite> findByBasicInfo(@Param("idNumber") String idNumber, @Param("passportNumber") String passportNumber, @Param("nationalityCode") String nationalityCode);
+
     @Query("SELECT NEW com.elm.shj.admin.portal.orm.entity.ApplicantStaffVO ( applicantDigitalId.uin, applicant.fullNameEn, applicant.fullNameAr, " +
             "ritualSeason.ritualTypeCode, card.statusCode, applicant.photo, " +
-            "applicantPackage.id, groupLeaderDigitalId.suin, groupLeader.mobileNumber,groupLeader.mobileNumberIntl,company.labelEn,company.labelAr  ) " +
+            "applicantPackage.id, groupLeaderDigitalId.suin, groupLeader.mobileNumber,groupLeader.mobileNumberIntl,company.labelEn,company.labelAr,applicant.emergencyContactName, applicant.emergencyContactMobileNumber  ) " +
             "FROM JpaApplicantCard card " +
             "INNER JOIN card.applicantRitual ritual  " +
             "INNER JOIN ritual.applicant applicant " +
@@ -72,7 +88,7 @@ public interface ApplicantLiteRepository extends JpaRepository<JpaApplicantLite,
 
     @Query("SELECT NEW com.elm.shj.admin.portal.orm.entity.ApplicantStaffVO ( applicantDigitalId.uin, applicant.fullNameEn, applicant.fullNameAr, " +
             "ritualSeason.ritualTypeCode, card.statusCode, applicant.photo, " +
-            "applicantPackage.id, groupLeaderDigitalId.suin, groupLeader.mobileNumber,groupLeader.mobileNumberIntl,company.labelEn,company.labelAr  ) " +
+            "applicantPackage.id, groupLeaderDigitalId.suin, groupLeader.mobileNumber,groupLeader.mobileNumberIntl,company.labelEn,company.labelAr,applicant.emergencyContactName, applicant.emergencyContactMobileNumber  ) " +
             "FROM JpaApplicantCard card " +
             "INNER JOIN card.applicantRitual ritual  " +
             "INNER JOIN ritual.applicant applicant " +
@@ -95,29 +111,11 @@ public interface ApplicantLiteRepository extends JpaRepository<JpaApplicantLite,
     )
     List<ApplicantStaffVO> findApplicantRitualByUin(@Param("uin") String uin, @Param("digitalIdStatus") String digitalIdStatus, @Param("canceledCardStatus") String canceledCardStatus, @Param("suspendedCardStatus") String suspendedCardStatus);
 
-    @Query(value = "SELECT NEW com.elm.shj.admin.portal.orm.entity.ApplicantVo(a.fullNameAr, a.fullNameEn, adi.uin, a.photo, l.latitude , l.longitude,a.idNumber,a.passportNumber) From JpaApplicant a INNER JOIN JpaApplicantDigitalId adi ON adi.applicantId = a.id LEFT JOIN JpaUserLocation l ON l.userId = adi.uin WHERE adi.uin = :uin order by l.creationDate desc")
-    List<ApplicantVo> findApplicantDetailsWithLocationByUin(@Param("uin") String uin);
+    @Query("SELECT NEW com.elm.shj.admin.portal.orm.entity.ApplicantEmergencyContactDto(a.emergencyContactName,a.emergencyContactMobileNumber) from JpaApplicant a " +
+            "join JpaApplicantDigitalId digitalId on digitalId.applicantId = a.id where digitalId.uin = :applicantUin ")
+    ApplicantEmergencyContactDto findApplicantEmergencyContactByApplicantId(@Param("applicantUin") String applicantUin);
 
-    @Query("SELECT NEW com.elm.shj.admin.portal.orm.entity.ApplicantStaffVO ( applicantDigitalId.uin, applicant.fullNameEn, applicant.fullNameAr, " +
-            "ritualSeason.ritualTypeCode, card.statusCode, applicant.photo, " +
-            "applicantPackage.id, groupLeaderDigitalId.suin, groupLeader.mobileNumber,groupLeader.mobileNumberIntl,company.labelEn,company.labelAr  ) " +
-            "FROM JpaApplicantCard card " +
-            "INNER JOIN card.applicantRitual ritual  " +
-            "INNER JOIN ritual.applicant applicant " +
-            "INNER JOIN ritual.applicantPackage applicantPackage " +
-            "INNER JOIN applicant.digitalIds applicantDigitalId " +
-            "INNER JOIN applicantPackage.ritualPackage ritualPackage " +
-            "INNER JOIN ritualPackage.companyRitualSeason companyRitualSeason " +
-            "INNER JOIN companyRitualSeason.ritualSeason ritualSeason " +
-            "INNER JOIN companyRitualSeason.company company " +
-            "LEFT JOIN JpaGroupApplicantList groupApplicantList on groupApplicantList.applicantUin = applicantDigitalId.uin " +
-            "LEFT JOIN groupApplicantList.applicantGroup applicantGroup " +
-            "LEFT JOIN applicantGroup.groupLeader groupLeader " +
-            "LEFT JOIN groupLeader.digitalIds groupLeaderDigitalId " +
-            "WHERE ritualSeason.active = true " +
-            "AND  applicantDigitalId.uin =:uin " +
-            "AND card.id = :cardId " +
-            "order by applicantPackage.startDate desc, applicantPackage.creationDate desc "
-    )
-    List<ApplicantStaffVO> findApplicantRitualByUinAndCardId(@Param("uin") String uin, @Param("cardId") long cardId);
+    @Modifying
+    @Query("update JpaApplicant set emergencyContactName= :emergencyContactName, emergencyContactMobileNumber= :emergencyContactMobileNumber where id= :applicantId")
+    int updateApplicantEmergencyContactByApplicantId(@Param("applicantId") long applicantId,@Param("emergencyContactName") String emergencyContactName,@Param("emergencyContactMobileNumber") String emergencyContactMobileNumber);
 }

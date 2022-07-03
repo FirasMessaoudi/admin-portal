@@ -21,8 +21,9 @@ import java.util.Date;
 public class ValidateApplicantCmd implements Serializable {
 
     private static final long serialVersionUID = 6641483817347109390L;
-
-    private String uin;
+    private String type;
+    private String nationalityCode;
+    private String identifier;
 
     @Past
     private Date dateOfBirthGregorian;

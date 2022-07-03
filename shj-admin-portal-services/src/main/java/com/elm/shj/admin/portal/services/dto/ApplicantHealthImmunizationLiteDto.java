@@ -20,6 +20,7 @@ public class ApplicantHealthImmunizationLiteDto implements Serializable {
 
     private static final long serialVersionUID = -5478275049682327662L;
 
+    private Long id;
     private String immunizationCode;
     private Date immunizationDate;
     private boolean mandatory;

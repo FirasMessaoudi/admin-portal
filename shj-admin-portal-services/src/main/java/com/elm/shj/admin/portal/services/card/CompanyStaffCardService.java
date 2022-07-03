@@ -34,7 +34,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor(onConstructor_ = {@Autowired})
 public class CompanyStaffCardService extends GenericService<JpaCompanyStaffCard, CompanyStaffCardDto, Long> {
     private final CompanyStaffCardRepository companyStaffCardRepository;
-    List<String> cardStatus = Arrays.asList(ECardStatus.ACTIVE.name(), ECardStatus.READY_TO_PRINT.name(), ECardStatus.SENT_FOR_PRINT.name(), ECardStatus.PRINTED.name(), ECardStatus.DISTRIBUTED.name(), ECardStatus.SUSPENDED.name());
+    List<String> cardStatus = Arrays.asList(ECardStatus.ACTIVE.name(), ECardStatus.READY_TO_PRINT.name(), ECardStatus.SENT_FOR_PRINT.name(), ECardStatus.PRINTED.name(), ECardStatus.DISTRIBUTED.name(), ECardStatus.SUSPENDED.name(), ECardStatus.CANCELLED.name());
 
     /**
      * find company staff cards by suin
@@ -89,6 +89,21 @@ public class CompanyStaffCardService extends GenericService<JpaCompanyStaffCard,
             List<Predicate> predicates = new ArrayList<>();
             Join<JpaCompanyStaffCard, JpaCompanyRitualSeason> companyRitualSeason = root.join("companyRitualSeason");
             Join<JpaCompanyRitualSeason, JpaRitualSeason> ritualSeason = companyRitualSeason.join("ritualSeason");
+            Join<JpaCompanyStaffCard, JpaCompanyStaffDigitalId> companyStaffDigitalId = root.join("companyStaffDigitalId");
+
+            predicates.add(criteriaBuilder.notEqual(root.get("statusCode"), ECardStatus.EXPIRED.name()));
+            predicates.add(criteriaBuilder.notEqual(root.get("statusCode"), ECardStatus.REISSUED.name()));
+
+            predicates.add(criteriaBuilder.equal(companyStaffDigitalId.join("companyStaff").get("deleted"), false));
+
+            if (criteria.getIdNumber() != null) {
+                predicates.add(criteriaBuilder.equal(companyStaffDigitalId.join("companyStaff").get("idNumber"), criteria.getIdNumber()));
+            }
+
+            if (criteria.getPassportNumber() != null) {
+                predicates.add(criteriaBuilder.equal(companyStaffDigitalId.join("companyStaff").get("passportNumber"), criteria.getPassportNumber()));
+            }
+
             if (criteria.getRitualType() != null) {
                 Path<String> ritualTypeCode = ritualSeason.get("ritualTypeCode");
                 predicates.add(criteriaBuilder.equal(ritualTypeCode, criteria.getRitualType()));
@@ -106,7 +121,6 @@ public class CompanyStaffCardService extends GenericService<JpaCompanyStaffCard,
             }
 
             if (criteria.getJobTitle() != null) {
-                Join<JpaCompanyStaffCard, JpaCompanyStaffDigitalId> companyStaffDigitalId = root.join("companyStaffDigitalId");
                 predicates.add(criteriaBuilder.equal(companyStaffDigitalId.join("companyStaff").get("titleCode"), criteria.getJobTitle()));
             }
 
@@ -115,7 +129,6 @@ public class CompanyStaffCardService extends GenericService<JpaCompanyStaffCard,
             }
 
             if (criteria.getSuin() != null && !criteria.getSuin().equals("")) {
-                Join<JpaCompanyStaffCard, JpaCompanyStaffDigitalId> companyStaffDigitalId = root.join("companyStaffDigitalId");
                 predicates.add(criteriaBuilder.equal(companyStaffDigitalId.get("suin"), criteria.getSuin()));
             }
 
@@ -143,10 +156,6 @@ public class CompanyStaffCardService extends GenericService<JpaCompanyStaffCard,
         return mapPage(companyStaffCardRepository.findPrintingCards(ECardStatus.READY_TO_PRINT.name(), EPrintRequestStatus.NEW.name(), uin,
                 companyCode, nationalityCode, seasonYear, ritualCode,
                 excludedCardsIds.size() == 0 ? Arrays.asList(-1L) : excludedCardsIds, pageable));
-    }
-
-    public CompanyStaffCardDto findStaffCardById(long cardId) {
-        return getMapper().fromEntity(companyStaffCardRepository.findByIdAndStatusCodeNot(cardId, ECardStatus.REISSUED.name()), mappingContext);
     }
 
     @Transactional
@@ -199,5 +208,15 @@ public class CompanyStaffCardService extends GenericService<JpaCompanyStaffCard,
     public List<ApplicantBasicInfoVo> findStaffBasicInfoByDigitalIds(List<String> digitalIds) {
         return  companyStaffCardRepository.findAllByStaffDigitalIds(digitalIds, Arrays.asList(ECardStatus.CANCELLED.name(),ECardStatus.EXPIRED.name(),ECardStatus.SUSPENDED.name()));
 
+    }
+
+    public void updateStaffCardStatusByStaffId(List<Long> staffCardIdList){
+        companyStaffCardRepository.updateCompanyStaffCardStatus(staffCardIdList);
+    }
+
+    public List<Long> findStaffCardByStaffId(Long staffId){
+        List<Long> staffCardIdList = companyStaffCardRepository.findStaffCard(staffId);
+
+        return staffCardIdList;
     }
 }

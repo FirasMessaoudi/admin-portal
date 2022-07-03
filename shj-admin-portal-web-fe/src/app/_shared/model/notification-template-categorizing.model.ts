@@ -6,12 +6,16 @@ export class NotificationTemplateCategorizing {
   minAge: number;
   maxAge: number;
   gender: string;
+  notificationCategory: number;
   selectedApplicants: string;
+  selectedStaff: string;
   creationDate: Date;
   updateDate: Date;
 
 
-  constructor(selectedApplicants: string) {
+  constructor(selectedApplicants: string, selectedStaff: string, notificationCategory: number) {
     this.selectedApplicants = selectedApplicants;
+    this.selectedStaff = selectedStaff;
+    this.notificationCategory = notificationCategory;
   }
 }

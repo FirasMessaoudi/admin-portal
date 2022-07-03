@@ -4,12 +4,8 @@
 package com.elm.shj.admin.portal.services.dto;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
-import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.sql.Time;
 import java.util.Date;
@@ -22,6 +18,7 @@ import java.util.List;
  * @since 1.1.0
  */
 @AllArgsConstructor
+@NoArgsConstructor
 @Builder
 @Getter
 @Setter
@@ -29,19 +26,17 @@ public class PackageCateringDto implements Serializable {
 
     private static final long serialVersionUID = 4099330015218595333L;
 
-    public PackageCateringDto(){
-    }
     private long id;
 
     private String mealCode;
 
-    @NotNull(message = "validation.data.constraints.msg.20001")
+    private String mealTimeCode;
+
+    private String mealTypeCode;
+
     private Time mealTime;
 
-    @NotNull(message = "validation.data.constraints.msg.20001")
     private String mealDescription;
-
-    private String type;
 
     private String descriptionAr;
 

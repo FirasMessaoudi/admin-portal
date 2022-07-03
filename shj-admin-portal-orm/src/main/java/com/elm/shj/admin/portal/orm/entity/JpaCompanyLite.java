@@ -8,7 +8,7 @@ import javax.persistence.*;
 import java.io.Serializable;
 
 /**
- * The persistent class for the shc_company database table.
+ * The light persistent class for the shc_company database table.
  *
  * @author Ahmed Ali
  * @since 1.1.0
@@ -39,4 +39,11 @@ public class JpaCompanyLite implements Serializable {
 
     @Column(name = "contact_number", nullable = false)
     private String contactNumber;
+
+    @Column(name = "type_code")
+    private String typeCode;
+    @Column(name = "mission_ref_code")
+    private Long missionRefCode;
+    @Column(name = "establishment_ref_code")
+    private Integer establishmentRefCode;
 }

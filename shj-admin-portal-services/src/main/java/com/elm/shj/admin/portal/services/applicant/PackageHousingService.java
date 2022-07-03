@@ -14,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -53,14 +54,36 @@ public class PackageHousingService extends GenericService<JpaPackageHousing, Pac
     public List<PackageHousingDto> findByRitualPackageId(long id) {
         log.info("PackageHousingService ::: Start findByRitualPackageId ::: id: {}",id);
         List<PackageHousingDto> packageHousingDtos = mapList(packageHousingRepository.findByRitualPackageId(id));
-        log.info("PackageHousingService ::: Finish packageHousingDtosListsize: {}",packageHousingDtos.size());
+        log.info("PackageHousingService ::: Finish packageHousingDtosListsize: {}", packageHousingDtos.size());
         return packageHousingDtos;
     }
 
     public PackageHousingDto findStaffPackageHousingByCompanyRitualSeason(long companyRitualSeason) {
-        log.info("PackageHousingService ::: Start findStaffPackageHousingByCompanyRitualSeason ::: companyRitualSeason: {}",companyRitualSeason);
+        log.info("PackageHousingService ::: Start findStaffPackageHousingByCompanyRitualSeason ::: companyRitualSeason: {}", companyRitualSeason);
         JpaPackageHousing jpaPackageHousing = packageHousingRepository.findStaffPackageHousingByCompanyRitualSeason(companyRitualSeason);
-        log.info("PackageHousingService ::: Start findStaffPackageHousingByCompanyRitualSeason ::: jpaPackageHousingLocationNameEn: {}",jpaPackageHousing.getLocationNameEn());
-        return getMapper().fromEntity(jpaPackageHousing,mappingContext);
+        if(jpaPackageHousing == null)
+            return null;
+        log.info("PackageHousingService ::: Start findStaffPackageHousingByCompanyRitualSeason ::: jpaPackageHousingLocationNameEn: {}", jpaPackageHousing.getLocationNameEn());
+        return getMapper().fromEntity(jpaPackageHousing, mappingContext);
+    }
+
+    public PackageHousingDto findByRitualPackageIdAndSiteCode(long id, String siteCode) {
+        log.info("PackageHousingService ::: Start findByRitualPackageIdAndSiteCode ::: ritualPackage: {}", id);
+        Optional<JpaPackageHousing> jpaPackageHousing = packageHousingRepository.findTopByRitualPackageIdAndSiteCode(id, siteCode);
+        if (jpaPackageHousing.isPresent()) {
+            return getMapper().fromEntity(jpaPackageHousing.get(), mappingContext);
+        }
+        return null;
+
+    }
+
+    public List<PackageHousingDto> findAllByRitualPackageIdAndSiteCode(long id, String siteCode) {
+        log.info("PackageHousingService ::: Start findByRitualPackageIdAndSiteCode ::: ritualPackage: {}", id);
+        List<JpaPackageHousing> jpaPackageHousing = packageHousingRepository.findAllByRitualPackageIdAndSiteCode(id, siteCode);
+        if (!jpaPackageHousing.isEmpty()) {
+            return mapList(jpaPackageHousing);
+        }
+        return Collections.emptyList();
+
     }
 }

@@ -32,7 +32,6 @@ public class JpaPackageHousing implements Serializable {
     @Column(unique = true, nullable = false)
     private long id;
 
-
     @Column(name = "type_code")
     private String typeCode;
 

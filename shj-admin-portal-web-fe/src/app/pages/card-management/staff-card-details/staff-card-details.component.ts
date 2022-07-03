@@ -8,7 +8,7 @@ import { AuthenticationService, CardService } from '@core/services';
 import { ToastService } from '@shared/components/toast';
 import { Lookup } from '@model/lookup.model';
 import { LookupService } from '@core/utilities/lookup.service';
-import { CountryLookup } from '@model/country-lookup.model';
+import { NationalityLookup } from '@model/nationality-lookup.model';
 import { EAuthority } from '@model/index';
 import { NavigationService } from '@core/utilities/navigation.service';
 import { CardStatus } from '@model/enum/card-status.enum';
@@ -16,6 +16,8 @@ import { DigitalIdStatus } from '@model/enum/digital-id-status.enum';
 import { CardStatusActions } from '@model/enum/card-status-actions.enum';
 import { ConfirmDialogService } from '@shared/components/confirm-dialog';
 import { CompanyStaffCard } from '@model/staff-card.model';
+import { GenerateCardInput } from '@model/generate-card-input.model';
+import { GenerateStaffCardInput } from '@model/generate-staff-card-input.model';
 
 @Component({
   selector: 'app-staff-card-details',
@@ -33,7 +35,7 @@ export class StaffCardDetailsComponent implements OnInit {
   housingSites: Lookup[] = [];
   transportationTypes: Lookup[] = [];
   relativeRelationships: Lookup[] = [];
-  countries: CountryLookup[] = [];
+  countries: NationalityLookup[] = [];
   healthSpecialNeeds: Lookup[] = [];
   maritalStatuses: Lookup[] = [];
   ritualStepsLabels: Lookup[] = [];
@@ -160,6 +162,7 @@ export class StaffCardDetailsComponent implements OnInit {
 
   changeCardStatus(actionCode: string, confirmationText: string) {
     if (this.isUserHasAllowedAuthority(actionCode)) {
+      //if (true) {
       this.confirmDialogService
         .confirm(
           this.translate.instant(confirmationText),
@@ -167,7 +170,28 @@ export class StaffCardDetailsComponent implements OnInit {
         )
         .then((confirm) => {
           if (confirm) {
-            this.cardService
+
+            if(actionCode == this.actions.REPRINT_CARD)          
+            {            
+              let generatCardInput:GenerateStaffCardInput = {
+                actionCode: this.actions.REPRINT_CARD,
+                cardId: this.card.id                
+                };
+
+                this.cardService.generatStaffCard(generatCardInput).subscribe(result=>{           
+                  
+                  if(result && result==true)
+                  this.router.navigate(['/card/print',this.card?.companyStaffDigitalId?.suin,'STAFF']); 
+                  else
+                   {
+                    this.toastr.error(this.translate.instant('card-management.user_not_authorized'), this.translate.instant('general.dialog_error_title'));
+                   }               
+                 });
+                           
+            }
+            else 
+            {
+              this.cardService
               .changeStaffCardStatus(this.card.id, actionCode)
               .subscribe(
                 (result) => {
@@ -199,6 +223,8 @@ export class StaffCardDetailsComponent implements OnInit {
                   );
                 }
               );
+
+            }
           }
         });
     } else {
@@ -224,6 +250,9 @@ export class StaffCardDetailsComponent implements OnInit {
       }
       case 'cancel_card': {
         return this.authenticationService.hasAuthority(EAuthority.CANCEL_CARD);
+      }
+      case 'reprint_card': {
+        return this.authenticationService.hasAuthority(EAuthority.REISSUE_CARD);
       }
       default: {
         return false;

@@ -6,6 +6,8 @@ package com.elm.shj.admin.portal.orm.repository;
 import com.elm.shj.admin.portal.orm.entity.JpaCompanyLite;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.List;
+
 /**
  * Repository for company data.
  *
@@ -14,8 +16,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
  **/
 public interface CompanyLiteRepository extends JpaRepository<JpaCompanyLite, Long> {
 
-
     boolean existsByCode(String code);
 
-
+    List<JpaCompanyLite> findByTypeCode(String typeCode);
+    List<JpaCompanyLite> findByTypeCodeAndEstablishmentRefCode(String typeCode, int refCode);
 }

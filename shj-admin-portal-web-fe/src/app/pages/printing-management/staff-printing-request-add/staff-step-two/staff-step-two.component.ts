@@ -1,7 +1,7 @@
 import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
 import {PrintRequest} from "@model/print-request.model";
 import {PrintBatchType} from "@model/print-batch-type.model";
-import {CountryLookup} from "@model/country-lookup.model";
+import {NationalityLookup} from "@model/nationality-lookup.model";
 import {I18nService} from "@dcc-commons-ng/services";
 import {ToastService} from "@shared/components/toast";
 import {TranslateService} from "@ngx-translate/core";
@@ -25,7 +25,7 @@ export class StaffStepTwoComponent implements OnInit, OnChanges {
   isLoading: boolean;
 
   batchTypes: PrintBatchType[];
-  countries: CountryLookup[] = [];
+  countries: NationalityLookup[] = [];
   selectedBatchTypes: string[] = [];
   currentPage: number = 1;
   pageSize: number = 10;
