@@ -176,7 +176,8 @@ public class ApplicantCardController {
         // Reissued The Card
         JwtToken loggedInUser = (JwtToken) authentication;
         Optional<Long> userId = jwtTokenService.retrieveUserIdFromToken(loggedInUser.getToken());
-        card = applicantCardService.buildApplicantCard(applicantCardService.changeCardStatus(card, applicantCreateCardDto.getActionCode(), userId));
+        card.setStatusCode(ECardStatus.REISSUED.name());
+        applicantCardService.save(card);
 
         // Sent Card Reprint
         ApplicantRitualBasicDto applicantRitualBasic =  applicantRitualBasicService.findOne(applicantCreateCardDto.getRitualId());
@@ -184,8 +185,10 @@ public class ApplicantCardController {
         userCardStatusAuditService.saveUserBasicCardStatusAudit(savedCard, Constants.SYSTEM_USER_ID_NUMBER);
 
         // Mark Active as New Card
+
         ApplicantCardDto newCard = applicantCardService.findApplicantCard(savedCard.getId());
-        newCard = applicantCardService.buildApplicantCard(applicantCardService.changeCardStatus(newCard,ECardStatusAction.ACTIVATE_CARD.name() , userId));
+        newCard.setStatusCode(ECardStatus.ACTIVE.name());
+        applicantCardService.save(newCard);
 
         return savedCard;
     }

@@ -158,7 +158,7 @@ export class CardDetailsComponent implements OnInit {
       this.confirmDialogService.confirm(this.translate.instant(confirmationText), this.translate.instant('general.dialog_confirmation_title')).then(confirm => {
         if (confirm) {
 
-          if(actionCode == this.actions.REPRINT_CARD)          
+          if(actionCode == 'REPRINT_CARD')          
           {
               let generatCardInput:GenerateCardInput = {
                   actionCode: this.actions.REISSUE_CARD,
