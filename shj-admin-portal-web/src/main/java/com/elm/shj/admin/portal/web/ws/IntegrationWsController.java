@@ -7,6 +7,7 @@ import com.elm.dcc.foundation.providers.recaptcha.exception.RecaptchaException;
 import com.elm.shj.admin.portal.orm.entity.*;
 import com.elm.shj.admin.portal.services.applicant.*;
 import com.elm.shj.admin.portal.services.card.BadgeService;
+import com.elm.shj.admin.portal.services.chatbot.ChatBotItemService;
 import com.elm.shj.admin.portal.services.company.*;
 import com.elm.shj.admin.portal.services.complaint.ApplicantComplaintLiteService;
 import com.elm.shj.admin.portal.services.complaint.ApplicantComplaintService;
@@ -19,8 +20,8 @@ import com.elm.shj.admin.portal.services.digitalid.CompanyStaffDigitalIdService;
 import com.elm.shj.admin.portal.services.dto.*;
 import com.elm.shj.admin.portal.services.incident.ApplicantIncidentLiteService;
 import com.elm.shj.admin.portal.services.incident.ApplicantIncidentService;
+import com.elm.shj.admin.portal.services.incident.IncidentAttachmentLiteService;
 import com.elm.shj.admin.portal.services.lookup.*;
-import com.elm.shj.admin.portal.services.otp.OtpService;
 import com.elm.shj.admin.portal.services.ritual.ApplicantRitualCardLiteService;
 import com.elm.shj.admin.portal.services.ritual.ApplicantRitualService;
 import com.elm.shj.admin.portal.services.user.UserLocationService;
@@ -34,7 +35,6 @@ import com.elm.shj.admin.portal.web.security.otp.OtpAuthenticationProvider;
 import javassist.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.core.io.Resource;
@@ -54,6 +54,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
+import javax.ws.rs.QueryParam;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -82,13 +83,13 @@ public class IntegrationWsController {
     private final OtpAuthenticationProvider authenticationProvider;
     private final JwtTokenService jwtTokenService;
 
-    private final OtpService otpService;
     private final ApplicantLiteService applicantLiteService;
     private final RitualTypeLookupService ritualTypeLookupService;
     private final CardStatusLookupService cardStatusLookupService;
     private final RelativeRelationshipLookupService relativeRelationshipLookupService;
     private final MaritalStatusLookupService maritalStatusLookupService;
     private final NationalityLookupService nationalityLookupService;
+    private final CountryLookupService countryLookupService;
     private final HealthSpecialNeedsLookupService healthSpecialNeedsLookupService;
     private final ApplicantService applicantService;
     private final ApplicantHealthLiteService applicantHealthLiteService;
@@ -144,6 +145,8 @@ public class IntegrationWsController {
     private final ApplicantComplaintLiteService applicantComplaintLiteService;
     private final ApplicantComplaintService applicantComplaintService;
     private final ApplicantHealthBasicService applicantHealthBasicService;
+    private final IncidentAttachmentLiteService incidentAttachmentLiteService;
+    private final ChatBotItemService chatBotItemService;
 
     private enum EDataRequestFileTypeWS {
         O, // Original
@@ -231,8 +234,16 @@ public class IntegrationWsController {
      */
     @GetMapping("/country/list")
     public ResponseEntity<WsResponse<?>> listCountries() {
+        //TODO: this should be list nationalities
         log.debug("list countries...");
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(nationalityLookupService.findAll()).build());
+    }
+
+    @GetMapping("/nationality/list")
+    public ResponseEntity<WsResponse<?>> listNationalities() {
+        //TODO: this should be list countries
+        log.debug("list nationalities...");
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(countryLookupService.findAll()).build());
     }
 
     /**
@@ -267,22 +278,32 @@ public class IntegrationWsController {
     @PostMapping("/verify")
     public ResponseEntity<WsResponse<?>> verify(@RequestBody @Validated ValidateApplicantCmd command) {
         Optional<ApplicantLiteDto> applicant = Optional.empty();
-        if (command.getType().equals(ELoginType.uin.name()))
+        if (command.getType().equals(ELoginType.uin.name())) {
             applicant = applicantLiteService.findByUin(command.getIdentifier());
-        if (command.getType().equals(ELoginType.passport.name()))
+        } else if (command.getType().equals(ELoginType.passport.name())) {
             applicant = applicantLiteService.findByPassportNumber(command.getIdentifier(), command.getNationalityCode());
-        if (command.getType().equals(ELoginType.id.name()))
+        } else if (command.getType().equals(ELoginType.id.name())) {
             applicant = applicantLiteService.findByIdNumber(command.getIdentifier());
+        }
+
 
         if (applicant.isPresent()) {
             boolean dateOfBirthMatched;
             SimpleDateFormat sdf = new SimpleDateFormat(ISO8601_DATE_PATTERN);
             // decide which date of birth to use
-            if (command.getDateOfBirthGregorian() != null) {
+            if (applicant.get().getDateOfBirthGregorian() != null) {
+                if(command.getDateOfBirthGregorian() == null){
+                    return ResponseEntity.ok(WsResponse.builder().status(WsError.EWsError.INVALID_DATE_OF_BIRTH.getCode())
+                            .body(WsError.builder().error(WsError.EWsError.APPLICANT_NOT_MATCHED.getCode()).referenceNumber(command.getIdentifier()).build()).build());
+                }
                 String applicantDateFormatted = sdf.format(applicant.get().getDateOfBirthGregorian());
                 String commandDataOfBirthFormatted = sdf.format(command.getDateOfBirthGregorian());
                 dateOfBirthMatched = commandDataOfBirthFormatted.equals(applicantDateFormatted);
             } else {
+                if(command.getDateOfBirthHijri() <= 0 ){
+                    return ResponseEntity.ok(WsResponse.builder().status(WsError.EWsError.INVALID_DATE_OF_BIRTH.getCode())
+                            .body(WsError.builder().error(WsError.EWsError.APPLICANT_NOT_MATCHED.getCode()).referenceNumber(command.getIdentifier()).build()).build());
+                }
                 dateOfBirthMatched = command.getDateOfBirthHijri() == applicant.get().getDateOfBirthHijri();
             }
             if (!dateOfBirthMatched) {
@@ -539,7 +560,7 @@ public class IntegrationWsController {
     @GetMapping("/find/company-employees/{uin}/{seasonId}")
     public ResponseEntity<WsResponse<?>> findCompanyEmployeesByUinAndSeasonId(@PathVariable String uin, @PathVariable long seasonId) {
         log.info("Start findCompanyEmployeesByUinAndSeasonId for {} uin and {} season id.", uin, seasonId);
-        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(companyStaffService.findGroupLeaderByApplicantUin(uin, seasonId)).build());
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(companyStaffService.findGroupLeaderByApplicantUin(uin)).build());
     }
 
     /**
@@ -910,7 +931,11 @@ public class IntegrationWsController {
             boolean dateOfBirthMatched;
             SimpleDateFormat sdf = new SimpleDateFormat(ISO8601_DATE_PATTERN);
             // decide which date of birth to use
-            if (validateStaffCmd.getDateOfBirthGregorian() != null && !validateStaffCmd.getDateOfBirthGregorian().equals("")) {
+            if (staff.get().getDateOfBirthGregorian() != null) {
+                if(validateStaffCmd.getDateOfBirthGregorian() == null){
+                    return ResponseEntity.ok(WsResponse.builder().status(WsError.EWsError.INVALID_DATE_OF_BIRTH.getCode())
+                            .body(WsError.builder().error(WsError.EWsError.APPLICANT_NOT_MATCHED.getCode()).referenceNumber(validateStaffCmd.getIdentifier()).build()).build());
+                }
                 try {
                     Date gregorianDate = sdf.parse(validateStaffCmd.getDateOfBirthGregorian());
                     String applicantDateFormatted = sdf.format(staff.get().getDateOfBirthGregorian());
@@ -922,6 +947,10 @@ public class IntegrationWsController {
                 }
 
             } else {
+                if(validateStaffCmd.getDateOfBirthHijri() <= 0 ){
+                    return ResponseEntity.ok(WsResponse.builder().status(WsError.EWsError.INVALID_DATE_OF_BIRTH.getCode())
+                            .body(WsError.builder().error(WsError.EWsError.APPLICANT_NOT_MATCHED.getCode()).referenceNumber(validateStaffCmd.getIdentifier()).build()).build());
+                }
                 dateOfBirthMatched = validateStaffCmd.getDateOfBirthHijri() == staff.get().getDateOfBirthHijri();
             }
             if (!dateOfBirthMatched) {
@@ -1537,7 +1566,7 @@ public class IntegrationWsController {
         if (mainType == ETicketMainTypeCRM.Complaint.getId()) {
             attachment = applicantComplaintService.downloadApplicantComplaintAttachment(attachmentId);
         } else if (mainType == ETicketMainTypeCRM.Incident.getId()) {
-            attachment = applicantIncidentService.downloadApplicantIncidentAttachment(attachmentId);
+            attachment = incidentAttachmentLiteService.downloadApplicantIncidentAttachment(attachmentId);
         }
 
         if (attachment != null) {
@@ -1588,4 +1617,24 @@ public class IntegrationWsController {
         return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(companyService.findUidByCode(companyCode)).build());
     }
 
+    @GetMapping("/applicants/find-by-ids")
+    public ResponseEntity<WsResponse<?>> findByIds(@RequestParam List<Long> ids, Pageable pageable) {
+        log.debug("Find applicants by ids...");
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode())
+                .body( applicantService.findByIds(ids, pageable)).build());
+    }
+    
+    @GetMapping("/group/all")
+    public ResponseEntity<WsResponse<?>> findOrganizationGroups(@QueryParam("companyRefCode") Long companyRefCode, @QueryParam("organizerTypeCode") String organizerTypeCode) {
+        log.info("find applicant groups by company");
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode())
+                .body(applicantGroupService.findAllGroupByCompanyCode(companyRefCode + "_" + organizerTypeCode)).build());
+    }
+
+    @GetMapping("/chatbot-items/list/{lang}")
+    public ResponseEntity<WsResponse<?>> findAllChatBotItems(@PathVariable String lang) {
+        log.info("find all chatbot items by lang");
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode())
+                .body(chatBotItemService.findAllByLang(lang)).build());
+    }
 }

@@ -75,7 +75,7 @@ public class JpaPackageHousingBasic implements Serializable {
 
     private double lng;
 
-    @LazyCollection(LazyCollectionOption.TRUE)
+    @LazyCollection(LazyCollectionOption.FALSE)
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "packageHousing")
     private List<JpaPackageCateringBasic> packageCatering;
 

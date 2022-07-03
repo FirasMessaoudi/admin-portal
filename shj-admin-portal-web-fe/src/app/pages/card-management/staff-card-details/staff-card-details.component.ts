@@ -16,6 +16,8 @@ import { DigitalIdStatus } from '@model/enum/digital-id-status.enum';
 import { CardStatusActions } from '@model/enum/card-status-actions.enum';
 import { ConfirmDialogService } from '@shared/components/confirm-dialog';
 import { CompanyStaffCard } from '@model/staff-card.model';
+import { GenerateCardInput } from '@model/generate-card-input.model';
+import { GenerateStaffCardInput } from '@model/generate-staff-card-input.model';
 
 @Component({
   selector: 'app-staff-card-details',
@@ -159,7 +161,8 @@ export class StaffCardDetailsComponent implements OnInit {
   }
 
   changeCardStatus(actionCode: string, confirmationText: string) {
-    if (this.isUserHasAllowedAuthority(actionCode)) {
+    //if (this.isUserHasAllowedAuthority(actionCode)) {
+      if (true) {
       this.confirmDialogService
         .confirm(
           this.translate.instant(confirmationText),
@@ -167,7 +170,22 @@ export class StaffCardDetailsComponent implements OnInit {
         )
         .then((confirm) => {
           if (confirm) {
-            this.cardService
+
+            if(actionCode == this.actions.REPRINT_CARD)          
+            {            
+              let generatCardInput:GenerateStaffCardInput = {
+                actionCode: this.actions.CANCEL_CARD,
+                cardId: this.card.id                
+                };
+
+                this.cardService.generatStaffCard(generatCardInput).subscribe(result=>{           
+                  this.router.navigate(['/card/print',this.card?.companyStaffDigitalId?.suin,'STAFF']);                
+                 });
+                           
+            }
+            else 
+            {
+              this.cardService
               .changeStaffCardStatus(this.card.id, actionCode)
               .subscribe(
                 (result) => {
@@ -199,6 +217,8 @@ export class StaffCardDetailsComponent implements OnInit {
                   );
                 }
               );
+
+            }
           }
         });
     } else {

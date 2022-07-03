@@ -1,5 +1,5 @@
 import {Injectable} from "@angular/core";
-import {HttpClient, HttpErrorResponse, HttpParams} from "@angular/common/http";
+import {HttpClient, HttpErrorResponse, HttpHeaders, HttpParams} from "@angular/common/http";
 import {Observable, of} from "rxjs";
 import {ApplicantSearchCriteria} from "@model/applicant-search-criteria.model";
 import {catchError} from "rxjs/internal/operators";
@@ -13,6 +13,16 @@ import {catchError} from "rxjs/internal/operators";
 export class ApplicantService {
 
   constructor(private http: HttpClient) {
+  }
+
+  getApplicantBadge(uin:String): Observable<any> { 
+    const headers= new HttpHeaders().set('CALLER-TYPE', 'WEB-SERVICE');    
+    return this.http.get<any>(`/core/api/applicants/badge/applicant/frontback/${uin}`,{ 'headers': headers });
+  }
+
+  getApplicantFullBadge(uin:String): Observable<any> { 
+    const headers= new HttpHeaders().set('CALLER-TYPE', 'WEB-SERVICE');    
+    return this.http.get<any>(`/core/api/applicants/applicant/all/${uin}`,{ 'headers': headers });
   }
 
   findByIds(ids, pageNumber: any): Observable<any> {

@@ -25,4 +25,5 @@ public class ApplicantCardBasicDto implements Serializable, HibernateAwareMapper
     private long id;
     private ApplicantRitualBasicDto applicantRitual;
     private String statusCode;
+    private boolean deleted;
 }

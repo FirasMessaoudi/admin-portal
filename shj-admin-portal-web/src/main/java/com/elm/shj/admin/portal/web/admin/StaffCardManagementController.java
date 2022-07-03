@@ -5,9 +5,7 @@ package com.elm.shj.admin.portal.web.admin;
 
 import com.elm.shj.admin.portal.services.card.ApplicantCardService;
 import com.elm.shj.admin.portal.services.card.CompanyStaffCardService;
-import com.elm.shj.admin.portal.services.dto.AuthorityConstants;
-import com.elm.shj.admin.portal.services.dto.CompanyStaffCardDto;
-import com.elm.shj.admin.portal.services.dto.CompanyStaffCardFilterDto;
+import com.elm.shj.admin.portal.services.dto.*;
 import com.elm.shj.admin.portal.web.error.CardDetailsNotFoundException;
 import com.elm.shj.admin.portal.web.navigation.Navigation;
 import com.elm.shj.admin.portal.web.security.jwt.JwtToken;
@@ -160,5 +158,29 @@ public class StaffCardManagementController {
         }
         return true;
     }
+
+    @PostMapping("/generate-card")
+    public void generateCard(@RequestBody StaffCreateCardDto staffCreateCardDto,Authentication authentication)  {
+
+        CompanyStaffCardDto card = companyStaffCardService.findById(staffCreateCardDto.getCardId());
+        if (card == null) {
+            throw new CardDetailsNotFoundException("no card found with id : " + staffCreateCardDto.getCardId());
+        }
+        JwtToken loggedInUser = (JwtToken) authentication;
+        Optional<Long> userId = jwtTokenService.retrieveUserIdFromToken(loggedInUser.getToken());
+        card.setStatusCode(ECardStatus.CANCELLED.name());
+        companyStaffCardService.changeCardStatus(card,staffCreateCardDto.getActionCode(), userId);
+
+        companyStaffCardService.save(card
+                .builder()
+                .referenceNumber(card.getReferenceNumber())
+                .companyRitualSeason(card.getCompanyRitualSeason())
+                .companyStaffDigitalId(card.getCompanyStaffDigitalId())
+                .statusCode(ECardStatus.READY_TO_PRINT.name())
+                .build());
+    }
+
+
+
 
 }

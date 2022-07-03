@@ -8,16 +8,18 @@ import { SharedModule } from '@shared/shared.module';
 import { TranslateModule } from '@ngx-translate/core';
 import { CardDetailsModule } from './card-details/card-details.module';
 import { StaffCardListComponent } from './staff-card-list/staff-card-list.component';
+import { PrintCardComponent } from './print-card/print-card.component';
 
 @NgModule({
-  declarations: [CardListComponent, StaffCardListComponent],
+  declarations: [CardListComponent, StaffCardListComponent,PrintCardComponent],
   imports: [
     CommonModule,
     ReactiveFormsModule,
     SharedModule,
     CardManagementRoutingModule,
     TranslateModule,
-    CardDetailsModule,
+    CardDetailsModule    
+    
   ],
 })
 export class CardManagementModule {}

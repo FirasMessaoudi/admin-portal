@@ -84,18 +84,21 @@ public class ApplicantComplaintScheduler {
                     // cannot authenticate, throw an exception
                     // TODO: handle failure of authentication .
                 }
-                integrationService.callCRMCreateProfile(complaint.getApplicantRitual(), complaint.getMobileNumber(), accessTokenWsResponse);
+                if (complaint.getCrmTicketNumber() == null) {
+                    integrationService.callCRMCreateProfile(complaint.getApplicantRitual(), complaint.getMobileNumber(), accessTokenWsResponse);
 
-                ComplaintUpdateCRMDto updateCRMDto = integrationService.callCRMCreateComplaint(complaint, accessTokenWsResponse);
-
-
-                applicantComplaintRepository.updateCRMTicketNumber(complaint.getId(), updateCRMDto.getCrmTicketNumber());
+                    ComplaintUpdateCRMDto updateCRMDto = integrationService.callCRMCreateTicket(complaint, ETicketMainTypeCRM.Complaint.getId(), accessTokenWsResponse);
 
 
-                if (complaint.getCrmTicketNumber() != null && !complaint.getStatusCode().equals(EIncidentStatus.UNDER_PROCESSING.name())  && complaint.getCrmStatusUpdated() == null && !complaint.getCrmStatusUpdated()){
+                    applicantComplaintRepository.updateCRMTicketNumber(complaint.getId(), updateCRMDto.getCrmTicketNumber());
+                    complaint.setCrmTicketNumber(updateCRMDto.getCrmTicketNumber());
+                }
+
+
+                if (complaint.getCrmTicketNumber() != null && !complaint.getStatusCode().equals(EIncidentStatus.UNDER_PROCESSING.name())  && (complaint.getCrmStatusUpdated() == null || !complaint.getCrmStatusUpdated())){
                     ApplicantIncidentComplaintVoCRM applicantComplaintVoCRM = new ApplicantIncidentComplaintVoCRM();
                     applicantComplaintVoCRM.setCrmTicketNumber(complaint.getCrmTicketNumber());
-                    applicantComplaintVoCRM.setStatus(EIncidentResolutionType.valueOf(complaint.getStatusCode()).getCrmCode());
+                    applicantComplaintVoCRM.setStatus(EComplaintStatus.valueOf(complaint.getStatusCode()).getCode());
                     applicantComplaintVoCRM.setSmartIDTicketNumber(complaint.getReferenceNumber());
                     applicantComplaintVoCRM.setResolutionComment(complaint.getResolutionComment());
 
