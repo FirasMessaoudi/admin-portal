@@ -14,6 +14,7 @@ import javassist.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
@@ -155,7 +156,11 @@ public class NotificationRequestService extends GenericService<JpaNotificationRe
         if(categorizing != null){
             if(categorizing.getNotificationCategory() == NotificationScope.ALL){
                 String companyCode = notificationTemplate.getCompanyCode();
-                applicants = applicantService.findApplicantByCompanyCode(companyCode);
+                if(companyCode == null) {
+                    applicants = applicantService.findAllRegisteredAndHavingActiveRitual();
+                } else {
+                    applicants = applicantService.findApplicantByCompanyCode(companyCode);
+                }
                 sendNotificationTemplateToApplicants(savedNotificationTemplate, applicants);
             }
             else if(categorizing.getNotificationCategory() == 2){
@@ -264,14 +269,15 @@ public class NotificationRequestService extends GenericService<JpaNotificationRe
                 .orElse(NOTIFICATION_DEFAULT_LANGUAGE);
     }
 
-    @Transactional(isolation = Isolation.READ_COMMITTED)
-    public void processNotificationTemplates() {
-        List<NotificationTemplateDto> notificationTemplates = notificationTemplateService.findUnprocessedUserDefinedNotifications(ENotificationTemplateType.USER_DEFINED.name(), new Date(), false, true);
+    @Modifying
+    public void processNotificationTemplates(int notificationProcessingBatchSize) {
+
+        List<NotificationTemplateDto> notificationTemplates = notificationTemplateService
+                .findUnprocessedUserDefinedNotifications(ENotificationTemplateType.USER_DEFINED.name(), new Date(), false, true, notificationProcessingBatchSize);
         notificationTemplates.forEach(
                 notificationTemplate -> {
                     createUserDefinedNotificationRequest(notificationTemplate);
-                    notificationTemplate.setIsProcessed(true);
-                    notificationTemplateService.save(notificationTemplate);
+                    notificationTemplateService.updatedProcessed(notificationTemplate);
                 }
         );
     }

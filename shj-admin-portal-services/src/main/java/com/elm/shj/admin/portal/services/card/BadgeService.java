@@ -529,11 +529,13 @@ public class BadgeService {
     }
 
     private void addPilgrimImage(Graphics2D g2d, String base64Photo, boolean isApplicant) {
-        BufferedImage pilgrimImage = ImageUtils.loadImageInCircle(base64Photo);
-        if (pilgrimImage != null) {
-            Image img = ImageUtils.resizeImage(pilgrimImage, PHOTO_MAX_HEIGHT, PHOTO_MAX_HEIGHT);
-            int yDif = (int) Math.round(0.2 * 100);
-            g2d.drawImage(img, (BADGE_WIDTH - img.getWidth(null)) / 2, yDif, null);
+        if (base64Photo != null && !base64Photo.isEmpty()) {
+            BufferedImage pilgrimImage = ImageUtils.loadImageInCircle(base64Photo);
+            if (pilgrimImage != null) {
+                Image img = ImageUtils.resizeImage(pilgrimImage, PHOTO_MAX_HEIGHT, PHOTO_MAX_HEIGHT);
+                int yDif = (int) Math.round(0.2 * 100);
+                g2d.drawImage(img, (BADGE_WIDTH - img.getWidth(null)) / 2, yDif, null);
+            }
         }
     }
 
@@ -662,10 +664,13 @@ public class BadgeService {
     }
 
     public String makeLabelFit(String label) {
+        if (label == null) {
+            return " ";
+        }
         if (label != null && label.length() > 28) {
             return label.substring(0, 23) + "...";
         }
-        return label + " ";
+        return label;
     }
 
     public BufferedImage makeRoundedCorner(BufferedImage image,
@@ -737,17 +742,20 @@ public class BadgeService {
     }
 
     private void writeTable(Graphics2D g2d, int rectWidth, int rectX, int rectY, String[] labelEn, String[] labelAr, boolean prePrinted) {
+
         FontRenderContext frc = g2d.getFontRenderContext();
         Font font;
         LineMetrics lm;
         TextLayout layout;
         for (int i = 0; i < labelAr.length; i++) {
+            System.out.println(labelAr[i]);
             font = shaaerFont.deriveFont(21f);
             /*font = font.deriveFont(
                     Collections.singletonMap(
                             TextAttribute.WEIGHT, TextAttribute.WEIGHT_BOLD));*/
             // header AR
             lm = font.getLineMetrics(labelAr[i], frc);
+
             layout = new TextLayout(labelAr[i], font, frc);
             g2d.setColor(new Color(0xFF212121));
             layout.draw(g2d, rectX + (i * rectWidth / labelAr.length) + (int) (rectWidth / labelAr.length - font.getStringBounds(labelAr[i], frc).getWidth()) / 2, rectY + lm.getHeight() + 26);
