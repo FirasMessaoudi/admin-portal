@@ -37,7 +37,7 @@ public class NotificationRequestProcessingScheduler {
     @Value("${notification.processing.batch.size}")
     private int notificationProcessingBatchSize;
 
-    @PostConstruct
+
     @Scheduled(cron = "${scheduler.notification.processing.cron}")
     @SchedulerLock(name = "notification-processing-task")
     void sendUserNotifications() {
