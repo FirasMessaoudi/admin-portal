@@ -20,5 +20,5 @@ import java.util.Date;
 public interface NotificationTemplateRepository extends JpaRepository<JpaNotificationTemplate, Long>, JpaSpecificationExecutor<JpaNotificationTemplate> {
     JpaNotificationTemplate findByNameCodeAndEnabledTrue(String nameCode);
 
-    Page<JpaNotificationTemplate> findByTypeCodeAndSendingDateAfterAndProcessedAndEnabled(String typeCode, Date date, Boolean isProcessed, boolean enabled, Pageable pageable);
+    Page<JpaNotificationTemplate> findByTypeCodeAndSendingDateBeforeAndProcessedAndEnabled(String typeCode, Date date, Boolean isProcessed, boolean enabled, Pageable pageable);
 }
