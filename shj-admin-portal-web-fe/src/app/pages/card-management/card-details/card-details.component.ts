@@ -161,7 +161,7 @@ export class CardDetailsComponent implements OnInit {
           if(actionCode == this.actions.REPRINT_CARD)          
           {
               let generatCardInput:GenerateCardInput = {
-                  actionCode: this.actions.CANCEL_CARD,
+                  actionCode: this.actions.REISSUE_CARD,
                   cardId: this.card.id,
                   ritualId: this.card?.applicantRitual?.id
               };
