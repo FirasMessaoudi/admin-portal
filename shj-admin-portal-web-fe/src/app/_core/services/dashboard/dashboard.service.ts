@@ -326,4 +326,8 @@ export class DashboardService {
       '/core/api/dashboard/company-hajj-list/' + seasonYear
     );
   }
+
+  loadDashboardUrl(): Observable<any> {
+    return this.http.get<any>(`/core/api/dashboard/bi`);
+  }
 }
