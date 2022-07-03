@@ -14,8 +14,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.criteria.Join;
@@ -164,7 +166,7 @@ public class NotificationTemplateService extends GenericService<JpaNotificationT
     @Transactional
     public NotificationTemplateDto create(NotificationTemplateDto notificationTemplate) {
         notificationTemplate.setTypeCode(ENotificationTemplateType.USER_DEFINED.name());
-        notificationTemplate.setIsProcessed(false);
+        notificationTemplate.setProcessed(false);
         notificationTemplate.getNotificationTemplateContents().stream().forEach(content -> content.setNotificationTemplate(notificationTemplate));
         if (notificationTemplate.getNotificationTemplateCategorizing() != null) {
             notificationTemplate.getNotificationTemplateCategorizing().setNotificationTemplate(notificationTemplate);
@@ -172,9 +174,13 @@ public class NotificationTemplateService extends GenericService<JpaNotificationT
         notificationTemplate.setNotificationTemplateContents(notificationTemplate.getNotificationTemplateContents());
         return save(notificationTemplate);
     }
+    @Modifying
+    @Transactional
+    public List<NotificationTemplateDto> findUnprocessedUserDefinedNotifications(String typeCode, Date date, Boolean isProcessed, boolean enabled,int batchSize) {
 
-    public List<NotificationTemplateDto> findUnprocessedUserDefinedNotifications(String typeCode, Date date, Boolean isProcessed, boolean enabled) {
-        return mapList(notificationTemplateRepository.findByTypeCodeAndSendingDateBeforeAndIsProcessedAndEnabled(typeCode, date, isProcessed, enabled));
+        List<JpaNotificationTemplate> pendingNotificationTemplate = notificationTemplateRepository
+                .findByTypeCodeAndSendingDateBeforeAndProcessedAndEnabled(typeCode,date,isProcessed,enabled, PageRequest.of(0,batchSize)).getContent();
+        return mapList(pendingNotificationTemplate);
     }
 
     public NotificationTemplateDto updateUserDefined(NotificationTemplateDto notificationTemplate) {
@@ -212,6 +218,9 @@ public class NotificationTemplateService extends GenericService<JpaNotificationT
                 categorizing = notificationTemplate.getNotificationTemplateCategorizing();
                 categorizing.setSelectedApplicants(null);
             }
+            if(notificationTemplate.getNotificationTemplateCategorizing().getSelectedGroupId() != null) {
+                categorizing.setSelectedGroupId(notificationTemplate.getNotificationTemplateCategorizing().getSelectedGroupId());
+            }
             categorizing.setId(databaseNotificationTemplate.getNotificationTemplateCategorizing().getId());
             categorizing.setCreationDate(databaseNotificationTemplate.getNotificationTemplateCategorizing().getCreationDate());
             categorizing.setNotificationTemplate(databaseNotificationTemplate);
@@ -226,8 +235,10 @@ public class NotificationTemplateService extends GenericService<JpaNotificationT
         return save(databaseNotificationTemplate);
     }
 
+    @Modifying
     public NotificationTemplateDto updatedProcessed(NotificationTemplateDto notificationTemplateDto) {
-        notificationTemplateDto.setIsProcessed(true);
-        return save(notificationTemplateDto);
+        var notificationTemplate = findOne(notificationTemplateDto.getId());
+        notificationTemplate.setProcessed(true);
+        return save(notificationTemplate);
     }
 }

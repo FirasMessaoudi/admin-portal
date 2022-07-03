@@ -158,15 +158,22 @@ export class CardDetailsComponent implements OnInit {
       this.confirmDialogService.confirm(this.translate.instant(confirmationText), this.translate.instant('general.dialog_confirmation_title')).then(confirm => {
         if (confirm) {
 
-          if(actionCode == this.actions.REPRINT_CARD)          
+          if(actionCode == 'REPRINT_CARD')          
           {
               let generatCardInput:GenerateCardInput = {
-                  actionCode: this.actions.CANCEL_CARD,
+                  actionCode: this.actions.REISSUE_CARD,
                   cardId: this.card.id,
                   ritualId: this.card?.applicantRitual?.id
               };
            this.cardService.generateCard(generatCardInput).subscribe(result=>{           
-            this.router.navigate(['/card/print',this.card?.applicantRitual?.applicant?.digitalIds[0]?.uin,'APPLICANT']);                
+            if(result && result == true)
+            {
+              this.router.navigate(['/card/print',this.card?.applicantRitual?.applicant?.digitalIds[0]?.uin,'APPLICANT']);                
+            }
+            else
+            {
+              this.toastr.error(this.translate.instant('card-management.user_not_authorized'), this.translate.instant('general.dialog_error_title'));
+            }
            });  
              
           }

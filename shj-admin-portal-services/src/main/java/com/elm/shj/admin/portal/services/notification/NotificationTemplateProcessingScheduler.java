@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.javacrumbs.shedlock.core.LockAssert;
 import net.javacrumbs.shedlock.spring.annotation.SchedulerLock;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -26,13 +27,15 @@ public class NotificationTemplateProcessingScheduler {
 
     private final NotificationRequestService notificationRequestService;
 
-    @PostConstruct
+    @Value("${notification.processing.batch.size}")
+    private int notificationProcessingBatchSize;
+    
     @Scheduled(cron = "${scheduler.notification.template.processing.cron}")
     @SchedulerLock(name = "notification-template-processing-task")
     public void createNotificationRequests() {
         log.debug("create notification requests scheduler started ...");
        // LockAssert.assertLocked();
-        notificationRequestService.processNotificationTemplates();
+        notificationRequestService.processNotificationTemplates(notificationProcessingBatchSize);
     }
 
 }

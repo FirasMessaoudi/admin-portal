@@ -169,20 +169,41 @@ public class ApplicantCardController {
     }
 
     @PostMapping("/generate-card")
-    public ApplicantCardBasicDto generateCard(@RequestBody ApplicantCreateCardDto applicantCreateCardDto,Authentication authentication)  {
+    public boolean generateCard(@RequestBody ApplicantCreateCardDto applicantCreateCardDto,Authentication authentication)  {
         // Get Applicant Card
         ApplicantCardDto card = applicantCardService.findApplicantCard(applicantCreateCardDto.getCardId());
 
-        // Cancel The Card
+        // Reissued The Card
+        // Check IF Allowed to Reiisue
+        boolean isUserAllowed = isUserAuthorizedToChangeCardStatus(card, ECardStatusAction.REISSUE_CARD.name(), authentication);
+        if (!isUserAllowed) {
+            log.error("this user does not have the authority to take this action on  card status");
+            return false;
+        }
+        // Check IF Allowed to Reiisue
+        isUserAllowed = isUserAuthorizedToChangeCardStatus(card, ECardStatusAction.ACTIVATE_CARD.name(), authentication);
+        if (!isUserAllowed) {
+            log.error("this user does not have the authority to take this action on  card status");
+            return false;
+        }
+
         JwtToken loggedInUser = (JwtToken) authentication;
         Optional<Long> userId = jwtTokenService.retrieveUserIdFromToken(loggedInUser.getToken());
-        card = applicantCardService.buildApplicantCard(applicantCardService.changeCardStatus(card, applicantCreateCardDto.getActionCode(), userId));
+        card.setStatusCode(ECardStatus.REISSUED.name());
+        applicantCardService.save(card);
 
         // Sent Card Reprint
         ApplicantRitualBasicDto applicantRitualBasic =  applicantRitualBasicService.findOne(applicantCreateCardDto.getRitualId());
         ApplicantCardBasicDto savedCard = applicantCardBasicService.save(ApplicantCardBasicDto.builder().applicantRitual(applicantRitualBasic).statusCode(ECardStatus.READY_TO_PRINT.name()).build());
         userCardStatusAuditService.saveUserBasicCardStatusAudit(savedCard, Constants.SYSTEM_USER_ID_NUMBER);
-        return savedCard;
+
+        // Mark Active as New Card
+
+        ApplicantCardDto newCard = applicantCardService.findApplicantCard(savedCard.getId());
+        newCard.setStatusCode(ECardStatus.ACTIVE.name());
+        applicantCardService.save(newCard);
+
+        return true;
     }
 
 }

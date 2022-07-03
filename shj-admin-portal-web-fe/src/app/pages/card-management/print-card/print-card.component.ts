@@ -66,6 +66,7 @@ export class PrintCardComponent implements OnInit {
     {
       this.loadApplicantPerson =true;
       this.loadApplicantCardImages();
+      
     }
     else 
     {
