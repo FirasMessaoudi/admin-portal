@@ -475,6 +475,12 @@ public class ItemWriter {
                     dataValidationResults.add(DataValidationResult.builder().valid(false).cell(entry.getKey().getCell(1)).errorMessages(Collections.singletonList(EExcelItemReaderErrorType.INVALID_ID_NUMBER.getMessage())).valid(false).build());
                     return;
                 }
+                // validate applicant is belong to loggend in  user company
+                if(!validationService.isValidApplicant(applicantLiteService.findOne(applicantId), companyRefCode[0])){
+                    dataValidationResults.add(DataValidationResult.builder().valid(false).cell(entry.getKey().getCell(1)).errorMessages(Collections.singletonList(EExcelItemReaderErrorType.NOT_APPLICANT_FOUND.getMessage())).valid(false).build());
+                    return;
+                }
+
                 ApplicantPackageDto applicantPackageDto = applicantPackageService.findJpaApplicantPackageByApplicantId(applicantId);
                 if (applicantPackageDto == null) {
                     dataValidationResults.add(DataValidationResult.builder().valid(false).cell(entry.getKey().getCell(1)).errorMessages(Collections.singletonList(EExcelItemReaderErrorType.APPLICANT_PACKAGE_NOT_FOUND.getMessage())).valid(false).build());
