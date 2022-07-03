@@ -57,6 +57,8 @@ public class NotificationTemplateCategorizingDto implements Serializable {
 
     private String selectedApplicants;
 
+    private Long selectedGroupId;
+
     private String selectedStaff;
 
     private Date creationDate;

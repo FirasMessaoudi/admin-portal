@@ -40,7 +40,8 @@ public class WsError {
         COMPLAINT_NOT_FOUND_OR_NOT_UNDER_PROCESSING(135),
         COMPLAINT_TYPE_NOT_FOUND(136),
         CAMP_NUMBER_NOT_PROVIDED(137),
-        ATTACHMENT_NOT_FOUND(138);
+        ATTACHMENT_NOT_FOUND(138),
+        INVALID_DATE_OF_BIRTH(139);
         int code;
 
         EWsError(int code) {

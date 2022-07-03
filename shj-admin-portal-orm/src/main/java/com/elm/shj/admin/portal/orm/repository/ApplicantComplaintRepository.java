@@ -31,9 +31,14 @@ public interface ApplicantComplaintRepository extends JpaRepository<JpaApplicant
             "complaint.resolutionComment = :resolutionComment, complaint.updateDate = current_timestamp where complaint.id =:complaintId")
     void update(@Param("complaintId") long complaintId, @Param("resolutionComment") String resolutionComment, @Param("status") String status);
 
+    @Modifying
+    @Query("update JpaApplicantComplaint complaint set complaint.statusCode = :status, " +
+            "complaint.resolutionComment = :resolutionComment, complaint.crmStatusUpdated = true, complaint.updateDate = current_timestamp where complaint.id =:complaintId")
+    void updateByCrm(@Param("complaintId") long complaintId, @Param("resolutionComment") String resolutionComment, @Param("status") String status);
+
     @Transactional
     @Modifying
-    @Query("update JpaApplicantComplaint complaint set complaint.crmTicketNumber = :crmTicketNumber, complaint.updateDate = current_timestamp where complaint.id =:complaintId")
+    @Query("update JpaApplicantComplaint complaint set complaint.crmTicketNumber = :crmTicketNumber, complaint.crmStatusUpdated = false, complaint.updateDate = current_timestamp where complaint.id =:complaintId")
     void updateCRMTicketNumber(@Param("complaintId") long complaintId, @Param("crmTicketNumber") String crmTicketNumber);
 
     @Transactional
@@ -62,7 +67,7 @@ public interface ApplicantComplaintRepository extends JpaRepository<JpaApplicant
                                                             @Param("establishmentRefCode") long establishmentRefCode, @Param("missionRefCode") long missionRefCode,
                                                             @Param("serviceGroupRefCode") long serviceGroupRefCode, Pageable pageable);
 
-    @Query("SELECT new com.elm.shj.admin.portal.orm.entity.ApplicantComplaintVo(c.id,c.referenceNumber,c.typeCode, c.city,c.crmStatusUpdated, c.description,c.locationLat, c.locationLng,c.mobileNumber,c.creationDate, att.id,a.fullNameAr,a.fullNameEn,a.fullNameOrigin, a.idNumber, a.passportNumber,a.dateOfBirthHijri, a.dateOfBirthGregorian,a.gender,a.nationalityCode,ac.email,ac.localMobileNumber,ac.intlMobileNumber,ac.countryCode, di.uin) " +
+    @Query("SELECT new com.elm.shj.admin.portal.orm.entity.ApplicantComplaintVo(c.id,c.referenceNumber,c.typeCode,c.statusCode, c.city,c.resolutionComment,c.crmStatusUpdated,c.crmTicketNumber, c.description,c.locationLat, c.locationLng,c.mobileNumber,c.creationDate, att.id,a.fullNameAr,a.fullNameEn,a.fullNameOrigin, a.idNumber, a.passportNumber,a.dateOfBirthHijri, a.dateOfBirthGregorian,a.gender,a.nationalityCode,ac.email,ac.localMobileNumber,ac.intlMobileNumber,ac.countryCode, di.uin) " +
             "FROM JpaApplicantComplaint c JOIN c.applicantRitual ar JOIN ar.applicant a JOIN  a.digitalIds di JOIN a.contacts ac LEFT JOIN c.complaintAttachment att " +
             "WHERE (c.statusCode = :statusCode and " +
             "c.creationDate <= :creationDate AND c.crmTicketNumber is null) OR (c.crmStatusUpdated = false AND c.statusCode <> :statusCode)")

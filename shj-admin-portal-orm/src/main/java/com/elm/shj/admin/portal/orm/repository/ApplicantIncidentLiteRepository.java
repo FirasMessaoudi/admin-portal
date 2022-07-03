@@ -3,6 +3,7 @@
  */
 package com.elm.shj.admin.portal.orm.repository;
 
+import com.elm.shj.admin.portal.orm.entity.ApplicantComplaintVo;
 import com.elm.shj.admin.portal.orm.entity.JpaApplicantIncidentLite;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
@@ -29,12 +30,17 @@ public interface ApplicantIncidentLiteRepository extends JpaRepository<JpaApplic
 
     @Transactional
     @Modifying
-    @Query("update JpaApplicantIncidentLite i set i.crmTicketNumber = :crmTicketNumber, i.updateDate = current_timestamp where i.id =:incidentId")
+    @Query("update JpaApplicantIncidentLite i set i.crmTicketNumber = :crmTicketNumber, i.crmStatusUpdated = false, i.updateDate = current_timestamp where i.id =:incidentId")
     void updateCRMTicketNumber(@Param("incidentId") long incidentId, @Param("crmTicketNumber") String crmTicketNumber);
 
     @Transactional
     @Modifying
     @Query("update JpaApplicantIncidentLite i set i.crmStatusUpdated = true, i.updateDate = current_timestamp where i.id =:incidentId")
     void updateCRMUpdateStatus(@Param("incidentId") long incidentId);
+
+    @Query("SELECT new com.elm.shj.admin.portal.orm.entity.ApplicantComplaintVo(c.id,c.referenceNumber,c.creationDate,c.statusCode, c.typeCode,c.city, c.description, c.locationLat, c.locationLng,c.campNumber, att.id, att.filePath, c.resolutionComment, c.updateDate,a.fullNameAr,a.fullNameEn, di.uin, a.preferredLanguage) " +
+            "FROM JpaApplicantIncidentLite c JOIN JpaApplicantRitualBasic ar ON c.applicantRitualId = ar.id JOIN JpaApplicant a ON a.id = ar.applicant.id JOIN JpaApplicantDigitalId di ON di.applicantId = a.id LEFT JOIN JpaComplaintAttachment att ON att.applicantComplaint.id = c.id " +
+            "WHERE c.id = :id")
+    ApplicantComplaintVo findOneLite(@Param("id") Long id);
 
 }

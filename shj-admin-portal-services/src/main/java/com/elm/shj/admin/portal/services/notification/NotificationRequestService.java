@@ -153,8 +153,9 @@ public class NotificationRequestService extends GenericService<JpaNotificationRe
         NotificationTemplateDto savedNotificationTemplate = notificationTemplateService.create(notificationTemplate);
         NotificationTemplateCategorizingDto categorizing = notificationTemplate.getNotificationTemplateCategorizing();
         if(categorizing != null){
-            if(categorizing.getNotificationCategory() == 1){
-                applicants = applicantService.findAllRegisteredAndHavingActiveRitual();
+            if(categorizing.getNotificationCategory() == NotificationScope.ALL){
+                String companyCode = notificationTemplate.getCompanyCode();
+                applicants = applicantService.findApplicantByCompanyCode(companyCode);
                 sendNotificationTemplateToApplicants(savedNotificationTemplate, applicants);
             }
             else if(categorizing.getNotificationCategory() == 2){
@@ -165,7 +166,7 @@ public class NotificationRequestService extends GenericService<JpaNotificationRe
                 applicants = applicantService.findAllByCriteria(notificationTemplate.getNotificationTemplateCategorizing(), null);
                 sendNotificationTemplateToApplicants(savedNotificationTemplate, applicants);
             }
-            else if(categorizing.getNotificationCategory() == 4){
+            else if(categorizing.getNotificationCategory() == NotificationScope.SELECTED_APPLICANT){
 
                 if (categorizing.getSelectedApplicants() != null) {
                     List<Long> applicantIds = Arrays.stream(categorizing.getSelectedApplicants().split(",")).map(Long::parseLong).collect(Collectors.toList());
@@ -181,6 +182,9 @@ public class NotificationRequestService extends GenericService<JpaNotificationRe
                     companyStaff = companyStaffService.findAllByIds(staffIds);
                     sendNotificationTemplateToCompanyStaff(savedNotificationTemplate, companyStaff);
                 }
+            } else if(categorizing.getNotificationCategory() == NotificationScope.GROUP) {
+                    List<ApplicantDto> groupApplicants = applicantService.findApplicantByGroupId(categorizing.getSelectedGroupId());
+                    sendNotificationTemplateToApplicants(savedNotificationTemplate, groupApplicants);
             }
         }
 
