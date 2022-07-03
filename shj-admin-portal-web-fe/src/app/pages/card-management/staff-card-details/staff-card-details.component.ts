@@ -179,7 +179,13 @@ export class StaffCardDetailsComponent implements OnInit {
                 };
 
                 this.cardService.generatStaffCard(generatCardInput).subscribe(result=>{           
-                  this.router.navigate(['/card/print',this.card?.companyStaffDigitalId?.suin,'STAFF']);                
+                  
+                  if(result && result==true)
+                  this.router.navigate(['/card/print',this.card?.companyStaffDigitalId?.suin,'STAFF']); 
+                  else
+                   {
+                    this.toastr.error(this.translate.instant('card-management.user_not_authorized'), this.translate.instant('general.dialog_error_title'));
+                   }               
                  });
                            
             }

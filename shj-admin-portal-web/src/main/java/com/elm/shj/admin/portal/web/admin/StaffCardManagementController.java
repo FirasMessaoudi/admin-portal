@@ -160,12 +160,27 @@ public class StaffCardManagementController {
     }
 
     @PostMapping("/generate-card")
-    public void generateCard(@RequestBody StaffCreateCardDto staffCreateCardDto,Authentication authentication)  {
+    public boolean generateCard(@RequestBody StaffCreateCardDto staffCreateCardDto,Authentication authentication)  {
 
         CompanyStaffCardDto card = companyStaffCardService.findById(staffCreateCardDto.getCardId());
         if (card == null) {
             throw new CardDetailsNotFoundException("no card found with id : " + staffCreateCardDto.getCardId());
         }
+
+        // Reissued The Card
+        // Check IF Allowed to Reiisue
+        boolean isUserAllowed = isUserAuthorizedToChangeCardStatus(card, ECardStatusAction.REISSUE_CARD.name(), authentication);
+        if (!isUserAllowed) {
+            log.error("this user does not have the authority to take this action on  card status");
+            return false;
+        }
+        // Check IF Allowed to Reiisue
+        isUserAllowed = isUserAuthorizedToChangeCardStatus(card, ECardStatusAction.ACTIVATE_CARD.name(), authentication);
+        if (!isUserAllowed) {
+            log.error("this user does not have the authority to take this action on  card status");
+            return false;
+        }
+
         JwtToken loggedInUser = (JwtToken) authentication;
         Optional<Long> userId = jwtTokenService.retrieveUserIdFromToken(loggedInUser.getToken());
 
@@ -185,6 +200,8 @@ public class StaffCardManagementController {
         CompanyStaffCardDto newCard = companyStaffCardService.findById(companyStaffCardDto.getId());
         newCard.setStatusCode(ECardStatus.ACTIVE.name());
         companyStaffCardService.save(newCard);
+
+        return true;
     }
 
 
