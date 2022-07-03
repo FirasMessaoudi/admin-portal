@@ -16,8 +16,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityManager;
+import javax.persistence.Parameter;
+import javax.persistence.PersistenceContext;
+import javax.persistence.TemporalType;
 import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
@@ -164,7 +169,7 @@ public class NotificationTemplateService extends GenericService<JpaNotificationT
     @Transactional
     public NotificationTemplateDto create(NotificationTemplateDto notificationTemplate) {
         notificationTemplate.setTypeCode(ENotificationTemplateType.USER_DEFINED.name());
-        notificationTemplate.setIsProcessed(false);
+        notificationTemplate.setProcessed(false);
         notificationTemplate.getNotificationTemplateContents().stream().forEach(content -> content.setNotificationTemplate(notificationTemplate));
         if (notificationTemplate.getNotificationTemplateCategorizing() != null) {
             notificationTemplate.getNotificationTemplateCategorizing().setNotificationTemplate(notificationTemplate);
@@ -172,9 +177,21 @@ public class NotificationTemplateService extends GenericService<JpaNotificationT
         notificationTemplate.setNotificationTemplateContents(notificationTemplate.getNotificationTemplateContents());
         return save(notificationTemplate);
     }
+    @PersistenceContext
+    private EntityManager entityManager;
 
-    public List<NotificationTemplateDto> findUnprocessedUserDefinedNotifications(String typeCode, Date date, Boolean isProcessed, boolean enabled) {
-        return mapList(notificationTemplateRepository.findByTypeCodeAndSendingDateBeforeAndIsProcessedAndEnabled(typeCode, date, isProcessed, enabled));
+    @Modifying
+    @Transactional
+    public List<NotificationTemplateDto> findUnprocessedUserDefinedNotifications(String typeCode, Date date, Boolean isProcessed, boolean enabled,int batchSize) {
+        List<JpaNotificationTemplate> pendingNotificationTemplate = entityManager
+                .createQuery("SELECT nt from JpaNotificationTemplate nt WHERE nt.typeCode=:typeCode AND nt.sendingDate<=:now AND nt.isProcessed=:isProcessed AND nt.enabled=:enabled", JpaNotificationTemplate.class)
+                .setParameter("typeCode",typeCode)
+                .setParameter("now",date, TemporalType.DATE)
+                .setParameter("isProcessed", isProcessed)
+                .setParameter("enabled",enabled)
+                .setMaxResults(batchSize)
+                .getResultList();
+        return mapList(pendingNotificationTemplate);
     }
 
     public NotificationTemplateDto updateUserDefined(NotificationTemplateDto notificationTemplate) {
@@ -212,6 +229,9 @@ public class NotificationTemplateService extends GenericService<JpaNotificationT
                 categorizing = notificationTemplate.getNotificationTemplateCategorizing();
                 categorizing.setSelectedApplicants(null);
             }
+            if(notificationTemplate.getNotificationTemplateCategorizing().getSelectedGroupId() != null) {
+                categorizing.setSelectedGroupId(notificationTemplate.getNotificationTemplateCategorizing().getSelectedGroupId());
+            }
             categorizing.setId(databaseNotificationTemplate.getNotificationTemplateCategorizing().getId());
             categorizing.setCreationDate(databaseNotificationTemplate.getNotificationTemplateCategorizing().getCreationDate());
             categorizing.setNotificationTemplate(databaseNotificationTemplate);
@@ -226,8 +246,10 @@ public class NotificationTemplateService extends GenericService<JpaNotificationT
         return save(databaseNotificationTemplate);
     }
 
+    @Modifying
     public NotificationTemplateDto updatedProcessed(NotificationTemplateDto notificationTemplateDto) {
-        notificationTemplateDto.setIsProcessed(true);
-        return save(notificationTemplateDto);
+        var notificationTemplate = findOne(notificationTemplateDto.getId());
+        notificationTemplate.setProcessed(true);
+        return save(notificationTemplate);
     }
 }
