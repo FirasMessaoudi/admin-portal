@@ -15,7 +15,7 @@
         </option>
       </select>
 
-      
+
 
     </h3>
 
@@ -39,7 +39,7 @@
 
   <div class="content__section">
 
-    
+
 
     <div class="row row-cols-1 row-cols-md-2 row-cols-xl-4">
 
@@ -182,13 +182,13 @@
 
     </div>
 
-    
+
 
     <div class="row row-cols-1 row-cols-xl-2">
       <div class="col mt-4">
         <div class="flex-center-column border py-4 px-5">
           <img src="assets/images/homelink.svg" alt="homelink">
-          <button class="btn btn-dcc-primary btn-lg mt-3 px-7 py-3">Dashboard URL</button>
+          <button (click)="openBIDashboard()" class="btn btn-dcc-primary btn-lg mt-3 px-7 py-3">{{'dashboard.main.open_bi_dashboard' | translate}}</button>
         </div>
       </div>
       <div class="col mt-4">
@@ -266,7 +266,7 @@
           <div class="py-3">Content</div>
         </div>
       </div>
-      
+
     </div>
     <div class="col mt-4">
       <div class="h-100 p-3 border">
