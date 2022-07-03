@@ -252,7 +252,7 @@ export class StaffCardDetailsComponent implements OnInit {
         return this.authenticationService.hasAuthority(EAuthority.CANCEL_CARD);
       }
       case 'reprint_card': {
-        return this.authenticationService.hasAuthority(EAuthority.REPRINT_CARD);
+        return this.authenticationService.hasAuthority(EAuthority.REISSUE_CARD);
       }
       default: {
         return false;
