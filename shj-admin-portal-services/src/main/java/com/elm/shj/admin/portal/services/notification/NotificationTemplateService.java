@@ -14,7 +14,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
@@ -177,20 +179,12 @@ public class NotificationTemplateService extends GenericService<JpaNotificationT
         notificationTemplate.setNotificationTemplateContents(notificationTemplate.getNotificationTemplateContents());
         return save(notificationTemplate);
     }
-    @PersistenceContext
-    private EntityManager entityManager;
-
     @Modifying
     @Transactional
     public List<NotificationTemplateDto> findUnprocessedUserDefinedNotifications(String typeCode, Date date, Boolean isProcessed, boolean enabled,int batchSize) {
-        List<JpaNotificationTemplate> pendingNotificationTemplate = entityManager
-                .createQuery("SELECT nt from JpaNotificationTemplate nt WHERE nt.typeCode=:typeCode AND nt.sendingDate<=:now AND nt.isProcessed=:isProcessed AND nt.enabled=:enabled", JpaNotificationTemplate.class)
-                .setParameter("typeCode",typeCode)
-                .setParameter("now",date, TemporalType.DATE)
-                .setParameter("isProcessed", isProcessed)
-                .setParameter("enabled",enabled)
-                .setMaxResults(batchSize)
-                .getResultList();
+
+        List<JpaNotificationTemplate> pendingNotificationTemplate = notificationTemplateRepository
+                .findByTypeCodeAndSendingDateAfterAndProcessedAndEnabled(typeCode,date,isProcessed,enabled, PageRequest.of(0,batchSize)).getContent();
         return mapList(pendingNotificationTemplate);
     }
 

@@ -64,7 +64,7 @@ public class JpaNotificationTemplate implements Serializable {
     private boolean forceSending;
 
     @Column(name = "is_processed")
-    private boolean isProcessed;
+    private boolean processed;
 
     @Column(name = "expiration_period_in_minutes")
     private Integer expirationPeriodInMinutes;
