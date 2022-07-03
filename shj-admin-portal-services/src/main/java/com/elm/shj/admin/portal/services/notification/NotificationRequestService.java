@@ -98,9 +98,11 @@ public class NotificationRequestService extends GenericService<JpaNotificationRe
      * @param passwordExpiryNotificationRequest the Password Expiry Notification Request Details to save
      */
     public void savePasswordExpiryNotificationRequest(PasswordExpiryNotificationRequest passwordExpiryNotificationRequest) throws NotFoundException {
+        log.info("Start savePasswordExpiryNotificationRequest");
         Optional<NotificationTemplateDto> notificationTemplate = notificationTemplateService.findEnabledNotificationTemplateByNameCode(PASSWORD_EXPIRATION_TEMPLATE_NAME);
 
         if (notificationTemplate == null || !notificationTemplate.isPresent()) {
+            log.debug("notification template not found");
             throw new NotFoundException("no Template found for  " + PASSWORD_EXPIRATION_TEMPLATE_NAME);
         }
 
@@ -118,6 +120,7 @@ public class NotificationRequestService extends GenericService<JpaNotificationRe
                     save(notificationRequest);
                 }
         );
+        log.info("end savePasswordExpiryNotificationRequest");
     }
 
     /**
@@ -149,25 +152,33 @@ public class NotificationRequestService extends GenericService<JpaNotificationRe
 
     @Transactional(isolation = Isolation.READ_COMMITTED)
     public void createUserDefinedNotificationRequest(NotificationTemplateDto notificationTemplate) {
+        log.info("Start createUserDefinedNotificationRequest");
         List<ApplicantDto> applicants;
         List<CompanyStaffDto> companyStaff;
         NotificationTemplateDto savedNotificationTemplate = notificationTemplateService.create(notificationTemplate);
         NotificationTemplateCategorizingDto categorizing = notificationTemplate.getNotificationTemplateCategorizing();
         if(categorizing != null){
+            log.info("notification categorization found");
             if(categorizing.getNotificationCategory() == NotificationScope.ALL){
                 String companyCode = notificationTemplate.getCompanyCode();
                 if(companyCode == null) {
+                    log.info("retrieve all aplicants for all registered and have active ritual");
                     applicants = applicantService.findAllRegisteredAndHavingActiveRitual();
                 } else {
+                    log.info("retrieve all aplicants for company with companyCode: {}", companyCode);
                     applicants = applicantService.findApplicantByCompanyCode(companyCode);
                 }
+                log.info("send notification to applicants", applicants);
                 sendNotificationTemplateToApplicants(savedNotificationTemplate, applicants);
             }
             else if(categorizing.getNotificationCategory() == 2){
+                log.info("find registered staff for send notification");
                 companyStaff = companyStaffService.findRegisteredStaff();
+                log.info("registered staff to send notification: {}", companyStaff);
                 sendNotificationTemplateToCompanyStaff(savedNotificationTemplate, companyStaff);
             }
             else if(categorizing.getNotificationCategory() == 3){
+                log.info("find all applicants by criteria to send notifications");
                 applicants = applicantService.findAllByCriteria(notificationTemplate.getNotificationTemplateCategorizing(), null);
                 sendNotificationTemplateToApplicants(savedNotificationTemplate, applicants);
             }
@@ -175,6 +186,7 @@ public class NotificationRequestService extends GenericService<JpaNotificationRe
 
                 if (categorizing.getSelectedApplicants() != null) {
                     List<Long> applicantIds = Arrays.stream(categorizing.getSelectedApplicants().split(",")).map(Long::parseLong).collect(Collectors.toList());
+                    log.info("applicantIds for send notificiation to applicants : {}", applicantIds);
                     applicants = applicantService.findAllByIds(applicantIds);
                     sendNotificationTemplateToApplicants(savedNotificationTemplate, applicants);
                 }
@@ -184,6 +196,7 @@ public class NotificationRequestService extends GenericService<JpaNotificationRe
                 //sendNotificationTemplateToCompanyStaff(savedNotificationTemplate, companyStaff);
                 if (categorizing.getSelectedStaff() != null) {
                     List<Long> staffIds = Arrays.stream(categorizing.getSelectedApplicants().split(",")).map(Long::parseLong).collect(Collectors.toList());
+                    log.info("staffIds for send notificiation to staff : {}", staffIds);
                     companyStaff = companyStaffService.findAllByIds(staffIds);
                     sendNotificationTemplateToCompanyStaff(savedNotificationTemplate, companyStaff);
                 }
@@ -262,6 +275,7 @@ public class NotificationRequestService extends GenericService<JpaNotificationRe
                 .orElse(NOTIFICATION_DEFAULT_LANGUAGE);
     }
     private String getCompanyNotificationLanguage(NotificationTemplateDto notificationTemplate, CompanyStaffDto companyStaffDto) {
+        log.info("start getCompanyNotificationLanguage");
         return notificationTemplate.getNotificationTemplateContents()
                 .stream().filter(c -> companyStaffDto.getPreferredLanguage().equalsIgnoreCase(c.getLang()))
                 .findFirst()
@@ -271,7 +285,7 @@ public class NotificationRequestService extends GenericService<JpaNotificationRe
 
     @Modifying
     public void processNotificationTemplates(int notificationProcessingBatchSize) {
-
+        log.info("start processNotificationTemplates");
         List<NotificationTemplateDto> notificationTemplates = notificationTemplateService
                 .findUnprocessedUserDefinedNotifications(ENotificationTemplateType.USER_DEFINED.name(), new Date(), false, true, notificationProcessingBatchSize);
         notificationTemplates.forEach(

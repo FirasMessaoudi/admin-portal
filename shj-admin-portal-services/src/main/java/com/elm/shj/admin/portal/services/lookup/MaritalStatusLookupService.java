@@ -27,6 +27,10 @@ public class MaritalStatusLookupService extends GenericService<JpaMaritalStatusL
      * @return if the marital status is found
      */
     public boolean existsByCode(String maritalStatusCode) {
-        return ((MaritalStatusLookupRepository) getRepository()).existsByCode(maritalStatusCode);
+        log.info("start existsByCode in MaritalStatusLookupService with maritalStatusCode: {}", maritalStatusCode);
+        boolean maritalStatusCodeExits = ((MaritalStatusLookupRepository) getRepository()).existsByCode(maritalStatusCode);
+        log.info("marital status found {}", maritalStatusCodeExits);
+        log.info("start existsByCode in MaritalStatusLookupService with maritalStatusCode: {}", maritalStatusCode);
+        return maritalStatusCodeExits;
     }
 }

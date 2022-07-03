@@ -37,15 +37,17 @@ public class PrintRequestBatchService extends GenericService<JpaPrintRequestBatc
 
 
     public List<PrintRequestBatchDto> findPrintRequestBatches(long printRequestId) {
+        log.info("find print request batches for applicant with printRequestId : {}", printRequestId);
         return mapList(printRequestBatchRepository.findPrintRequestBatches(printRequestId));
     }
 
     public List<PrintRequestBatchDto> findStaffPrintRequestBatches(long printRequestId) {
+        log.info("find print request batches for staff with printRequestId : {}", printRequestId);
         return mapList(printRequestBatchRepository.findStaffPrintRequestBatches(printRequestId));
     }
 
     public void updatePrintRequestBatchCards(String printRequestReferenceNumber, int batchSequenceNumber, Map<String, String> cardsReferenceNumberMap) throws PrintRequestBatchException {
-
+        log.info("start updatePrintRequestBatchCards");
         Optional<JpaPrintRequestBatch> batch = printRequestBatchRepository.findBySequenceNumberAndPrintRequestReferenceNumber(batchSequenceNumber, printRequestReferenceNumber);
         if (!batch.isPresent()) {
             throw new PrintRequestBatchException("Print request Batch not found");
@@ -105,6 +107,7 @@ public class PrintRequestBatchService extends GenericService<JpaPrintRequestBatc
                     }
                 }
             });
+            log.info("end updatePrintRequestBatchCards");
             companyStaffCardService.saveAll(staffCardList);
         }
     }

@@ -41,30 +41,37 @@ public class ApplicantRitualCardLiteService extends GenericService<JpaApplicantR
 
 
     public Optional<ApplicantRitualCardLiteDto> findCardDetailsByUinAndPackageId(String uin, long applicantPackageId) {
-
+        log.info("start findCardDetailsByUinAndPackageId with uin: {} and applicantPackageId: {}", uin, applicantPackageId);
         ApplicantPackageDto applicantPackageDto = applicantPackageService.findOne(applicantPackageId);
 
         if (applicantPackageDto == null) {
+            log.info("not found for findOne with uin: {} and applicantPackageId: {}", uin, applicantPackageId);
             return Optional.empty();
         }
 
         Optional<JpaApplicantRitual> applicantRitual = applicantRitualRepository.findByApplicantDigitalIdsUinAndApplicantPackageId(uin, applicantPackageId);
 
-        if (!applicantRitual.isPresent())
+        if (!applicantRitual.isPresent()) {
+            log.info("not found  findByApplicantDigitalIdsUinAndApplicantPackageId with uin: {} and applicantPackageId: {}", uin, applicantPackageId);
             return Optional.empty();
+        }
 
         ApplicantCardDto applicantCardDto = applicantCardService.findApplicantCardByApplicantRitualId(applicantRitual.get().getId());
         //TODO some validation on findByApplicantRitualId if it is required like status code
-        if (applicantCardDto == null)
+        if (applicantCardDto == null) {
+            log.info("not found  findApplicantCardByApplicantRitualId applicantPackageId: {}", applicantPackageId);
             return Optional.empty();
+        }
         Optional<CompanyStaffDto> groupLeader = companyStaffService.findGroupLeaderByApplicantUin(uin, applicantPackageDto.getRitualPackage().getCompanyRitualSeason().getId());
         //comment out this part because group leader info maybe not provided
         /*if (!groupLeader.isPresent())
             return Optional.empty();*/
 
         CompanyLiteDto company = companyService.findCompanyByCompanyRitualSeasonsIdAndApplicantUin(applicantPackageDto.getRitualPackage().getCompanyRitualSeason().getId(), Long.parseLong(uin));
-        if (company == null)
+        if (company == null) {
+            log.info("not found  findCompanyByCompanyRitualSeasonsIdAndApplicantUin uin: {}", uin);
             return Optional.empty();
+        }
 
         ApplicantRitualCardLiteDto returnedDto = getMapper().fromEntity(applicantRitual.get(), mappingContext);
         returnedDto.setRitualType(applicantPackageDto.getRitualPackage().getCompanyRitualSeason().getRitualSeason().getRitualTypeCode().toUpperCase());
@@ -88,15 +95,18 @@ public class ApplicantRitualCardLiteService extends GenericService<JpaApplicantR
         returnedDto.setEstablishmentId(company.getEstablishmentRefCode() != null ? company.getEstablishmentRefCode() : 9);
         CompanyLiteDto establishment = companyService.findByBasicInfo(company.getEstablishmentRefCode() != null ? company.getEstablishmentRefCode() + "" : 9 + "", 1);
         if (establishment != null) {
+            log.info("found  findByBasicInfo with establishmentRefCode: {}", company.getEstablishmentRefCode());
             returnedDto.setEstablishmentNameAr(establishment.getLabelAr());
             returnedDto.setEstablishmentNameEn(establishment.getLabelEn());
             returnedDto.setEstablishmentContactNumber(establishment.getContactNumber());
         }
         CompanyLiteDto serviceGroup = companyService.findByBasicInfo(applicantRitual.get().getApplicant().getServiceGroupMakkahCode() + "", 5);
         if (serviceGroup != null) {
+            log.info("found  findByBasicInfo with serviceGroup Makkah : {}", applicantRitual.get().getApplicant().getServiceGroupMakkahCode());
             returnedDto.setServiceNameAr(serviceGroup.getLabelAr());
             returnedDto.setServiceNameEn(serviceGroup.getLabelEn());
         }
+        log.info("end findCardDetailsByUinAndPackageId with uin: {} and applicantPackageId: {}", uin, applicantPackageId);
         return Optional.of(returnedDto);
     }
 

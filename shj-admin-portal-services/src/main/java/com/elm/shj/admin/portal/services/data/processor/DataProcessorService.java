@@ -57,6 +57,7 @@ public class DataProcessorService {
      */
     @SuppressWarnings({"rawtypes", "unchecked"})
     public <T> DataProcessorResult<T> processRequestFile(Resource requestFile, DataSegmentDto dataSegment) throws IOException {
+        log.info("start processRequestFile for dataSegment", dataSegment.getTemplateFileName());
         // create suitable reader;
         ExcelItemReader<T> excelItemReader = excelItemReaderFactory.create(dataSegment);
         // load workbook
@@ -72,13 +73,18 @@ public class DataProcessorService {
             if (row.getRowNum() != headerRowNum && !isBlankRow(row)) {
                 try {
                     // read item
+                    log.info("Read items with row: {}", row);
                     T item = excelItemReader.read(row ,headerRowNum);
                     // add all reading errors
+                    log.info("Add all errors in dataValidations Results: {}", excelItemReader.getDataReadingErrors());
                     dataValidationResults.addAll(excelItemReader.getDataReadingErrors());
                     // run validations
                     Set<ConstraintViolation<T>> violations = new HashSet<>(validator.validate(item));
+                    log.info("Validate Item level one: {}", violations);
                     violations.addAll(validator.validate(item, CheckFirst.class));
+                    log.info("Validate Item level two: {}", violations);
                     violations.addAll(validator.validate(item, CheckSecond.class));
+                    log.info("Validate Item level three: {}", violations);
                     if (violations.isEmpty()) {
                         // if no validation errors than add item
                         parsedItems.add(new AbstractMap.SimpleEntry<>(row, item));
@@ -96,6 +102,8 @@ public class DataProcessorService {
         result.setDataValidationResults(dataValidationResults);
         result.setParsedItems(parsedItems);
         result.setWithErrors(dataValidationResults.stream().anyMatch(dvr -> !dvr.isValid()));
+        log.info("parsed item results: {}", parsedItems);
+        log.info("end processRequestFile for dataSegment", dataSegment.getTemplateFileName());
         return result;
     }
 

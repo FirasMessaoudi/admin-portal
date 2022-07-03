@@ -67,11 +67,13 @@ public class OtpService {
      * @return the created otp
      */
     public String createOtp(String principal,Integer countryCode, String mobileNumber) {
+        log.info("start createOtp with username: {} and countryCode: {}, and mobileNumber: {}", principal, countryCode, mobileNumber);
         try {
             String generatedOtp = otpGenerator.generateOtp(principal);
             otpCache.put(principal, generatedOtp);
             String locale = principal.startsWith("1") ? "ar" : "en";
             String registerUserSms = messageSource.getMessage(OTP_SMS_NOTIFICATION_MSG, new String[]{generatedOtp}, Locale.forLanguageTag(locale));
+            log.info("end createOtp with username: {} and countryCode: {}, and mobileNumber: {}", principal, countryCode, mobileNumber);
             return huicSmsService.sendMessage(countryCode,mobileNumber, registerUserSms, "comments") ? generatedOtp : null;
         } catch (NoSuchAlgorithmException | InvalidKeyException | RuntimeException | SSLException e) {
             log.error("Unable to generate OTP : " + e.getMessage(), e);

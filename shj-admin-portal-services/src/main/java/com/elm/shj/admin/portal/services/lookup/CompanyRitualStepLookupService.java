@@ -41,20 +41,25 @@ public class CompanyRitualStepLookupService extends GenericService<JpaCompanyRit
 
 
     public List<GroupRitualStepVo> findCompanyRitualStepsByGroupId(long groupId) {
+        log.info("start findCompanyRitualStepsByGroupId with group Id: {}", groupId);
+        log.info("query for findCompanyRitualStepsByGroupId with group Id: {}", groupId);
         List<GroupRitualStepVo> companyRitualSteps = repository.findCompanyRitualStepsByGroupId(groupId);
-
+        log.info("company ritual steps found with : {}", companyRitualSteps);
         companyRitualSteps.forEach(s -> {
             s.setStepHijriDate(DateUtils.toHijri(s.getStepDateTime()));
             s.setStepTime(s.getStepDateTime().toInstant()
                     .atZone(ZoneId.systemDefault())
                     .toLocalTime());
         });
-
+        log.info("end findCompanyRitualStepsByGroupId with group Id: {}", groupId);
         return companyRitualSteps;
     }
 
     public CompanyRitualStepLookupDto findCompanyRitualStep(String stepCode) {
+        log.info("start findCompanyRitualStep with step code: {}", stepCode);
+        log.info("query for  findTopByCodeAndLang with step code: {}", stepCode);
         Optional<JpaCompanyRitualStepLookup> companyRitualStep = repository.findTopByCodeAndLang(stepCode, "en");
+        log.info("companyRitualStep found : {}", companyRitualStep.isPresent());
         return companyRitualStep.isPresent() ? getMapper().fromEntity(companyRitualStep.get(), mappingContext):null;
     }
 

@@ -60,11 +60,14 @@ public class PrintRequestLiteService extends GenericService<JpaPrintRequest, Pri
      * @return the list of print requests
      */
     public Page<PrintRequestDto> findAll(String target, Pageable pageable) {
+        log.info("start find all print request with target: {}", target);
         Page<PrintRequestDto> litePrintRequests = mapPage(printRequestRepository.findByTarget(target, pageable));
+        log.info("print request findByTarget: {}", litePrintRequests);
         litePrintRequests.forEach(p -> {
             p.setCardsCount(printRequestCardRepository.countAllByPrintRequestId(p.getId()));
             p.setBatchesCount(printRequestBatchRepository.countAllByPrintRequestId(p.getId()));
         });
+        log.info("end find all print request with target: {}", target);
         return litePrintRequests;
     }
 
@@ -76,6 +79,7 @@ public class PrintRequestLiteService extends GenericService<JpaPrintRequest, Pri
      * @return
      */
     public Page<PrintRequestDto> findByFilter(PrintRequestCriteriaDto criteria, String target, Pageable pageable) {
+        log.info("start find by filter print request with target: {}", target);
         Page<PrintRequestDto> litePrintRequests = null;
         Date startDate = new GregorianCalendar(1950, 01, 01).getTime();
         Date endDate = new GregorianCalendar(5000, 01, 01).getTime();
@@ -97,28 +101,32 @@ public class PrintRequestLiteService extends GenericService<JpaPrintRequest, Pri
             p.setCardsCount(printRequestCardRepository.countAllByPrintRequestId(p.getId()));
             p.setBatchesCount(printRequestBatchRepository.countAllByPrintRequestId(p.getId()));
         });
+        log.info("end find by filter print request with target: {}", target);
         return litePrintRequests;
     }
 
     private Page<PrintRequestDto> findStaffPrintRequests(PrintRequestCriteriaDto criteria, Date startDate, Date endDate, Pageable pageable) {
+        log.info("start findStaffPrintRequests ");
         if (criteria.getFromDate() != null)
             startDate = atStartOfDay(criteria.getFromDate());
 
         if (criteria.getToDate() != null)
             endDate = atEndOfDay(criteria.getToDate());
 
+        log.info("query for  findStaffPrintRequestByFilters with filters: {}", criteria);
         return mapPage(printRequestRepository.findStaffPrintRequestByFilters(criteria.getRitualTypeCode(), criteria.getCompanyCode(), criteria.getSeason(), criteria.getStatusCode(), !criteria.getDescription().equals("") ? criteria.getDescription() : null,
                 !criteria.getRequestNumber().equals("") ? criteria.getRequestNumber() : null, criteria.getBatchNumber() != 0 ? criteria.getBatchNumber() : -1L, !criteria.getCardNumber().equals("") ? criteria.getCardNumber() : null, !criteria.getIdNumber().equals("") ? criteria.getIdNumber() : null
                 , startDate, endDate, pageable));
     }
 
     private Page<PrintRequestDto> findApplicantPrintRequests(PrintRequestCriteriaDto criteria, Date startDate, Date endDate, Pageable pageable) {
+        log.info("start findApplicantPrintRequests");
         if (criteria.getFromDate() != null)
             startDate = atStartOfDay(criteria.getFromDate());
 
         if (criteria.getToDate() != null)
             endDate = atEndOfDay(criteria.getToDate());
-
+        log.info("query for applicant findByFilters with criteria: {}", criteria);
         return mapPage(printRequestRepository.findByFilters(criteria.getStatusCode(), criteria.getDescription(),
                 criteria.getRequestNumber(), criteria.getBatchNumber() != 0 ? criteria.getBatchNumber() : -1L, criteria.getCardNumber(), criteria.getIdNumber()
                 , startDate, endDate, pageable));
@@ -199,10 +207,12 @@ public class PrintRequestLiteService extends GenericService<JpaPrintRequest, Pri
     }
 
     public List<PrintRequestBatchDto> findPrintRequestBatches(String refrenceNumber, String target){
+        log.info("start find print request batches with reference number: {} and target: {}", refrenceNumber, target);
         JpaPrintRequest jpaPrintRequest = printRequestRepository.findByReferenceNumber(refrenceNumber);
         List<PrintRequestBatchDto> listPrintRequestBatches = new ArrayList<>();
         if(jpaPrintRequest != null) {
             if (target.equalsIgnoreCase(EPrintingRequestTarget.APPLICANT.name())) {
+                log.info("query for findPrintRequestBatches with applicant id: {}", jpaPrintRequest.getId());
                 listPrintRequestBatches = printRequestBatchService.findPrintRequestBatches(jpaPrintRequest.getId());
                 listPrintRequestBatches.stream().forEach(batch -> {
                     // will be called for each print request batch, get all applicant cards for that batch
@@ -227,6 +237,7 @@ public class PrintRequestLiteService extends GenericService<JpaPrintRequest, Pri
 
 
             } else {
+                log.info("query for findStaffPrintRequestBatches with staff id: {}", jpaPrintRequest.getId());
                 listPrintRequestBatches = printRequestBatchService.findStaffPrintRequestBatches(jpaPrintRequest.getId());
                 listPrintRequestBatches.stream().forEach(batch -> {
                     // will be called for each print request batch, get all applicant cards for that batch
@@ -248,6 +259,7 @@ public class PrintRequestLiteService extends GenericService<JpaPrintRequest, Pri
                 });
             }
         }
+        log.info("end find print request batches with reference number: {} and target: {}", refrenceNumber, target);
         return listPrintRequestBatches;
 
     }
@@ -271,6 +283,7 @@ public class PrintRequestLiteService extends GenericService<JpaPrintRequest, Pri
 
     @Transactional
     public void updatePrintRequestStatusToSendToPrinting(long printRequestId, String target) {
+        log.info("start updatePrintRequestStatusToSendToPrinting with printRequestId : {}", printRequestId);
         printRequestRepository.updatePrintRequestStatus(printRequestId, EPrintRequestStatus.SENT_TO_PRINTING.name());
         if (target.equalsIgnoreCase(EPrintingRequestTarget.APPLICANT.name())) {
             List<Long> cardsIds = printRequestCardRepository.findAllByPrintRequestId(printRequestId).stream().map(JpaPrintRequestCard::getCardId).collect(Collectors.toList());
@@ -279,6 +292,7 @@ public class PrintRequestLiteService extends GenericService<JpaPrintRequest, Pri
             List<Long> cardsIds = printRequestCardRepository.findAllByPrintRequestId(printRequestId).stream().map(JpaPrintRequestCard::getCardId).collect(Collectors.toList());
             companyStaffCardService.updateCardStatus(cardsIds);
         }
+        log.info("end updatePrintRequestStatusToSendToPrinting with printRequestId : {}", printRequestId);
     }
 
 }

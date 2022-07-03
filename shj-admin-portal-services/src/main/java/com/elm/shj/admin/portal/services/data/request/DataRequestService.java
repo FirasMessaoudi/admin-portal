@@ -130,10 +130,12 @@ public class DataRequestService extends GenericService<JpaDataRequest, DataReque
      */
     @Transactional
     public DataRequestDto save(DataRequestDto dataRequest, MultipartFile file) {
+        log.info("start save dataRequest: {}", dataRequest);
         dataRequest.setChannel(EDataRequestChannel.SYSTEM.toString());
         // generate request reference
         String requestReference = generateReferenceNumber(EDataRequestChannel.nullSafeValueOf(dataRequest.getChannel()));
         // generate file and folder names to be uploaded/created in SFTP
+        log.info("requestReference for generate sftp file path: {}", requestReference);
         String sftpPath = sftpService.generateSftpFilePath(file.getOriginalFilename(), requestReference, false);
         // create and save the data request
         dataRequest.setReferenceNumber(requestReference);
@@ -220,6 +222,7 @@ public class DataRequestService extends GenericService<JpaDataRequest, DataReque
         log.info("Confirming process request #{}", companyRefCode);
         // retrieve the data request
         DataRequestDto dataRequest = findOne(dataRequestId);
+        log.info("found data request with dataRequestId: {}", dataRequestId);
         // initial validation
         if (dataRequest != null && dataRequest.getOriginalSourcePath() != null) {
             // retrieve the original file to start processing
@@ -230,8 +233,10 @@ public class DataRequestService extends GenericService<JpaDataRequest, DataReque
             try {
                 // process the file
                 parserResult = dataRequestProcessor.processRequestFile(originalFile, dataRequest.getDataSegment());
+                log.info("parsed file results: {}", parserResult);
                 // save all parsed items
                 writerValidationResult = itemWriter.write(parserResult.getParsedItems(), dataRequest.getDataSegment(), dataRequestId, companyRefCode);
+                log.info("check file has error : {}", writerValidationResult);
             } catch (Exception e) {
                 log.error("Failed to process the data request id {}.", dataRequestId, e);
                 //update the status of the request
@@ -241,11 +246,14 @@ public class DataRequestService extends GenericService<JpaDataRequest, DataReque
 
             // in case of error, generate the error file and save it in the SFTP
            if(!writerValidationResult.isEmpty()){
+               log.info("file without error : {}", writerValidationResult);
                 parserResult.getDataValidationResults().addAll(writerValidationResult);
                parserResult.setWithErrors(true);
            }
             if (parserResult.isWithErrors()) {
+                log.info("file with error : {}", writerValidationResult);
                 // generate error file
+                log.info("start creating error file for dataRequestId: {}", dataRequestId);
                 Resource errorFile = dataRequestProcessor.generateErrorFile(originalFile, parserResult.getDataValidationResults());
                 // generate file name
                 String fileName = "processing-error";
@@ -253,14 +261,18 @@ public class DataRequestService extends GenericService<JpaDataRequest, DataReque
                     fileName = originalFile.getDescription().split("\\[")[1].replaceAll("]", "");
                 }
                 // save the file in the sftp folder
+                log.info("start generate sftp file path with File name: {}", fileName);
                 String errorFilePath = sftpService.generateSftpFilePath(fileName, dataRequest.getReferenceNumber(), true);
                 sftpService.uploadFile(errorFilePath, errorFile.getInputStream(),DATA_UPLOAD_CONFIG_PROPERTIES);
+                log.info("upload error file successfully with fileName: {}", fileName);
                 // update the data request status
                 Set<Integer> rowsWithErrors = parserResult.getDataValidationResults().stream().filter(dvr -> !dvr.isValid()).map(dvr -> dvr.getCell().getRow().getRowNum()).collect(Collectors.toSet());
                 ((DataRequestRepository) getRepository()).updateProcessingStatus(dataRequestId, EDataRequestStatus.PROCESSED_WITH_ERRORS.getId(), errorFilePath, rowsWithErrors.size());
+                log.info("End procession with Errors: {}", rowsWithErrors);
                 // return writerValidationResult
             } else {
                 // update the data request status
+                log.info("End procession without Errors: {}", dataRequestId);
                 ((DataRequestRepository) getRepository()).updateStatus(dataRequestId, EDataRequestStatus.PROCESSED_SUCCESSFULLY.getId());
                 //return writerValidationResult
             }
