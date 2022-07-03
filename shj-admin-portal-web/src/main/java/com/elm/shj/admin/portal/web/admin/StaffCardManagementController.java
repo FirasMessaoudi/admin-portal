@@ -168,16 +168,23 @@ public class StaffCardManagementController {
         }
         JwtToken loggedInUser = (JwtToken) authentication;
         Optional<Long> userId = jwtTokenService.retrieveUserIdFromToken(loggedInUser.getToken());
-        card.setStatusCode(ECardStatus.CANCELLED.name());
-        companyStaffCardService.changeCardStatus(card,staffCreateCardDto.getActionCode(), userId);
 
-        companyStaffCardService.save(card
+        // Old Card Marked as Reissued
+        card.setStatusCode(ECardStatus.REISSUED.name());
+        companyStaffCardService.save(card);
+
+
+        CompanyStaffCardDto companyStaffCardDto = companyStaffCardService.save(card
                 .builder()
                 .referenceNumber(card.getReferenceNumber())
                 .companyRitualSeason(card.getCompanyRitualSeason())
                 .companyStaffDigitalId(card.getCompanyStaffDigitalId())
                 .statusCode(ECardStatus.READY_TO_PRINT.name())
                 .build());
+
+        CompanyStaffCardDto newCard = companyStaffCardService.findById(companyStaffCardDto.getId());
+        newCard.setStatusCode(ECardStatus.ACTIVE.name());
+        companyStaffCardService.save(newCard);
     }
 
 

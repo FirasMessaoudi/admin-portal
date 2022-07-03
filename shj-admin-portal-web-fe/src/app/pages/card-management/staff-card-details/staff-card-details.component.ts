@@ -161,8 +161,8 @@ export class StaffCardDetailsComponent implements OnInit {
   }
 
   changeCardStatus(actionCode: string, confirmationText: string) {
-    //if (this.isUserHasAllowedAuthority(actionCode)) {
-      if (true) {
+    if (this.isUserHasAllowedAuthority(actionCode)) {
+      //if (true) {
       this.confirmDialogService
         .confirm(
           this.translate.instant(confirmationText),
@@ -174,7 +174,7 @@ export class StaffCardDetailsComponent implements OnInit {
             if(actionCode == this.actions.REPRINT_CARD)          
             {            
               let generatCardInput:GenerateStaffCardInput = {
-                actionCode: this.actions.CANCEL_CARD,
+                actionCode: this.actions.REPRINT_CARD,
                 cardId: this.card.id                
                 };
 
@@ -244,6 +244,9 @@ export class StaffCardDetailsComponent implements OnInit {
       }
       case 'cancel_card': {
         return this.authenticationService.hasAuthority(EAuthority.CANCEL_CARD);
+      }
+      case 'reprint_card': {
+        return this.authenticationService.hasAuthority(EAuthority.REPRINT_CARD);
       }
       default: {
         return false;
