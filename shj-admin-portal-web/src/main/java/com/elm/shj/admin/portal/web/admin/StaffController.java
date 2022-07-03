@@ -3,8 +3,10 @@
  */
 package com.elm.shj.admin.portal.web.admin;
 
+import com.elm.shj.admin.portal.services.card.BadgeService;
 import com.elm.shj.admin.portal.services.company.CompanyStaffService;
 import com.elm.shj.admin.portal.services.dto.AuthorityConstants;
+import com.elm.shj.admin.portal.services.dto.BadgeVO;
 import com.elm.shj.admin.portal.services.dto.CompanyStaffDto;
 import com.elm.shj.admin.portal.services.dto.NotificationTemplateCategorizingDto;
 import com.elm.shj.admin.portal.web.navigation.Navigation;
@@ -16,6 +18,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.security.RolesAllowed;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -31,7 +34,7 @@ import java.util.List;
 @RequiredArgsConstructor(onConstructor_ = {@Autowired})
 public class StaffController {
     private final CompanyStaffService companyStaffService;
-
+    private final BadgeService badgeService;
     @PostMapping("/find")
     @RolesAllowed(AuthorityConstants.USER_DEFINED_NOTIFICATION_MANAGEMENT)
     public Page<CompanyStaffDto> findCompanyStaff(@RequestBody NotificationTemplateCategorizingDto criteria,
@@ -61,6 +64,14 @@ public class StaffController {
         return companyStaffService.findRegisteredStaff();
     }
 
+    @GetMapping("/staff/all/{suin}")
+    public List<BadgeVO> findStaffBadgeFrontAndBack(@PathVariable String suin) {
+        List<BadgeVO> badges = new ArrayList<>();
+        badges.add(badgeService.generateStaffCard(suin));
+        badges.add(badgeService.generateStaffBackBadge(suin));
+        badges.add(badgeService.generatePrePrintedStaffCard(suin));
+        return badges;
+    }
 
 
 }

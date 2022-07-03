@@ -88,6 +88,8 @@ public class Navigation {
 	//Company Staff
 	public static final String API_COMPANY_STAFF = "/api/company-staff";
 
+	// Tawakkalna
+	public static final String API_TAWAKKALNA_INTEGRATION = "/api/tawakkalna-integration";
 
 
 }

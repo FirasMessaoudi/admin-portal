@@ -13,7 +13,7 @@ export const environment = {
   recaptchaSiteKey: '6LdzHFQUAAAAAKbbaojHVswZvdHgPuzC71VCIUlb',
   invisibleRecaptchaSiteKey: '6Le30G0UAAAAAM3Kwdf4V_feWJ-zD7OFAjxqO3Vo',
   version: env.npm_package_version + '-dev',
-  backendMappings: [{mapping: '/core', url: 'http://localhost:8080/shj-admin/'}],
+  backendMappings: [{mapping: '/core', url: 'http://localhost:8085/shj-admin/'}],
   websocketConnection: [{url: ''}],
   defaultLanguage: 'ar-SA',
   termsAndConditionsUrl: '',
