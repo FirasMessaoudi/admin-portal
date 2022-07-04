@@ -275,7 +275,6 @@ public class NotificationRequestService extends GenericService<JpaNotificationRe
                 .orElse(NOTIFICATION_DEFAULT_LANGUAGE);
     }
     private String getCompanyNotificationLanguage(NotificationTemplateDto notificationTemplate, CompanyStaffDto companyStaffDto) {
-        log.info("start getCompanyNotificationLanguage");
         return notificationTemplate.getNotificationTemplateContents()
                 .stream().filter(c -> companyStaffDto.getPreferredLanguage().equalsIgnoreCase(c.getLang()))
                 .findFirst()
@@ -285,7 +284,6 @@ public class NotificationRequestService extends GenericService<JpaNotificationRe
 
     @Modifying
     public void processNotificationTemplates(int notificationProcessingBatchSize) {
-        log.info("start processNotificationTemplates");
         List<NotificationTemplateDto> notificationTemplates = notificationTemplateService
                 .findUnprocessedUserDefinedNotifications(ENotificationTemplateType.USER_DEFINED.name(), new Date(), false, true, notificationProcessingBatchSize);
         notificationTemplates.forEach(
