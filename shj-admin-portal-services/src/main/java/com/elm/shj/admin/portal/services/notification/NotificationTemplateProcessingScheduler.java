@@ -13,6 +13,8 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 
 /**
  * Scheduler to process automatically notification templates
@@ -29,10 +31,29 @@ public class NotificationTemplateProcessingScheduler {
 
     @Value("${notification.processing.batch.size}")
     private int notificationProcessingBatchSize;
-    
+
+    @Value("${scheduler.notification.template.processing.active.nodes}")
+    private String schedulerActiveNodes;
+
     @Scheduled(cron = "${scheduler.notification.template.processing.cron}")
     @SchedulerLock(name = "notification-template-processing-task")
     public void createNotificationRequests() {
+        String runningIpAddress;
+        try {
+            runningIpAddress = InetAddress.getLocalHost().getHostAddress();
+            log.info("running IP address for potential notification template processing scheduler is: {}", runningIpAddress);
+        } catch (UnknownHostException e) {
+            log.error("Error while getting the running ip address. Notification template processing scheduler will not run.", e);
+            return;
+        }
+        if (schedulerActiveNodes == null || schedulerActiveNodes.isEmpty()) {
+            log.warn("Notification template processing scheduler will not run, no active nodes are configured in database.");
+            return;
+        }
+        if (!schedulerActiveNodes.contains(runningIpAddress)) {
+            log.warn("Notification template processing scheduler will not run, {} ip is not in the configured active nodes list.");
+            return;
+        }
         log.debug("create notification requests scheduler started ...");
        // LockAssert.assertLocked();
         notificationRequestService.processNotificationTemplates(notificationProcessingBatchSize);
