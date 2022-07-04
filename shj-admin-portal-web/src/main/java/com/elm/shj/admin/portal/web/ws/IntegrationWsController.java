@@ -968,6 +968,7 @@ public class IntegrationWsController {
 
     @PostMapping("/update-staff")
     public ResponseEntity<WsResponse<?>> updateStaff(@RequestBody @Validated UpdateStaffCmd command) {
+        log.info("Start updateStaff for {} suin.", command.getSuin());
         // TODO: 26/01/2022 should be refactored same as applicant
         Optional<CompanyStaffLiteDto> companyStaff = companyStaffService.findBySuin(command.getSuin());
         if (companyStaff.isPresent()) {
