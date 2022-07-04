@@ -402,7 +402,7 @@ public class BadgeService {
         int xDif = ((BADGE_WIDTH - fm.stringWidth("123456788")) / 2);
         int yDif = 400 + topBackground.getHeight() + 30;
         BufferedImage phone = ImageUtils.loadFromClasspath(BADGE_RESOURCES_PATH + "phone-icon.PNG");
-        if (topBackground != null) {
+        if (phone != null && contactNumber != null && !isPrePrinted) {
             g2d.drawImage(ImageUtils.resizeImage(phone, 30, 30), xDif - 25, yDif - 20, null);
         }
         if (contactNumber != null) {
@@ -579,7 +579,7 @@ public class BadgeService {
             if (Arrays.asList(8, 9, 10).contains(applicantRitualCard.getEstablishmentId())) {
                 writeTable(g2d, rectWidth, rectX, rectY + 25, new String[]{makeLabelFit(applicantRitualCard.getCompanyName()), makeLabelFit(applicantRitualCard.getEstablishmentNameEn())}, new String[]{makeLabelFit(applicantRitualCard.getCompanyNameAr()), makeLabelFit(applicantRitualCard.getEstablishmentNameAr())}, isPrePrinted);
             } else {
-                writeTable(g2d, rectWidth, rectX, rectY - 10, new String[]{" ", makeLabelFit(applicantRitualCard.getEstablishmentNameEn())}, new String[]{" ", makeLabelFit(applicantRitualCard.getEstablishmentNameAr())}, isPrePrinted);
+                writeTable(g2d, rectWidth, rectX, isPrePrinted ? rectY + 25 : rectY - 10, new String[]{" ", makeLabelFit(applicantRitualCard.getEstablishmentNameEn())}, new String[]{" ", makeLabelFit(applicantRitualCard.getEstablishmentNameAr())}, isPrePrinted);
                 FontRenderContext frc = g2d.getFontRenderContext();
                 LineMetrics lm;
                 Font font = shaaerFont.deriveFont(20f);
