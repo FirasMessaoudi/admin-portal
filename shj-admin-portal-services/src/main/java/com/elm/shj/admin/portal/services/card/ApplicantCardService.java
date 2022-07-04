@@ -327,7 +327,7 @@ public class ApplicantCardService extends GenericService<JpaApplicantCard, Appli
 
     public ApplicantCardDto findApplicantCardByApplicantRitualId(long applicantRitualId) {
         log.info("Start findApplicantCardByApplicantRitualId with applicantRitualId: {}", applicantRitualId);
-        ApplicantCardDto applicantCardDto = getMapper().fromEntity(applicantCardRepository.findByApplicantRitualIdAndStatusCodeNotIn(applicantRitualId, Arrays.asList(ECardStatus.CANCELLED.name(), ECardStatus.EXPIRED.name(), ECardStatus.SUSPENDED.name())), mappingContext);
+        ApplicantCardDto applicantCardDto = getMapper().fromEntity(applicantCardRepository.findByApplicantRitualIdAndStatusCodeNotIn(applicantRitualId, Arrays.asList(ECardStatus.CANCELLED.name(), ECardStatus.EXPIRED.name(), ECardStatus.SUSPENDED.name(), ECardStatus.REISSUED.name())), mappingContext);
         log.info("Finish findApplicantCardByApplicantRitualId with applicantRitualId: {}", applicantRitualId);
         return applicantCardDto;
     }
