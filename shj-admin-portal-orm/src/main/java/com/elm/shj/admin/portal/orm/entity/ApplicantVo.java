@@ -27,6 +27,7 @@ public class ApplicantVo implements Serializable {
     private String photo;
     private String idNumber;
     private String passportNumber;
+    private String gender;
 
 
     public ApplicantVo(String fullNameAr, String fullNameEn, String uin, String photo, String idNumber,
@@ -37,6 +38,18 @@ public class ApplicantVo implements Serializable {
         this.photo = photo;
         this.idNumber= idNumber;
         this.passportNumber= passportNumber;
+
+    }
+
+    public ApplicantVo(String fullNameAr, String fullNameEn, String uin, String photo, String idNumber,
+                       String passportNumber, String gender) {
+        this.fullNameAr = fullNameAr;
+        this.fullNameEn = fullNameEn;
+        this.uin = uin;
+        this.photo = photo;
+        this.idNumber= idNumber;
+        this.passportNumber= passportNumber;
+        this.gender = gender;
 
     }
 

@@ -8,16 +8,23 @@ import com.elm.shj.admin.portal.orm.entity.JpaGroupApplicantList;
 import com.elm.shj.admin.portal.orm.repository.GroupApplicantListRepository;
 import com.elm.shj.admin.portal.services.company.CompanyRitualSeasonService;
 import com.elm.shj.admin.portal.services.dto.ApplicantGroupDto;
+import com.elm.shj.admin.portal.services.dto.EGender;
 import com.elm.shj.admin.portal.services.dto.GroupApplicantListDto;
 import com.elm.shj.admin.portal.services.dto.UpdateGroupCmd;
 import com.elm.shj.admin.portal.services.generic.GenericService;
+import com.elm.shj.admin.portal.services.utils.ImageUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
 
@@ -35,6 +42,7 @@ public class GroupApplicantListService extends GenericService<JpaGroupApplicantL
     private final GroupApplicantListRepository groupApplicantListRepository;
     private final ApplicantGroupService applicantGroupService;
     private final CompanyRitualSeasonService companyRitualSeasonService;
+    private final static String DEFAULT_AVATAR_FEMALE = "avatar/applicant-staff-female.png";
     @Transactional
     public boolean registerUserToGroup(String applicantUin, String referenceNumber) {
         log.info("GroupApplicantListService ::: Start registerUserToGroup  applicantUin: {} ,  referenceNumber: {}", applicantUin, referenceNumber);
@@ -65,6 +73,23 @@ public class GroupApplicantListService extends GenericService<JpaGroupApplicantL
         //return getMapper().fromEntityList(groupApplicantListRepository.findByApplicantGroupGroupLeaderDigitalIdsSuin(suin), mappingContext);
         List<ApplicantVo> applicantLiteDtoList = groupApplicantListRepository.findApplicantDetailsWithoutLocationByGroupeLeaderSuin(suin);
         //applicantLiteDtoList.removeAll(Collections.singleton(null));
+        applicantLiteDtoList.forEach(applicantVo -> {
+            if(EGender.FEMALE.getCode().equals(applicantVo.getGender())) {
+                BufferedImage defaultImage = ImageUtils.loadFromClasspath(DEFAULT_AVATAR_FEMALE);
+
+                final String defaultAvatar;
+                try (ByteArrayOutputStream bos = new ByteArrayOutputStream()) {
+                    ImageIO.write(defaultImage, "png", bos);
+                    byte[] bytes = bos.toByteArray();
+
+                    defaultAvatar = Base64.getEncoder().encodeToString(bytes).replace(System.lineSeparator(), "");
+                    applicantVo.setPhoto(defaultAvatar);
+                } catch (IOException e) {
+                    throw new RuntimeException("Invalid avatar");
+                }
+            }
+        });
+
         log.info("GroupApplicantListService ::: Start findGroupApplicantListBySuin  applicantLiteDtoListSize: {}", applicantLiteDtoList.size());
         return applicantLiteDtoList;
     }
