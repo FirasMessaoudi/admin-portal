@@ -3,6 +3,7 @@
  */
 package com.elm.shj.admin.portal.services.applicant;
 
+import com.elm.shj.admin.portal.orm.entity.ApplicantRitualPackageVo;
 import com.elm.shj.admin.portal.orm.entity.JpaApplicantPackageHousing;
 import com.elm.shj.admin.portal.orm.repository.ApplicantPackageHousingRepository;
 import com.elm.shj.admin.portal.services.dto.*;
@@ -61,7 +62,8 @@ public class ApplicantPackageHousingService extends GenericService<JpaApplicantP
         if(applicantDto == null)
             return false;
 
-        ApplicantPackageDto applicantPackageDto = applicantPackageService.findJpaApplicantPackageByApplicantId(applicantDto.getId());
+        ApplicantRitualPackageVo applicantPackage = applicantPackageService.findLatestApplicantRitualPackage(Long.parseLong(updateApplicantHousingCampDto.getApplicantUin()));
+        ApplicantPackageDto applicantPackageDto = applicantPackageService.findByIdAndApplicantUin(applicantPackage.getApplicantPackageId(),Long.parseLong(updateApplicantHousingCampDto.getApplicantUin()));
 
         List<PackageHousingDto> menaHousingList = packageHousingService.findAllByRitualPackageIdAndSiteCode(applicantPackageDto.getRitualPackage().getId(), ECampSite.MENA.name());
         List<PackageHousingDto> arafetHousingList = packageHousingService.findAllByRitualPackageIdAndSiteCode(applicantPackageDto.getRitualPackage().getId(), ECampSite.ARAFAT.name());
@@ -190,7 +192,8 @@ public class ApplicantPackageHousingService extends GenericService<JpaApplicantP
             return applicantCampDetail;
         }
 
-        ApplicantPackageDto applicantPackageDto = applicantPackageService.findJpaApplicantPackageByApplicantId(applicantDto.getId());
+        ApplicantRitualPackageVo applicantPackage = applicantPackageService.findLatestApplicantRitualPackage(Long.parseLong(applicantUin));
+        ApplicantPackageDto applicantPackageDto = applicantPackageService.findByIdAndApplicantUin(applicantPackage.getApplicantPackageId(),Long.parseLong(applicantUin));
 
         PackageHousingDto menaHousing = packageHousingService.findByRitualPackageIdAndSiteCode(applicantPackageDto.getRitualPackage().getId(), ECampSite.MENA.name());
         PackageHousingDto arafatHousing = packageHousingService.findByRitualPackageIdAndSiteCode(applicantPackageDto.getRitualPackage().getId(), ECampSite.ARAFAT.name());
@@ -244,6 +247,8 @@ public class ApplicantPackageHousingService extends GenericService<JpaApplicantP
                 ApplicantPackageHousingDto applicantPackageHousingMena = findByApplicantPackageIdAndHousingPackageId(applicantPackageDto.getId(), menaHousing.getId());
                 if (applicantPackageHousingMena != null) {
                     applicantPackageHousingMenaList.add(applicantPackageHousingMena);
+                } else {
+                    applicantPackageHousingMenaList.add(ApplicantPackageHousingDto.builder().build());
                 }
             }
 
@@ -251,6 +256,8 @@ public class ApplicantPackageHousingService extends GenericService<JpaApplicantP
                 ApplicantPackageHousingDto applicantPackageHousingArafat = findByApplicantPackageIdAndHousingPackageId(applicantPackageDto.getId(), arafatHousing.getId());
                 if (applicantPackageHousingArafat != null) {
                     applicantPackageHousingArafatList.add(applicantPackageHousingArafat);
+                } else {
+                    applicantPackageHousingArafatList.add(ApplicantPackageHousingDto.builder().build());
                 }
             }
         });
