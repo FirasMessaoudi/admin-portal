@@ -175,6 +175,8 @@ public class ApplicantPackageTransportationService extends GenericService<JpaApp
                 ApplicantPackageTransportationDto applicantPackageTransportation = findByApplicantPackageIdAndTransportationId(applicantPackageDto.getId(), packageTransportation.getId());
                 if (applicantPackageTransportation != null) {
                     applicantPackageTransportationList.add(applicantPackageTransportation);
+                } else {
+                    applicantPackageTransportationList.add(ApplicantPackageTransportationDto.builder().build());
                 }
             }
         });
@@ -192,7 +194,6 @@ public class ApplicantPackageTransportationService extends GenericService<JpaApp
     public String findApplicantVehicleNumberInfo(String applicantUin){
         log.info("Start updateApplicantHousingCampDto applicantUin: {}", applicantUin);
         ApplicantDto applicantDto = applicantService.findByUin(applicantUin).orElse(null);
-        ApplicantCampDetailDto applicantCampDetail = new ApplicantCampDetailDto();
         if(applicantDto == null)
             return null;
 
