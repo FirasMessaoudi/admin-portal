@@ -561,16 +561,6 @@ public class ValidationService {
                 return;
             }
 
-            if (huicApplicantMainData.getStatus() == 2 && existingApplicantBasic.isRegistered()) { //registered cannot be updated
-                log.info("applicant with {} id is already registered.", existingApplicantBasic.getId());
-                // if applicant is registered raise an error : cannot update
-                ErrorResponse errorResponse = new ErrorResponse();
-                errorResponse.setRowNumber(rowNumber + 1);
-                errorResponse.getErrors().add(new ErrorItem(rowNumber + 1, "", "30001", "This applicant is already registered and cannot be updated"));
-                errorResponses.add(errorResponse);
-                return;
-            }
-
             applicantContactDto.setId(existingApplicantBasic.getContacts().get(0).getId());
             applicant.setId(existingApplicantBasic.getId());
             if (existingApplicantBasic.getDigitalIds() != null && !existingApplicantBasic.getDigitalIds().isEmpty()) {

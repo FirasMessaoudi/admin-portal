@@ -65,6 +65,7 @@ public class CompanyStaffService extends GenericService<JpaCompanyStaff, Company
         log.info("Start findBySuin with suin: {}", suin);
         CompanyStaffDto companyStaff = getMapper().fromEntity(companyStaffRepository.findBySuin(suin, EDigitalIdStatus.VALID.name()), mappingContext);
         if (companyStaff != null) {
+            log.info("Found a staff with {} id for the {} suin.", companyStaff.getId(), suin);
             CompanyStaffLiteDto companyStaffLite = CompanyStaffLiteDto.builder()
                     .id(companyStaff.getId())
                     .suin(suin)
@@ -85,7 +86,6 @@ public class CompanyStaffService extends GenericService<JpaCompanyStaff, Company
                     .mobileNumberIntl(companyStaff.getMobileNumberIntl())
                     .countryPhonePrefix(companyStaff.getCountryPhonePrefix())
                     .build();
-            log.info("Finish findBySuin with suin: {}", suin);
             return Optional.of(companyStaffLite);
         } else {
             log.info("Finish findBySuin not found with suin: {}", suin);

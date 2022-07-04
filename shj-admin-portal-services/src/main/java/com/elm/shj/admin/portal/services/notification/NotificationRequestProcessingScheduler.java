@@ -18,6 +18,8 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.Date;
 
 /**
@@ -37,10 +39,28 @@ public class NotificationRequestProcessingScheduler {
     @Value("${notification.processing.batch.size}")
     private int notificationProcessingBatchSize;
 
+    @Value("${scheduler.notification.processing.active.nodes}")
+    private String schedulerActiveNodes;
 
     @Scheduled(cron = "${scheduler.notification.processing.cron}")
     @SchedulerLock(name = "notification-processing-task")
     void sendUserNotifications() {
+        String runningIpAddress;
+        try {
+            runningIpAddress = InetAddress.getLocalHost().getHostAddress();
+            log.info("running IP address for potential notification processing scheduler is: {}", runningIpAddress);
+        } catch (UnknownHostException e) {
+            log.error("Error while getting the running ip address. Notification template processing scheduler will not run.", e);
+            return;
+        }
+        if (schedulerActiveNodes == null || schedulerActiveNodes.isEmpty()) {
+            log.warn("Notification processing scheduler will not run, no active nodes are configured in database.");
+            return;
+        }
+        if (!schedulerActiveNodes.contains(runningIpAddress)) {
+            log.warn("Notification processing scheduler will not run, {} ip is not in the configured active nodes list.");
+            return;
+        }
         log.debug("send notification scheduler started ...");
 
         notificationRequestRepository.findNotificationRequests(PageRequest.ofSize(notificationProcessingBatchSize), ENotificationProcessingStatus.NEW.name(), new Date()).forEach(
