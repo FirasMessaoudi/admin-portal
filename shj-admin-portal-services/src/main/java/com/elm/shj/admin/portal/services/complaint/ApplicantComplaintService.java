@@ -83,6 +83,7 @@ public class ApplicantComplaintService extends GenericService<JpaApplicantCompla
      * @return the list of complaint
      */
     public Page<com.elm.shj.admin.portal.orm.entity.ApplicantComplaintVo> findAll(ComplaintSearchCriteriaDto criteria, Long companyRefCode, String companyTypeCode, Pageable pageable) {
+        log.info("Start findAll with ComplaintSearchCriteriaDto: {}", criteria);
         Long establishmentRefCode = -1L;
         Long missionRefCode = -1L;
         Long serviceGroupRefCode = -1L;
@@ -99,10 +100,11 @@ public class ApplicantComplaintService extends GenericService<JpaApplicantCompla
         } else if(companyTypeCode.equals(EOrganizerTypes.EXTERNAL_HAJ_COMPANY.name())){
             companyCode = companyRefCode + "_" + companyTypeCode;
         }
-        return applicantComplaintRepository.findApplicantComplaintFilter(criteria.getComplaintNumber(), criteria.getComplaintType(),
+        Page<com.elm.shj.admin.portal.orm.entity.ApplicantComplaintVo> applicantComplaintVoPage = applicantComplaintRepository.findApplicantComplaintFilter(criteria.getComplaintNumber(), criteria.getComplaintType(),
                 criteria.getStatus(), criteria.getApplicantName(), atStartOfDay(criteria.getFromDate()), atEndOfDay(criteria.getToDate()),
                 criteria.getApplicantId(), companyCode, establishmentRefCode, missionRefCode, serviceGroupRefCode, pageable);
-
+        log.info("Finish findAll");
+        return applicantComplaintVoPage;
     }
 
     private Date atStartOfDay(Date date) {
@@ -139,7 +141,10 @@ public class ApplicantComplaintService extends GenericService<JpaApplicantCompla
      */
     @Transactional(isolation = Isolation.READ_UNCOMMITTED)
     public com.elm.shj.admin.portal.orm.entity.ApplicantComplaintVo findByIdLite(long complaintId) {
-        return applicantComplaintLiteRepository.findOneLite(complaintId);
+        log.info("Start findByIdLite with complaintId: {}", complaintId);
+        com.elm.shj.admin.portal.orm.entity.ApplicantComplaintVo applicantComplaintVo = applicantComplaintLiteRepository.findOneLite(complaintId);
+        log.info("Finish findByIdLite with complaintId: {}", complaintId);
+        return applicantComplaintVo;
     }
 
 
@@ -150,11 +155,15 @@ public class ApplicantComplaintService extends GenericService<JpaApplicantCompla
      * @return the attachment of the applicant complaint
      */
     public Resource downloadApplicantComplaintAttachment(long complaintAttachmentId) throws Exception {
+        log.info("Start downloadApplicantComplaintAttachment with complaintAttachmentId: {}", complaintAttachmentId);
         Optional<JpaComplaintAttachmentLite> complaintAttachment = complaintAttachmentLiteRepository.findById(complaintAttachmentId);
         if (!complaintAttachment.isPresent()) {
+            log.info("Start downloadApplicantComplaintAttachment not found with complaintAttachmentId: {}", complaintAttachmentId);
             return null;
         }
-        return sftpService.downloadFile(complaintAttachment.get().getFilePath(), APPLICANT_COMPLAINTS_CONFIG_PROPERTIES);
+        log.info("Finish downloadApplicantComplaintAttachment with complaintAttachmentId: {}", complaintAttachmentId);
+        Resource resource = sftpService.downloadFile(complaintAttachment.get().getFilePath(), APPLICANT_COMPLAINTS_CONFIG_PROPERTIES);
+        return resource;
     }
 
     /**
@@ -164,7 +173,7 @@ public class ApplicantComplaintService extends GenericService<JpaApplicantCompla
      */
     @Transactional(isolation = Isolation.READ_UNCOMMITTED)
     public void update(ApplicantComplaintLiteDto complaint, ApplicantComplaintVo applicantComplaintVo) throws NotFoundException {
-
+        log.info("Start update with ApplicantComplaintLiteDto: {}", complaint);
         if (EComplaintResolutionType.RESOLVED.name().equals(applicantComplaintVo.getOperation())) {
             applicantComplaintRepository.update(complaint.getId(), applicantComplaintVo.getResolutionComment(), EComplaintStatus.RESOLVED.name());
             sendComplaintNotification(complaint.getId(), RESOLVE_INCIDENT_TEMPLATE_NAME);
@@ -200,20 +209,25 @@ public class ApplicantComplaintService extends GenericService<JpaApplicantCompla
      */
     @Transactional(isolation = Isolation.READ_UNCOMMITTED)
     public void updateByCrm(long complaintId, ApplicantIncidentComplaintVoCRM applicantComplaintVo) throws NotFoundException {
-
+        log.info("Start updateByCrm with ApplicantIncidentComplaintVoCRM: {}", applicantComplaintVo);
         if (EComplaintResolutionType.RESOLVED.getCrmCode().equals(applicantComplaintVo.getStatus())) {
+            log.info("Finish updateByCrm in case resolution type is RESOLVED");
             applicantComplaintRepository.updateByCrm(complaintId, applicantComplaintVo.getResolutionComment(), EComplaintStatus.RESOLVED.name());
             sendComplaintNotification(complaintId, RESOLVE_INCIDENT_TEMPLATE_NAME);
         } else if (EComplaintResolutionType.CLOSED.getCrmCode().equals(applicantComplaintVo.getStatus())) {
+            log.info("Finish updateByCrm in case resolution type is CLOSED");
             applicantComplaintRepository.updateByCrm(complaintId, applicantComplaintVo.getResolutionComment(), EComplaintStatus.CLOSED.name());
             sendComplaintNotification(complaintId, CLOSE_INCIDENT_TEMPLATE_NAME);
         }
 
+
     }
 
     private void sendComplaintNotification(long complaintId, String closeComplaintTemplateName) throws NotFoundException {
+        log.info("Start sendComplaintNotification with closeComplaintTemplateName: {}, complaintId: {}", closeComplaintTemplateName, complaintId);
         Optional<NotificationTemplateDto> notificationTemplate = notificationTemplateService.findEnabledNotificationTemplateByNameCode(closeComplaintTemplateName);
         if (notificationTemplate == null || !notificationTemplate.isPresent()) {
+            log.info("Finish sendComplaintNotification not found with closeComplaintTemplateName: {}, complaintId: {}", closeComplaintTemplateName, complaintId);
             throw new NotFoundException("no Template found for  " + closeComplaintTemplateName);
         }
 
@@ -221,6 +235,7 @@ public class ApplicantComplaintService extends GenericService<JpaApplicantCompla
         String uin = applicantComplaint.getApplicantRitual().getApplicant().getUin();
         String preferredLanguage = applicantComplaint.getApplicantRitual().getApplicant().getPreferredLanguage();
         notificationRequestService.sendComplaintNotification(notificationTemplate.get(), uin, preferredLanguage);
+        log.info("Finish sendComplaintNotification with closeComplaintTemplateName: {}, complaintId: {}", closeComplaintTemplateName, complaintId);
     }
 
     public <B, R> R callCRM(String serviceRelativeUrl, HttpMethod httpMethod, B bodyToSend,

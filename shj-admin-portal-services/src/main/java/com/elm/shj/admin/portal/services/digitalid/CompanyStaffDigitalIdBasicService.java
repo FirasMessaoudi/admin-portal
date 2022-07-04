@@ -35,19 +35,25 @@ public class CompanyStaffDigitalIdBasicService extends GenericService<JpaCompany
      * @return list of companyStaffDigitalId
      */
     public CompanyStaffDigitalIdBasicDto findByBasicInfo(long staffId, int season) {
+        log.info("Start findByBasicInfo with staffId: {}, season: {}", staffId, season);
         Optional<JpaCompanyStaffDigitalIdBasic> digitalId = companyStaffDigitalIdBasicRepository.findByBasicInfo(staffId,season,EDigitalIdStatus.VALID.name()) ;
         if (digitalId != null && digitalId.isPresent()) {
+            log.info("Finish findByBasicInfo with staffId: {}, season: {}", staffId, season);
             return getMapper().fromEntity(digitalId.get(), mappingContext);
         }
+        log.info("Finish findByBasicInfo not found with staffId: {}, season: {}", staffId, season);
         return null;
 
     }
 
     public CompanyStaffDigitalIdBasicDto findByBasicInfoWithoutDigitalIdStatus(long staffId, int season) {
+        log.info("Start findByBasicInfoWithoutDigitalIdStatus with staffId: {}, season: {}", staffId, season);
         Optional<JpaCompanyStaffDigitalIdBasic> digitalId = companyStaffDigitalIdBasicRepository.findByBasicInfo(staffId,season) ;
         if (digitalId != null && digitalId.isPresent()) {
+            log.info("Finish findByBasicInfoWithoutDigitalIdStatus with staffId: {}, season: {}", staffId, season);
             return getMapper().fromEntity(digitalId.get(), mappingContext);
         }
+        log.info("Finish findByBasicInfoWithoutDigitalIdStatus not found with staffId: {}, season: {}", staffId, season);
         return null;
 
     }

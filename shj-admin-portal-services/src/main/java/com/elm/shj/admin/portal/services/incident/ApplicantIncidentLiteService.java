@@ -80,6 +80,7 @@ public class ApplicantIncidentLiteService extends GenericService<JpaApplicantInc
      */
     @Transactional
     public ApplicantIncidentLiteDto addApplicantIncident(ApplicantIncidentLiteDto  applicantIncidentLiteDto, MultipartFile attachment) {
+        log.info("Start addApplicantIncident with ApplicantIncidentLiteDto: {}", applicantIncidentLiteDto);
         // generate request reference
         String referenceNumber = generateReferenceNumber();
         // generate and set reference number
@@ -150,13 +151,17 @@ public class ApplicantIncidentLiteService extends GenericService<JpaApplicantInc
             createdApplicantIncident.setIncidentAttachment(incidentAttachmentLiteService.save(incidentAttachmentDto));
         }
         integrationService.callCRMIncident(createdApplicantIncident);
+        log.info("Finish addApplicantIncident Successfully");
         return createdApplicantIncident;
     }
 
 
     @Transactional(isolation = Isolation.READ_UNCOMMITTED)
     public ApplicantIncidentLiteDto findByCrmTicketNumberOrSmartIDTicketNumber(String crmTicketNumber, String smartIDTicketNumber) {
-        return getMapper().fromEntity(applicantIncidentLiteRepository.findByCrmTicketNumberOrReferenceNumber(crmTicketNumber, smartIDTicketNumber), mappingContext);
+        log.info("Start findByCrmTicketNumberOrSmartIDTicketNumber with crmTicketNumber: {} or smartIDTicketNumber: {}", crmTicketNumber, smartIDTicketNumber);
+        ApplicantIncidentLiteDto applicantIncidentLiteDto = getMapper().fromEntity(applicantIncidentLiteRepository.findByCrmTicketNumberOrReferenceNumber(crmTicketNumber, smartIDTicketNumber), mappingContext);
+        log.info("Finish findByCrmTicketNumberOrSmartIDTicketNumber with crmTicketNumber: {} or smartIDTicketNumber: {}", crmTicketNumber, smartIDTicketNumber);
+        return applicantIncidentLiteDto;
     }
 
     /**
@@ -165,10 +170,12 @@ public class ApplicantIncidentLiteService extends GenericService<JpaApplicantInc
      * @return a unique identifier for the applicant incident
      */
     public String generateReferenceNumber() {
+        log.info("Start generateReferenceNumber");
         String referenceNumPrefix = String.valueOf(DateUtils.getCurrentHijriYear());
         threadLocalLatestSerialList.get().addAll(0, applicantIncidentLiteRepository.fetchReferenceNumByReferenceNumLike(referenceNumPrefix));
         long nextSequence = CollectionUtils.isEmpty(threadLocalLatestSerialList.get()) ? 1 : Long.parseLong(threadLocalLatestSerialList.get().get(0)) + 1;
         String serialDigits = StringUtils.leftPad(String.valueOf(nextSequence), 8, "0");
+        log.info("Finish generateReferenceNumber");
         return referenceNumPrefix+ serialDigits  ;
     }
 
@@ -188,7 +195,10 @@ public class ApplicantIncidentLiteService extends GenericService<JpaApplicantInc
      * @return List of applicant related incidents
      */
     public List<ApplicantIncidentLiteDto> listApplicantRelatedIncidents(long applicantRitualId) {
-        return mapList(applicantIncidentLiteRepository.findByApplicantRitualId(applicantRitualId));
+        log.info("Start listApplicantRelatedIncidents with applicantRitualId: {}", applicantRitualId);
+        List<ApplicantIncidentLiteDto> applicantIncidentLiteDtoList = mapList(applicantIncidentLiteRepository.findByApplicantRitualId(applicantRitualId));
+        log.info("Finish listApplicantRelatedIncidents with applicantRitualId: {}", applicantRitualId);
+        return applicantIncidentLiteDtoList;
     }
 }
 

@@ -76,6 +76,7 @@ public class DigitalIdService extends GenericService<JpaApplicantDigitalId, Appl
      * @return the generated smart id
      */
     public String generate(ApplicantBasicDto applicant) {
+        log.info("Start Generates smart id for specific applicant with ApplicantBasicDto: {}", applicant);
         // check inputs
         Assert.isTrue(Arrays.asList("M", "F").contains(applicant.getGender().toUpperCase()), "Invalid Applicant Gender!");
         Assert.isTrue(applicant.getDateOfBirthGregorian() != null || (applicant.getDateOfBirthHijri() != null && applicant.getDateOfBirthHijri() != 0), "Invalid Applicant Date of Birth!");
@@ -103,6 +104,7 @@ public class DigitalIdService extends GenericService<JpaApplicantDigitalId, Appl
         // add newly generated uinPrefix to the list to avoid duplicate for the current processed file in addition to the database.
         threadLocalLatestSerialList.get().add(0, serialDigits);
         // return smart id
+        log.info("Finish Generates smart id for specific applicant");
         return partialSmartId + checkDigit;
     }
 
@@ -113,11 +115,13 @@ public class DigitalIdService extends GenericService<JpaApplicantDigitalId, Appl
      * @return result of verification
      */
     public boolean validate(String smartId) {
+        log.info("Start Validates the given smart id : {}", smartId);
         if (smartId == null)
             return false;
         char checkDigit = smartId.charAt(smartId.length() - 1);
         String digit = calculateCheckDigit(smartId.substring(0, smartId.length() - 1));
         System.out.println("checksum digit: " + digit);
+        log.info("Finish Validates the given smart id : {}", smartId);
         return checkDigit == digit.charAt(0);
     }
 
@@ -128,6 +132,7 @@ public class DigitalIdService extends GenericService<JpaApplicantDigitalId, Appl
      * @return the check digit
      */
     public static String calculateCheckDigit(String smartId) {
+        log.info("Start Calculates the last digits for the given smart id number : {}", smartId);
         if (smartId == null)
             return null;
         String digit;
@@ -153,6 +158,7 @@ public class DigitalIdService extends GenericService<JpaApplicantDigitalId, Appl
 
         /* convert to string to be easier to take the last digit */
         digit = sum + "";
+        log.info("Finish Calculates the last digits for the given smart id number : {}", smartId);
         return digit.substring(digit.length() - 1);
     }
 
@@ -170,16 +176,23 @@ public class DigitalIdService extends GenericService<JpaApplicantDigitalId, Appl
      */
     @Transactional(isolation = Isolation.READ_UNCOMMITTED)
     public String findApplicantUin(long applicantId) {
-        return applicantDigitalIdRepository.findUinByApplicantIdAndStatusCode(applicantId, EDigitalIdStatus.VALID.name());
+        log.info("Start findApplicantUin with applicantId: {}", applicantId);
+        String applicantUin = applicantDigitalIdRepository.findUinByApplicantIdAndStatusCode(applicantId, EDigitalIdStatus.VALID.name());
+        log.info("Finish findApplicantUin with applicantId: {}", applicantId);
+        return applicantUin;
     }
 
     @Transactional
     public void validateDigitalId(String uin) {
+        log.info("Start validateDigitalId with uin: {}", uin);
         applicantDigitalIdRepository.updateDigitalIdStatus(EDigitalIdStatus.VALID.name(), uin);
+        log.info("Finish validateDigitalId with uin: {}", uin);
     }
 
     @Transactional
     public void inValidateDigitalId(String uin) {
+        log.info("Start inValidateDigitalId with uin: {}", uin);
         applicantDigitalIdRepository.updateDigitalIdStatus(EDigitalIdStatus.INVALID.name(), uin);
+        log.info("Finish inValidateDigitalId with uin: {}", uin);
     }
 }

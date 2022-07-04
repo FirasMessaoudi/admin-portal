@@ -74,7 +74,10 @@ public class ApplicantIncidentService extends GenericService<JpaApplicantInciden
      * @return the list of incidents
      */
     public Page<ApplicantIncidentDto> findAll(IncidentSearchCriteriaDto criteria, Pageable pageable) {
-        return mapPage(applicantIncidentRepository.findAll(withFilter(criteria), pageable));
+        log.info("Start findAll with IncidentSearchCriteriaDto: {}", criteria);
+        Page<ApplicantIncidentDto> applicantIncidentDtoPage = mapPage(applicantIncidentRepository.findAll(withFilter(criteria), pageable));
+        log.info("Finish findAll");
+        return applicantIncidentDtoPage;
     }
 
     private Specification<JpaApplicantIncident> withFilter(final IncidentSearchCriteriaDto criteria) {
@@ -149,7 +152,10 @@ public class ApplicantIncidentService extends GenericService<JpaApplicantInciden
      * @return List of applicant related incidents
      */
     public List<ApplicantIncidentDto> listApplicantRelatedIncidents(long applicantRitualId) {
-        return mapList(applicantIncidentRepository.findByApplicantRitualId(applicantRitualId));
+        log.info("Start listApplicantRelatedIncidents with applicantRitualId: {}", applicantRitualId);
+        List<ApplicantIncidentDto> applicantIncidentDtoList = mapList(applicantIncidentRepository.findByApplicantRitualId(applicantRitualId));
+        log.info("Finish listApplicantRelatedIncidents with applicantRitualId: {}", applicantRitualId);
+        return applicantIncidentDtoList;
     }
 
     /**
@@ -159,6 +165,7 @@ public class ApplicantIncidentService extends GenericService<JpaApplicantInciden
      */
     @Transactional(isolation = Isolation.READ_UNCOMMITTED)
     public void update(long incidentId, ApplicantIncidentVo applicantIncidentVo) throws NotFoundException {
+        log.info("Start Updates applicant incident with incidentId: {}", incidentId);
         if (EIncidentResolutionType.MARK_AS_RESOLVED.name().equals(applicantIncidentVo.getOperation())) {
             applicantIncidentRepository.update(incidentId, applicantIncidentVo.getResolutionComment(), EIncidentStatus.RESOLVED.name());
             sendIncidentNotification(incidentId, RESOLVE_INCIDENT_TEMPLATE_NAME);
@@ -186,6 +193,7 @@ public class ApplicantIncidentService extends GenericService<JpaApplicantInciden
 
             }
         }
+        log.info("Finish Updates applicant incident with incidentId: {}", incidentId);
     }
 
     /**
@@ -195,11 +203,13 @@ public class ApplicantIncidentService extends GenericService<JpaApplicantInciden
      */
     @Transactional(isolation = Isolation.READ_UNCOMMITTED)
     public void updateByCrm(long incidentId, ApplicantIncidentComplaintVoCRM applicantComplaintVo) throws NotFoundException {
-
+        log.info("Start updateByCrm with incidentId: {}", incidentId);
         if (EIncidentStatus.RESOLVED.getCrmCode().equals(applicantComplaintVo.getStatus())) {
+            log.info("Finish updateByCrm in case incident status is RESOLVED");
             applicantIncidentRepository.updateByCrm(incidentId, applicantComplaintVo.getResolutionComment(), EIncidentStatus.RESOLVED.name());
             sendIncidentNotification(incidentId, RESOLVE_INCIDENT_TEMPLATE_NAME);
         } else if (EIncidentStatus.CLOSED.getCrmCode().equals(applicantComplaintVo.getStatus())) {
+            log.info("Finish updateByCrm in case incident status is CLOSED");
             applicantIncidentRepository.updateByCrm(incidentId, applicantComplaintVo.getResolutionComment(), EIncidentStatus.CLOSED.name());
             sendIncidentNotification(incidentId, CLOSE_INCIDENT_TEMPLATE_NAME);
         }
@@ -208,8 +218,10 @@ public class ApplicantIncidentService extends GenericService<JpaApplicantInciden
 
 
     private void sendIncidentNotification(long incidentId, String closeIncidentTemplateName) throws NotFoundException {
+        log.info("Start sendIncidentNotification with incidentId: {}", incidentId);
         Optional<NotificationTemplateDto> notificationTemplate = notificationTemplateService.findEnabledNotificationTemplateByNameCode(closeIncidentTemplateName);
         if (notificationTemplate == null || !notificationTemplate.isPresent()) {
+            log.error("Failed sendIncidentNotification as no template found for :{}", closeIncidentTemplateName);
             throw new NotFoundException("no Template found for  " + closeIncidentTemplateName);
         }
 
@@ -217,5 +229,6 @@ public class ApplicantIncidentService extends GenericService<JpaApplicantInciden
         String uin = applicantIncident.getApplicantRitual().getApplicant().getUin();
         String preferredLanguage = applicantIncident.getApplicantRitual().getApplicant().getPreferredLanguage();
         notificationRequestService.sendIncidentNotification(notificationTemplate.get(), uin, preferredLanguage);
+        log.info("Finish sendIncidentNotification with incidentId: {}", incidentId);
     }
 }

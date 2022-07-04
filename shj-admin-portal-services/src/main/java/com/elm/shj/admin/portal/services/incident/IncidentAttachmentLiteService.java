@@ -35,10 +35,13 @@ public class IncidentAttachmentLiteService extends GenericService<JpaIncidentAtt
     }
 
     public Resource downloadApplicantIncidentAttachment(long incidentAttachmentId) throws Exception {
+        log.info("Start downloadApplicantIncidentAttachment with incidentAttachmentId: {}", incidentAttachmentId);
         Optional<JpaIncidentAttachmentLite> incidentAttachment = getRepository().findById(incidentAttachmentId);
         if (!incidentAttachment.isPresent()) {
+            log.info("Finish downloadApplicantIncidentAttachment not found with incidentAttachmentId: {}", incidentAttachmentId);
             return null;
         }
+        log.info("Finish downloadApplicantIncidentAttachment with incidentAttachmentId: {}", incidentAttachmentId);
         return sftpService.downloadFile(incidentAttachment.get().getFilePath(), APPLICANT_INCIDENTS_CONFIG_PROPERTIES);
     }
 }
