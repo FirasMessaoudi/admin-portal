@@ -269,7 +269,7 @@ public class ApplicantService extends GenericService<JpaApplicant, ApplicantDto,
                 predicates.add(criteriaBuilder.not(root.get("id").in(excludedIds)));
             }
 
-            return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
+            return criteriaBuilder.and(predicates.toArray(Predicate[]::new));
         };
     }
 
