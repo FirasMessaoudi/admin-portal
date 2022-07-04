@@ -37,13 +37,16 @@ public class ApplicantPackageService extends GenericService<JpaApplicantPackage,
     //TODO not used
     @Transactional(readOnly = true)
     public ApplicantPackageDto findApplicantPackageByUinAndReferenceNumber(Long applicantUin, String packageReferenceNumber) {
+        log.info("Start findApplicantPackageByUinAndReferenceNumber ::: applicantUin:{} ", applicantUin);
         Optional<JpaApplicantPackage> applicantPackageOptional = applicantPackageRepository.findByApplicantUinAndRitualPackageReferenceNumber(applicantUin, packageReferenceNumber);
         if (applicantPackageOptional.isPresent()) {
             JpaApplicantPackage applicantPackage = applicantPackageOptional.get();
             applicantPackage.getApplicantPackageTransportations().size();
             CycleAvoidingMappingContext mappingContext = new CycleAvoidingMappingContext();
+            log.info("Finish findApplicantPackageByUinAndReferenceNumber ::: applicantUin:{} ", applicantUin);
             return getMapper().fromEntity(applicantPackage, mappingContext);
         }
+        log.info("Finish findApplicantPackageByUinAndReferenceNumber ::: not found with applicantUin:{} ", applicantUin);
         return null;
     }
 

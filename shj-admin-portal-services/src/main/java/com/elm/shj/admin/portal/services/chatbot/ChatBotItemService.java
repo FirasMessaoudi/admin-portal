@@ -35,6 +35,8 @@ public class ChatBotItemService extends GenericService<JpaChatBotItem, ChatBotIt
      */
     public List<ChatBotItemDto> findAllByLang(String lang) {
         log.info("start find all chat boot items with lang");
-        return getMapper().fromEntityList(chatBotItemRepository.findAllByLang(lang), mappingContext);
+        List<ChatBotItemDto> chatBotItemDtoList = getMapper().fromEntityList(chatBotItemRepository.findAllByLang(lang), mappingContext);
+        log.info("Finish find all chat boot items with lang");
+        return chatBotItemDtoList;
     }
 }

@@ -27,12 +27,16 @@ public class CompanyRitualSeasonLiteService extends GenericService<JpaCompanyRit
 
 
     public CompanyRitualSeasonLiteDto getLatestCompanyRitualSeasonByApplicantUin(long applicantUin) {
+        log.info("Start getLatestCompanyRitualSeasonByApplicantUin with applicantUin: {}", applicantUin);
         JpaCompanyRitualSeasonLite companyRitualSeason = companyRitualSeasonRepository.findTopByRitualPackagesApplicantPackagesApplicantUinOrderBySeasonStartDesc(applicantUin);
+        log.info("Finish getLatestCompanyRitualSeasonByApplicantUin with applicantUin: {}", applicantUin);
         return getMapper().fromEntity(companyRitualSeason, mappingContext);
     }
 
     public List<CompanyRitualSeasonLiteDto> getListCompanyRitualSeasonByApplicantUin(long applicantUin) {
+        log.info("Start getListCompanyRitualSeasonByApplicantUin with applicantUin: {}", applicantUin);
         List<JpaCompanyRitualSeasonLite> companyRitualSeasons = companyRitualSeasonRepository.findAllByRitualPackagesApplicantPackagesApplicantUinOrderBySeasonStartDesc(applicantUin);
+        log.info("Finish getListCompanyRitualSeasonByApplicantUin with applicantUin: {}", applicantUin);
         return getMapper().fromEntityList(companyRitualSeasons, mappingContext);
     }
 

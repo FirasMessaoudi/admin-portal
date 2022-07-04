@@ -48,11 +48,17 @@ public class ApplicantHealthLiteService extends GenericService<JpaApplicantHealt
     }
 
     public Long findApplicantRitualIdByHealth(Long applicantHealthId) {
-        return applicantHealthLiteRepository.findApplicantRitualId(applicantHealthId);
+        log.info("Start findApplicantRitualIdByHealth applicantHealthId:{}", applicantHealthId);
+        Long applicantRitualId = applicantHealthLiteRepository.findApplicantRitualId(applicantHealthId);
+        log.info("Finish findApplicantRitualIdByHealth applicantHealthId:{}", applicantHealthId);
+        return applicantRitualId;
     }
 
     public String findPackageByHealth(Long applicantHealthId) {
-        return applicantHealthLiteRepository.findApplicantHealthPackage(applicantHealthId);
+        log.info("Start findPackageByHealth applicantHealthId:{}", applicantHealthId);
+        String applicantHealthPackage = applicantHealthLiteRepository.findApplicantHealthPackage(applicantHealthId);
+        log.info("Finish findPackageByHealth applicantHealthId:{}", applicantHealthId);
+        return applicantHealthPackage;
     }
 
 }

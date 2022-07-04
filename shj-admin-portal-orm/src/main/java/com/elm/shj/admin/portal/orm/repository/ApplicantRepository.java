@@ -184,7 +184,7 @@ public interface ApplicantRepository extends JpaRepository<JpaApplicant, Long>, 
                                           @Param("establishmentRefCode") long establishmentRefCode, @Param("missionRefCode") long missionRefCode,
                                           @Param("serviceGroupRefCode") long serviceGroupRefCode,  @Param("companyFullCode") String companyFullCode, Pageable pageable);
 
-    @Query("select a FROM JpaApplicant a JOIN a.digitalIds di JOIN JpaGroupApplicantList ga WHERE ga.applicantGroup.id=:groupId")
+    @Query("SELECT a FROM JpaApplicant a JOIN a.digitalIds di JOIN JpaGroupApplicantList ga On di.uin=ga.applicantUin WHERE ga.applicantGroup.id=:groupId")
     List<JpaApplicant> findAllApplicantByGroupId(@Param("groupId") Long groupId);
 
     @Query("select a  " +

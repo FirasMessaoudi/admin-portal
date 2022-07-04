@@ -39,9 +39,12 @@ public class ApplicantHealthService extends GenericService<JpaApplicantHealth, A
     //TODO this method not used
     @Transactional(isolation = Isolation.READ_UNCOMMITTED)
     public ApplicantHealthDto findByApplicantIdAndPackageReferenceNumber(long applicantId, String packageReferenceNumber) {
-        return getMapper().fromEntity(applicantHealthRepository.
+        log.info("Start findByApplicantIdAndPackageReferenceNumber applicantId:{}, packageReferenceNumber:{}", applicantId, packageReferenceNumber);
+        ApplicantHealthDto applicantHealthDto = getMapper().fromEntity(applicantHealthRepository.
                         findByApplicantIdAndPackageReferenceNumber(applicantId, packageReferenceNumber),
                 mappingContext);
+        log.info("Finish findByApplicantIdAndPackageReferenceNumber applicantId:{}, packageReferenceNumber:{}", applicantId, packageReferenceNumber);
+        return applicantHealthDto;
     }
 
     /**
@@ -72,7 +75,6 @@ public class ApplicantHealthService extends GenericService<JpaApplicantHealth, A
             applicantHealthId = applicantHealth.getId();
         }
         log.info("Finish findIdByApplicantIdAndPackageReferenceNumber  applicantHealthId:{}", applicantHealthId);
-
         return applicantHealthId;
     }
 

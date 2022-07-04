@@ -56,7 +56,7 @@ public class ApplicantPackageHousingService extends GenericService<JpaApplicantP
 
     @Transactional
     public Boolean updateApplicantHousingCamp(UpdateApplicantHousingCampDto updateApplicantHousingCampDto){
-        log.info("updateApplicantHousingCampDto .. {}", updateApplicantHousingCampDto);
+        log.info("Start updateApplicantHousingCamp .. {}", updateApplicantHousingCampDto);
         ApplicantDto applicantDto = applicantService.findByUin(updateApplicantHousingCampDto.getApplicantUin()).orElse(null);
         if(applicantDto == null)
             return false;
@@ -177,15 +177,18 @@ public class ApplicantPackageHousingService extends GenericService<JpaApplicantP
                 }
             });
         }
+        log.info("Finish updateApplicantHousingCamp");
         return true;
     }
 
     public ApplicantCampDetailDto findApplicantCampDetails(String applicantUin){
-        log.info("updateApplicantHousingCampDto .. {}", applicantUin);
+        log.info("Start findApplicantCampDetails .. {}", applicantUin);
         ApplicantDto applicantDto = applicantService.findByUin(applicantUin).orElse(null);
         ApplicantCampDetailDto applicantCampDetail = new ApplicantCampDetailDto();
-        if(applicantDto == null)
+        if(applicantDto == null) {
+            log.info("Finish findApplicantCampDetails not found with applicantUin:{}", applicantUin);
             return applicantCampDetail;
+        }
 
         ApplicantPackageDto applicantPackageDto = applicantPackageService.findJpaApplicantPackageByApplicantId(applicantDto.getId());
 
@@ -218,12 +221,12 @@ public class ApplicantPackageHousingService extends GenericService<JpaApplicantP
                 applicantCampDetail.setArafatRoom(applicantPackageHousingArafat.getSiteRoom());
             }
         }
-
+        log.info("Finish findApplicantCampDetails .. {}", applicantUin);
         return applicantCampDetail;
     }
 
     public GroupApplicantCampDto findGroupApplicantCampReferenceNumber(Long groupId) {
-        log.info("groupId .. {}", groupId);
+        log.info("Start findGroupApplicantCampReferenceNumber with groupId: {}", groupId);
         List<Long> applicantIdlIst = applicantService.findApplicantIdByGroupId(groupId);
         log.info("applicantIdlIst ... {}" + applicantIdlIst) ;
 
@@ -268,13 +271,13 @@ public class ApplicantPackageHousingService extends GenericService<JpaApplicantP
             }
         }
         groupApplicantCamp.setGroupId(groupId);
-
+        log.info("Finish findGroupApplicantCampReferenceNumber with groupId: {}", groupId);
         return groupApplicantCamp;
     }
 
     @Transactional
     public Boolean updateGroupApplicantHousingCamp(GroupApplicantCampDto groupApplicantCamp){
-        log.info("groupId .. {}", groupApplicantCamp.getGroupId());
+        log.info("Start updateGroupApplicantHousingCamp with GroupApplicantCampDto: {}", groupApplicantCamp);
         List<Long> applicantIdlIst = applicantService.findApplicantIdByGroupId(groupApplicantCamp.getGroupId());
         log.info("applicantIdlIst ... {}" + applicantIdlIst) ;
 
@@ -369,6 +372,7 @@ public class ApplicantPackageHousingService extends GenericService<JpaApplicantP
                 });
             }
         });
+        log.info("Finish updateGroupApplicantHousingCamp");
         return true;
     }
 }

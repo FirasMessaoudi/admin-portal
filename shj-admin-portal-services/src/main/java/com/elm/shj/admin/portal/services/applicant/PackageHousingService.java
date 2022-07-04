@@ -61,8 +61,10 @@ public class PackageHousingService extends GenericService<JpaPackageHousing, Pac
     public PackageHousingDto findStaffPackageHousingByCompanyRitualSeason(long companyRitualSeason) {
         log.info("PackageHousingService ::: Start findStaffPackageHousingByCompanyRitualSeason ::: companyRitualSeason: {}", companyRitualSeason);
         JpaPackageHousing jpaPackageHousing = packageHousingRepository.findStaffPackageHousingByCompanyRitualSeason(companyRitualSeason);
-        if(jpaPackageHousing == null)
+        if(jpaPackageHousing == null) {
+            log.info("PackageHousingService ::: Finish findStaffPackageHousingByCompanyRitualSeason not found ::: companyRitualSeason: {}", companyRitualSeason);
             return null;
+        }
         log.info("PackageHousingService ::: Start findStaffPackageHousingByCompanyRitualSeason ::: jpaPackageHousingLocationNameEn: {}", jpaPackageHousing.getLocationNameEn());
         return getMapper().fromEntity(jpaPackageHousing, mappingContext);
     }
@@ -71,18 +73,22 @@ public class PackageHousingService extends GenericService<JpaPackageHousing, Pac
         log.info("PackageHousingService ::: Start findByRitualPackageIdAndSiteCode ::: ritualPackage: {}", id);
         Optional<JpaPackageHousing> jpaPackageHousing = packageHousingRepository.findTopByRitualPackageIdAndSiteCode(id, siteCode);
         if (jpaPackageHousing.isPresent()) {
+            log.info("Finish findByRitualPackageIdAndSiteCode ::: ritualPackage: {}", id);
             return getMapper().fromEntity(jpaPackageHousing.get(), mappingContext);
         }
+        log.info("Finish findByRitualPackageIdAndSiteCode not found ::: ritualPackage: {}", id);
         return null;
 
     }
 
     public List<PackageHousingDto> findAllByRitualPackageIdAndSiteCode(long id, String siteCode) {
-        log.info("PackageHousingService ::: Start findByRitualPackageIdAndSiteCode ::: ritualPackage: {}", id);
+        log.info("PackageHousingService ::: Start findAllByRitualPackageIdAndSiteCode ::: packageId: {}", id);
         List<JpaPackageHousing> jpaPackageHousing = packageHousingRepository.findAllByRitualPackageIdAndSiteCode(id, siteCode);
         if (!jpaPackageHousing.isEmpty()) {
+            log.info("Finish findAllByRitualPackageIdAndSiteCode ::: packageId: {}", id);
             return mapList(jpaPackageHousing);
         }
+        log.info("Finish findAllByRitualPackageIdAndSiteCode not found ::: packageId: {}", id);
         return Collections.emptyList();
 
     }

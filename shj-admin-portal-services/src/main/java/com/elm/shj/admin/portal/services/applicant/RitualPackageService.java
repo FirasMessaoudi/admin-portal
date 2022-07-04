@@ -62,7 +62,9 @@ public class RitualPackageService extends GenericService<JpaRitualPackage, Ritua
 
     public String findPackageReferenceNumber(String companyCode, String typeCode, int year) {
         log.info("RitualPackageService ::: Start findReferenceNumberByTypeCode ::: typeCode: {}", typeCode);
-        return ritualPackageRepository.findReferenceNumberByRitualSeason(companyCode, typeCode, year);
+        String referenceNumber = ritualPackageRepository.findReferenceNumberByRitualSeason(companyCode, typeCode, year);
+        log.info("RitualPackageService ::: Finish findReferenceNumberByTypeCode ::: typeCode: {}", typeCode);
+        return referenceNumber;
     }
 
     public RitualPackageDto findByCodeAndRitual(String referenceCode, String typeCode, int year) {

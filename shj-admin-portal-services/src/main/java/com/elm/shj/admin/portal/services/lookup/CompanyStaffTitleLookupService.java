@@ -30,6 +30,10 @@ public class CompanyStaffTitleLookupService extends GenericService<JpaCompanySta
      * @return if the company staff title is found
      */
     public boolean existsByCode(String jobTitleCode) {
-        return companyStaffTitleLookupRepository.existsByCode(jobTitleCode);
+        log.info("start existsByCode in CompanyStaffTitleLookupService with jobTitleCode: {}", jobTitleCode);
+        boolean jobTitleExits = companyStaffTitleLookupRepository.existsByCode(jobTitleCode);
+        log.info("job title code exits :{}", jobTitleExits);
+        log.info("finish existsByCode in CompanyStaffTitleLookupService with jobTitleCode: {}", jobTitleCode);
+        return jobTitleExits;
     }
 }

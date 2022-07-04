@@ -175,6 +175,7 @@ public class ApplicantLiteService extends GenericService<JpaApplicantLite, Appli
     }
 
     public boolean existsByBasicInfo(String idNumber, String passportNumber, String nationalityCode) {
+        log.info("Start existsByBasicInfo idNumber:{}, passportNumber:{}, nationalityCode:{}", idNumber, nationalityCode, nationalityCode);
         if (idNumber != null && idNumber.isBlank()) {
             idNumber = null;
         }
@@ -182,6 +183,7 @@ public class ApplicantLiteService extends GenericService<JpaApplicantLite, Appli
             passportNumber = null;
         }
         boolean exists = applicantLiteRepository.existsByBasicInfo(idNumber, passportNumber, nationalityCode);
+        log.info("Finish existsByBasicInfo idNumber:{}, passportNumber:{}, nationalityCode:{}", idNumber, nationalityCode, nationalityCode);
         return exists;
     }
 
@@ -211,20 +213,23 @@ public class ApplicantLiteService extends GenericService<JpaApplicantLite, Appli
     }
 
     public ApplicantEmergencyContactDto findApplicantEmergencyContactByApplicantId(String applicantUin){
+        log.info("Start findApplicantEmergencyContactByApplicantId applicantUin:{}", applicantUin);
         ApplicantEmergencyContactDto applicantEmergencyContact =  applicantLiteRepository.findApplicantEmergencyContactByApplicantId(applicantUin);
+        log.info("Finish findApplicantEmergencyContactByApplicantId applicantUin:{}", applicantUin);
         return applicantEmergencyContact;
     }
     @Transactional(isolation = Isolation.READ_UNCOMMITTED)
     public ApplicantEmergencyContactDto updateApplicantEmergencyContactByApplicantId(String applicantUin, ApplicantEmergencyContactDto applicantEmergencyContact) {
-
+        log.info("Start updateApplicantEmergencyContactByApplicantId applicantUin:{}", applicantUin);
         Optional<ApplicantLiteDto> applicant = findByUin(applicantUin);
         if(applicant.isPresent()== false) {
+            log.info("Finish updateApplicantEmergencyContactByApplicantId not found applicantUin:{}", applicantUin);
             return null;
         }
       int numberOfAffectedRows =   applicantLiteRepository.updateApplicantEmergencyContactByApplicantId(applicant.get().getId(), applicantEmergencyContact.getEmergencyContactName(),applicantEmergencyContact.getEmergencyContactMobileNumber());
       if(numberOfAffectedRows == 1){
-
-      return applicantEmergencyContact;
+          log.info("Finish updateApplicantEmergencyContactByApplicantId applicantUin:{}", applicantUin);
+          return applicantEmergencyContact;
       }
         return null;
     }

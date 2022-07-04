@@ -55,6 +55,7 @@ public class ManifestService {
     }
 
     public List<ManifestVo> generateManifest(String printRequestReferenceNumber, BatchCollectionVO batchCollection, EManifestType manifestType) {
+        log.info("start generateManifest with printRequestReferenceNumber: {}", printRequestReferenceNumber);
         if (EManifestType.IMAGE == manifestType)
             return generateManifestAsImages(printRequestReferenceNumber, batchCollection);
         throw new IllegalArgumentException("Manifest Type not supported " + manifestType);
@@ -62,7 +63,9 @@ public class ManifestService {
     }
 
     private List<ManifestVo> generateManifestAsImages(String printRequestReferenceNumber, BatchCollectionVO batchCollectionVO) {
+        log.info("start generateManifestAsImages with printRequestReferenceNumber: {}", printRequestReferenceNumber);
         List<ManifestVo> manifestImages = new ArrayList<>();
+        log.info("query for  findByReferenceNumber with printRequestReferenceNumber: {}", printRequestReferenceNumber);
         PrintRequestDto printRequestDto = printRequestService.findByReferenceNumber(printRequestReferenceNumber);
 
         batchCollectionVO.getBatchMainCollections().forEach(batchMainCollectionDto -> batchMainCollectionDto.getSubCollections()
@@ -107,6 +110,7 @@ public class ManifestService {
                         throw new RuntimeException("Error while converting image to base64");
                     }
                 }));
+        log.info("end generateManifestAsImages with printRequestReferenceNumber: {}", printRequestReferenceNumber);
         return manifestImages;
     }
 
@@ -234,6 +238,7 @@ public class ManifestService {
             throw new RuntimeException("Error while creating document");
         }
         doc.close();
+        log.info("end generate Manifest PDF printRequestReferenceNumber: {}, batchCollection: {}", printRequestReferenceNumber, batchCollectionVO);
         return new ByteArrayInputStream(out.toByteArray());
     }
 

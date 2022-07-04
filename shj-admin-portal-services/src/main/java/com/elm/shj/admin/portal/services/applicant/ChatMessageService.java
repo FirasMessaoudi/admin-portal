@@ -78,6 +78,9 @@ public class ChatMessageService extends GenericService<JpaChatMessage, ChatMessa
     }
 
     public List<ChatMessageDto> findChatMessagesBySenderIdOrReceiverId(long contactId) {
-        return mapList(chatMessageRepository.findBySenderIdOrReceiverId(contactId, contactId));
+        log.info("Start findChatMessagesBySenderIdOrReceiverId senderId: {},  receiverId: {}", contactId, contactId);
+        List<ChatMessageDto> chatMessageDtoList = mapList(chatMessageRepository.findBySenderIdOrReceiverId(contactId, contactId));
+        log.info("Finish findChatMessagesBySenderIdOrReceiverId senderId: {},  receiverId: {}", contactId, contactId);
+        return chatMessageDtoList;
     }
 }

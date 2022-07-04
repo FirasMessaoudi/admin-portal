@@ -68,7 +68,7 @@ public class PrintRequestService extends GenericService<JpaPrintRequest, PrintRe
     }
 
     public PrintRequestDto processBatching(PrintRequestDto printRequest, List<EPrintBatchType> selectedBatchTypes, String target) {
-
+        log.info("start processBatching with target : {}", target);
         printRequest.getPrintRequestBatches().clear();
         if (selectedBatchTypes.size() > 0) {
             // Group printing cards by selected batch types
@@ -121,12 +121,13 @@ public class PrintRequestService extends GenericService<JpaPrintRequest, PrintRe
             PrintRequestBatchDto printRequestBatch = PrintRequestBatchDto.builder().sequenceNumber(sequenceCount.getAndIncrement()).printRequestBatchCards(printRequest.getPrintRequestCards().stream().map(requestCard -> PrintRequestBatchCardDto.builder().card(requestCard.getCard()).build()).collect(Collectors.toList())).build();
             printRequest.getPrintRequestBatches().add(printRequestBatch);
         }
+        log.info("end processBatching with target : {}", target);
         // Return nested object
         return printRequest;
     }
 
     public PrintRequestDto confirm(PrintRequestDto printRequest, String target) {
-
+        log.info("start confirm processBatching with target : {}", target);
         printRequest.getPrintRequestCards().forEach(requestCard -> {
             requestCard.setPrintRequest(printRequest);
             requestCard.setCardId(requestCard.getCard().getId());
@@ -143,15 +144,19 @@ public class PrintRequestService extends GenericService<JpaPrintRequest, PrintRe
         printRequest.setStatusCode(EPrintRequestStatus.CONFIRMED.name());
         printRequest.setTarget(target);
         printRequest.setConfirmationDate(new Date());
+        log.info("end confirm processBatching with target : {}", target);
         return super.save(printRequest);
     }
 
     public PrintRequestDto findByReferenceNumber(String referenceNumber) {
+        log.info("start findByReferenceNumber with referenceNumber : {}", referenceNumber);
         if(referenceNumber == null || referenceNumber.trim().isEmpty())
             return null;
         JpaPrintRequest jpaPrintRequest = printRequestRepository.findByReferenceNumber(referenceNumber);
-        if (jpaPrintRequest != null)
+        if (jpaPrintRequest != null) {
+            log.info("end findByReferenceNumber with referenceNumber : {}", referenceNumber);
             return this.getMapper().fromEntity(jpaPrintRequest, mappingContext);
+        }
         return null;
     }
 

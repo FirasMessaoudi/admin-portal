@@ -72,6 +72,7 @@ public class ApplicantComplaintLiteService extends GenericService<JpaApplicantCo
      */
     @Transactional
     public ApplicantComplaintLiteDto addApplicantComplaint(ApplicantComplaintLiteDto  applicantComplaintLiteDto, MultipartFile attachment) {
+        log.info("Start addApplicantComplaint with ApplicantComplaintLiteDto: {}", applicantComplaintLiteDto);
         // generate request reference
         String referenceNumber = generateReferenceNumber();
         // generate and set reference number
@@ -137,7 +138,7 @@ public class ApplicantComplaintLiteService extends GenericService<JpaApplicantCo
             complaintAttachmentDto.setApplicantComplaint(new ApplicantComplaintLiteDto(createdApplicantComplaint.getId()));
             createdApplicantComplaint.setComplaintAttachment(complaintAttachmentLiteService.save(complaintAttachmentDto));
         }
-        log.info("applicant complaint created successfully with id# {}", createdApplicantComplaint.getId());
+        log.info("Finish addApplicantComplaint created successfully with id# {}", createdApplicantComplaint.getId());
         // return the persisted object
         return createdApplicantComplaint;
     }
@@ -158,10 +159,12 @@ public class ApplicantComplaintLiteService extends GenericService<JpaApplicantCo
      * @return a unique identifier for the applicant incident
      */
     public String generateReferenceNumber() {
+        log.info("Start generateReferenceNumber");
         String referenceNumPrefix = String.valueOf(DateUtils.getCurrentHijriYear());
         threadLocalLatestSerialList.get().addAll(0, applicantComplaintLiteRepository.fetchReferenceNumByReferenceNumLike(referenceNumPrefix));
         long nextSequence = CollectionUtils.isEmpty(threadLocalLatestSerialList.get()) ? 1 : Long.parseLong(threadLocalLatestSerialList.get().get(0)) + 1;
         String serialDigits = StringUtils.leftPad(String.valueOf(nextSequence), 8, "0");
+        log.info("Finish generateReferenceNumber");
         return referenceNumPrefix+ serialDigits  ;
     }
 
@@ -170,8 +173,10 @@ public class ApplicantComplaintLiteService extends GenericService<JpaApplicantCo
     }
 
     public List<ApplicantComplaintLiteDto> findAllByApplicantRitualId(long applicantRitualId) {
-
-        return mapList(applicantComplaintLiteRepository.findByApplicantRitualId(applicantRitualId));
+        log.info("Start findAllByApplicantRitualId with applicantRitualId: {}", applicantRitualId);
+        List<ApplicantComplaintLiteDto> applicantComplaintLiteDtoList = mapList(applicantComplaintLiteRepository.findByApplicantRitualId(applicantRitualId));
+        log.info("Finish findAllByApplicantRitualId with applicantRitualId: {}", applicantRitualId);
+        return applicantComplaintLiteDtoList;
     }
 }
 

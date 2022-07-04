@@ -27,6 +27,9 @@ public class RitualGroupService extends GenericService<JpaRitualGroup, RitualGro
      * @return if the group is found
      */
     public boolean existsByCode(String groupCode) {
-        return ((RitualGroupRepository) getRepository()).existsByCode(groupCode);
+        log.info("RitualGroupService ::: Start existsByCode with groupCode: {}", groupCode);
+        boolean ritualGroupExists = ((RitualGroupRepository) getRepository()).existsByCode(groupCode);
+        log.info("RitualGroupService ::: Finish existsByCode with groupCode: {}", groupCode);
+        return ritualGroupExists;
     }
 }

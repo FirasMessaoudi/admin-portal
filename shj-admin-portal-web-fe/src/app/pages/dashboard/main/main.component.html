@@ -15,7 +15,7 @@
         </option>
       </select>
 
-      
+
 
     </h3>
 
@@ -38,6 +38,8 @@
   </div>
 
   <div class="content__section">
+
+
 
     <div class="row row-cols-1 row-cols-md-2 row-cols-xl-4">
 
@@ -180,42 +182,13 @@
 
     </div>
 
+
+
     <div class="row row-cols-1 row-cols-xl-2">
       <div class="col mt-4">
-        <div class="h-100 p-3 border">
-          <div class="flex-center-between flex-wrap">
-            <div class="flex-center-vert flex-wrap">
-              <h5 class="sts">{{'dashboard.main.service_rating' | translate}}</h5>
-            </div>
-            <a [routerLink]="['/dashboard/rating']" class="text-dcc-primary">
-              {{'dashboard.main.more_on_rating' | translate}}
-              <svg-icon icon="chevron-double-left" styleClass="small flip ml-2"></svg-icon>
-            </a>
-          </div>
-          <div class="py-3">Content</div>
-        </div>
-      </div>
-      <div class="col mt-4">
-        <div class="h-100 p-3 border">
-          <div class="flex-center-between flex-wrap">
-            <div class="flex-center-vert flex-wrap">
-              <h5 class="sts">{{'dashboard.main.company_rating' | translate}}</h5>
-              <button type="button" class="btn border mx-3">
-                {{'dashboard.general.max_rating' | translate}}
-                <svg-icon icon="sort-amount-up"></svg-icon>
-              </button>
-              <button type="button" class="btn border mx-3">
-                {{'dashboard.general.min_rating' | translate}}
-                <svg-icon icon="sort-amount-down"></svg-icon>
-              </button>
-            </div>
-
-            <a [routerLink]="['/dashboard/rating']" class="text-dcc-primary">
-              {{'dashboard.main.more_on_rating' | translate}}
-              <svg-icon icon="chevron-double-left" styleClass="small flip ml-2"></svg-icon>
-            </a>
-          </div>
-          <div class="py-3">Content</div>
+        <div class="flex-center-column border py-4 px-5">
+          <img src="assets/images/homelink.svg" alt="homelink">
+          <button (click)="openBIDashboard()" class="btn btn-dcc-primary btn-lg mt-3 px-7 py-3">{{'dashboard.main.open_bi_dashboard' | translate}}</button>
         </div>
       </div>
       <div class="col mt-4">
@@ -256,6 +229,44 @@
           </div>
         </div>
       </div>
+      <div class="col mt-4">
+        <div class="h-100 p-3 border">
+          <div class="flex-center-between flex-wrap">
+            <div class="flex-center-vert flex-wrap">
+              <h5 class="sts">{{'dashboard.main.service_rating' | translate}}</h5>
+            </div>
+            <a [routerLink]="['/dashboard/rating']" class="text-dcc-primary">
+              {{'dashboard.main.more_on_rating' | translate}}
+              <svg-icon icon="chevron-double-left" styleClass="small flip ml-2"></svg-icon>
+            </a>
+          </div>
+          <div class="py-3">Content</div>
+        </div>
+      </div>
+      <div class="col mt-4">
+        <div class="h-100 p-3 border">
+          <div class="flex-center-between flex-wrap">
+            <div class="flex-center-vert flex-wrap">
+              <h5 class="sts">{{'dashboard.main.company_rating' | translate}}</h5>
+              <button type="button" class="btn border mx-3">
+                {{'dashboard.general.max_rating' | translate}}
+                <svg-icon icon="sort-amount-up"></svg-icon>
+              </button>
+              <button type="button" class="btn border mx-3">
+                {{'dashboard.general.min_rating' | translate}}
+                <svg-icon icon="sort-amount-down"></svg-icon>
+              </button>
+            </div>
+
+            <a [routerLink]="['/dashboard/rating']" class="text-dcc-primary">
+              {{'dashboard.main.more_on_rating' | translate}}
+              <svg-icon icon="chevron-double-left" styleClass="small flip ml-2"></svg-icon>
+            </a>
+          </div>
+          <div class="py-3">Content</div>
+        </div>
+      </div>
+
     </div>
     <div class="col mt-4">
       <div class="h-100 p-3 border">

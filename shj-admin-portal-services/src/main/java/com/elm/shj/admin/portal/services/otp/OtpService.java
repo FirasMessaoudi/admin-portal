@@ -67,11 +67,14 @@ public class OtpService {
      * @return the created otp
      */
     public String createOtp(String principal,Integer countryCode, String mobileNumber) {
+        log.info("start createOtp with username: {} and countryCode: {}, and mobileNumber: {}", principal, countryCode, mobileNumber);
         try {
             String generatedOtp = otpGenerator.generateOtp(principal);
+            log.info("Otp generated for username:{} and otp: {}", principal, generatedOtp);
             otpCache.put(principal, generatedOtp);
             String locale = principal.startsWith("1") ? "ar" : "en";
             String registerUserSms = messageSource.getMessage(OTP_SMS_NOTIFICATION_MSG, new String[]{generatedOtp}, Locale.forLanguageTag(locale));
+            log.info("end createOtp with username: {} and countryCode: {}, and mobileNumber: {}", principal, countryCode, mobileNumber);
             return huicSmsService.sendMessage(countryCode,mobileNumber, registerUserSms, "comments") ? generatedOtp : null;
         } catch (NoSuchAlgorithmException | InvalidKeyException | RuntimeException | SSLException e) {
             log.error("Unable to generate OTP : " + e.getMessage(), e);
@@ -87,10 +90,13 @@ public class OtpService {
      * @return result of verification
      */
     public boolean validateOtp(String principal, String otpToVerify) {
+        log.info("Start Verify otp for username:{} and otpToVerify: {}", principal, otpToVerify);
         if (mockEnabled || Objects.equals(otpCache.getIfPresent(principal), otpToVerify)) {
             otpCache.invalidate(principal);
+            log.info("End with verified otp for username:{} and otpToVerify: {}", principal, otpToVerify);
             return true;
         }
+        log.info("Otp not matched with OtpCache for username:{} and otpToVerify: {}", principal, otpToVerify);
         return false;
     }
 

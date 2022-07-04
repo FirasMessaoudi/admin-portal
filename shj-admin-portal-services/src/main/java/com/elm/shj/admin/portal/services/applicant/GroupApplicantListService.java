@@ -81,7 +81,9 @@ public class GroupApplicantListService extends GenericService<JpaGroupApplicantL
     }
 
     public GroupApplicantListDto findByUin(String uin, long id) {
+        log.info("Start findByUin uin: {}", uin);
         Optional<JpaGroupApplicantList> groupApplicantList = groupApplicantListRepository.findTopByApplicantUinAndApplicantGroupIdOrderByCreationDateDesc(uin, id);
+        log.info("Finish findByUin uin: {}", uin);
         return groupApplicantList.map(jpaGroupApplicantList -> getMapper().fromEntity(jpaGroupApplicantList, mappingContext)).orElse(null);
     }
 
@@ -98,12 +100,14 @@ public class GroupApplicantListService extends GenericService<JpaGroupApplicantL
         if (existingGroupApplicantList != null) {
             existingGroupApplicantList.setApplicantGroup(applicantGroupDto);
             save(existingGroupApplicantList);
+            log.info("GroupApplicantListService ::: Finish updateGroup  in case existing group list is null");
             return true;
         } else {
             GroupApplicantListDto groupApplicantListDto = GroupApplicantListDto.builder()
                     .applicantGroup(applicantGroupDto)
                     .applicantUin(updateGroupCmd.getUin()).build();
             save(groupApplicantListDto);
+            log.info("GroupApplicantListService ::: Finish updateGroup  in case existing group list is not null");
             return true;
         }
 
@@ -115,6 +119,9 @@ public class GroupApplicantListService extends GenericService<JpaGroupApplicantL
     }
 
     public GroupApplicantListDto findByUin(String uin){
-        return  getMapper().fromEntity(groupApplicantListRepository.findTopByApplicantUinOrderByCreationDateDesc(uin).orElse(null), mappingContext);
+        log.info("Start findByUin uin: {}", uin);
+        GroupApplicantListDto groupApplicantListDto = getMapper().fromEntity(groupApplicantListRepository.findTopByApplicantUinOrderByCreationDateDesc(uin).orElse(null), mappingContext);;
+        log.info("Finish findByUin uin: {}", uin);
+        return  groupApplicantListDto;
     }
 }

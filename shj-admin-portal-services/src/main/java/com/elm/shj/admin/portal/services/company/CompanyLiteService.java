@@ -37,16 +37,25 @@ public class CompanyLiteService extends GenericService<JpaCompanyLite, CompanyLi
     }
 
     public List<CompanyLiteDto> findEstablishmentCompanies() {
-        return mapList(companyLiteRepository.findByTypeCode(ECompanyType.ESTABLISHMENT.name()));
+        log.info("Start findEstablishmentCompanies");
+        List<CompanyLiteDto> companyLiteDtoList = mapList(companyLiteRepository.findByTypeCode(ECompanyType.ESTABLISHMENT.name()));
+        log.info("Finish findEstablishmentCompanies");
+        return companyLiteDtoList;
     }
 
     public List<CompanyLiteDto> findServiceGroupCompanies(String establishmentCompanyCode) {
-     int refCode =   Integer.parseInt( establishmentCompanyCode.split("_")[0]);
-        return mapList(companyLiteRepository.findByTypeCodeAndEstablishmentRefCode(ECompanyType.SERVICE_GROUP.name(),refCode));
+        log.info("Start findServiceGroupCompanies with establishmentCompanyCode: {}", establishmentCompanyCode);
+        int refCode =   Integer.parseInt( establishmentCompanyCode.split("_")[0]);
+        List<CompanyLiteDto> companyLiteDtoList = mapList(companyLiteRepository.findByTypeCodeAndEstablishmentRefCode(ECompanyType.SERVICE_GROUP.name(),refCode));
+        log.info("Finish findServiceGroupCompanies with establishmentCompanyCode: {}", establishmentCompanyCode);
+        return companyLiteDtoList;
     }
 
     public List<CompanyLiteDto> findInternalHajjCompanies() {
-        return mapList(companyLiteRepository.findByTypeCode(ECompanyType.INTERNAL_HAJ_COMPANY.name()));
+        log.info("Start findInternalHajjCompanies");
+        List<CompanyLiteDto> companyLiteDtoList = mapList(companyLiteRepository.findByTypeCode(ECompanyType.INTERNAL_HAJ_COMPANY.name()));
+        log.info("Finish findInternalHajjCompanies");
+        return companyLiteDtoList;
     }
 
 }

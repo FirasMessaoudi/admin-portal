@@ -26,7 +26,9 @@ public class ApplicantRelativeService extends GenericService<JpaApplicantRelativ
     private final ApplicantRelativeRepository applicantRelativeRepository;
 
     public ApplicantRelativeDto findByApplicantIdAndRelativeApplicantId(long applicantId, long relativeApplicantId) {
+        log.info("Start findByApplicantIdAndRelativeApplicantId ::: applicantId: {},  relativeApplicantId: {}", applicantId, relativeApplicantId);
         Optional<JpaApplicantRelative> applicantRelative = applicantRelativeRepository.findTopByApplicantIdAndRelativeApplicantIdOrderByCreationDateDesc(applicantId, relativeApplicantId);
+        log.info("Finish findByApplicantIdAndRelativeApplicantId ::: applicantId: {},  relativeApplicantId: {}", applicantId, relativeApplicantId);
         return applicantRelative.map(r -> getMapper().fromEntity(r, mappingContext)).orElse(null);
     }
 

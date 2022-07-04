@@ -25,12 +25,17 @@ import org.springframework.stereotype.Service;
 public class UserCardStatusAuditService extends GenericService<JpaUserCardStatusAudit, UserCardStatusAuditDto, Long> {
 
     public void saveUserCardStatusAudit(ApplicantCardDto card, long userId) {
+        log.info("Start saveUserCardStatusAudit with card: {}", card);
         save(UserCardStatusAuditDto.builder().cardId(card.getId()).statusCode(card.getStatusCode()).userId(userId)
                 .uin(card.getApplicantRitual().getApplicant().getDigitalIds().get(0).getUin()).build());
+        log.info("Finish saveUserCardStatusAudit");
+
     }
 
     public void saveUserBasicCardStatusAudit(ApplicantCardBasicDto card, long userId) {
+        log.info("Start saveUserBasicCardStatusAudit with card: {}", card);
         save(UserCardStatusAuditDto.builder().cardId(card.getId()).statusCode(card.getStatusCode()).userId(userId)
                 .uin(card.getApplicantRitual().getApplicant().getDigitalIds().get(0).getUin()).build());
+        log.info("Finish saveUserBasicCardStatusAudit");
     }
 }

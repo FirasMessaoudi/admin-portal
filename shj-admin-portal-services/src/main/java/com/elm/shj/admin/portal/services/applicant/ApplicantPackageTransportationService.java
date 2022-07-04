@@ -48,7 +48,7 @@ public class ApplicantPackageTransportationService extends GenericService<JpaApp
 
     @Transactional
     public Boolean updateApplicantTransportation(UpdateApplicantTransportationDto updateApplicantTransportationDto){
-        log.info("updateApplicantTransportationDto .. {}", updateApplicantTransportationDto);
+        log.info("Start updateApplicantTransportationDto .. {}", updateApplicantTransportationDto);
         ApplicantDto applicantDto = applicantService.findByUin(updateApplicantTransportationDto.getApplicantUin()).orElse(null);
         if(applicantDto == null)
             return false;
@@ -77,7 +77,7 @@ public class ApplicantPackageTransportationService extends GenericService<JpaApp
                     .build();
             save(applicantPackageTransportation);
         } else {
-            log.info(" package transporation found for applicant .. {}", applicantDto.getId());
+            log.info("Finish updateApplicantTransportation found for applicant .. {}", applicantDto.getId());
             packageTransportationList.forEach(packageTransportationDto ->{
                 ApplicantPackageTransportationDto applicantPackageTransportationDto = findByApplicantPackageIdAndTransportationId(applicantPackageDto.getId(), packageTransportationDto.getId());
                 if (applicantPackageTransportationDto != null) {
@@ -86,7 +86,7 @@ public class ApplicantPackageTransportationService extends GenericService<JpaApp
                     save(applicantPackageTransportationDto);
 
                 } else {
-                    log.info(" applicant package transporation not found for applicant package {} and transportation .. {}", applicantPackageDto.getId(), packageTransportationDto.getId());
+                    log.info("Finish updateApplicantTransportation not found for applicant package {} and transportation .. {}", applicantPackageDto.getId(), packageTransportationDto.getId());
                     ApplicantPackageTransportationDto applicantPackageTransportation = ApplicantPackageTransportationDto.builder()
                             .applicantPackage(applicantPackageDto)
                             .packageTransportation(packageTransportationDto)
@@ -103,7 +103,7 @@ public class ApplicantPackageTransportationService extends GenericService<JpaApp
 
     @Transactional
     public Boolean updateGroupApplicantTranportation(UpdateApplicantTransportationDto updateApplicantTransportationDto){
-        log.info("groupId .. {}", updateApplicantTransportationDto.getGroupId());
+        log.info("Start updateGroupApplicantTranportation with groupId:{}", updateApplicantTransportationDto.getGroupId());
         List<Long> applicantIdlIst = applicantService.findApplicantIdByGroupId(updateApplicantTransportationDto.getGroupId());
         log.info("applicantIdlIst ... {}" + applicantIdlIst) ;
 
@@ -142,7 +142,7 @@ public class ApplicantPackageTransportationService extends GenericService<JpaApp
                         save(applicantPackageTransportationDto);
 
                     } else {
-                        log.info(" applicant package transporation not found for applicant package {} and transportation .. {}", applicantPackageDto.getId(), packageTransportationDto.getId());
+                        log.info("Finish updateGroupApplicantTranportation not found for applicant package {} and transportation .. {}", applicantPackageDto.getId(), packageTransportationDto.getId());
                         ApplicantPackageTransportationDto applicantPackageTransportation = ApplicantPackageTransportationDto.builder()
                                 .applicantPackage(applicantPackageDto)
                                 .packageTransportation(packageTransportationDto)
@@ -158,7 +158,7 @@ public class ApplicantPackageTransportationService extends GenericService<JpaApp
     }
 
     public String findGroupApplicantVebicleNumber(Long groupId){
-        log.info("groupId .. {}", groupId);
+        log.info("Start findGroupApplicantVebicleNumber with groupId: {}", groupId);
         List<Long> applicantIdlIst = applicantService.findApplicantIdByGroupId(groupId);
         log.info("applicantIdlIst ... {}" + applicantIdlIst);
 
@@ -166,12 +166,12 @@ public class ApplicantPackageTransportationService extends GenericService<JpaApp
 
         applicantIdlIst.forEach(applicantId -> {
             ApplicantPackageDto applicantPackageDto = applicantPackageService.findJpaApplicantPackageByApplicantId(applicantId);
-            log.info("applicant package not found for applicant ... {}" + applicantId);
+            log.info("Finish findGroupApplicantVebicleNumber not found for applicant ... {}" + applicantId);
 
             PackageTransportationDto packageTransportation = packageTransportationService.findByRitualPackageIdAndTypeCode(applicantPackageDto.getRitualPackage().getId(), ETransportationType.BUS.name());
 
             if (packageTransportation != null) {
-                log.info("packageTransportation  found for applicant ritual package... {}" + applicantPackageDto.getRitualPackage().getId());
+                log.info("Finish findGroupApplicantVebicleNumber  found for applicant ritual package... {}" + applicantPackageDto.getRitualPackage().getId());
                 ApplicantPackageTransportationDto applicantPackageTransportation = findByApplicantPackageIdAndTransportationId(applicantPackageDto.getId(), packageTransportation.getId());
                 if (applicantPackageTransportation != null) {
                     applicantPackageTransportationList.add(applicantPackageTransportation);
@@ -190,19 +190,19 @@ public class ApplicantPackageTransportationService extends GenericService<JpaApp
     }
 
     public String findApplicantVehicleNumberInfo(String applicantUin){
-        log.info("updateApplicantHousingCampDto .. {}", applicantUin);
+        log.info("Start updateApplicantHousingCampDto applicantUin: {}", applicantUin);
         ApplicantDto applicantDto = applicantService.findByUin(applicantUin).orElse(null);
         ApplicantCampDetailDto applicantCampDetail = new ApplicantCampDetailDto();
         if(applicantDto == null)
             return null;
 
         ApplicantPackageDto applicantPackageDto = applicantPackageService.findJpaApplicantPackageByApplicantId(applicantDto.getId());
-        log.info("applicant package not found for applicant ... {}" + applicantDto.getId());
+        log.info("Finish findApplicantVehicleNumberInfo not found for applicant ... {}" + applicantDto.getId());
 
         PackageTransportationDto packageTransportation = packageTransportationService.findByRitualPackageIdAndTypeCode(applicantPackageDto.getRitualPackage().getId(), ETransportationType.BUS.name());
         StringBuilder vehicleNumber = new StringBuilder();
         if (packageTransportation != null) {
-            log.info("packageTransportation  found for applicant ritual package... {}" + applicantPackageDto.getRitualPackage().getId());
+            log.info("Finish findApplicantVehicleNumberInfo found for applicant ritual package... {}" + applicantPackageDto.getRitualPackage().getId());
             ApplicantPackageTransportationDto applicantPackageTransportation = findByApplicantPackageIdAndTransportationId(applicantPackageDto.getId(), packageTransportation.getId());
             if(applicantPackageTransportation != null){
                 vehicleNumber.append(applicantPackageTransportation.getVehicleNumber());

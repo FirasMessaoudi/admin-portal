@@ -24,6 +24,7 @@ public class IncidentTypeLookupService extends GenericService<JpaIncidentTypeLoo
      * @return the found incident
      */
     public IncidentTypeLookupDto findByCode(String typeCode) {
+        log.info("start findByCode in IncidentTypeLookupService with typeCode: {}", typeCode);
         return getMapper().fromEntity(((IncidentTypeLookupRepository) getRepository()).findFirstByCode(typeCode), mappingContext);
     }
 }

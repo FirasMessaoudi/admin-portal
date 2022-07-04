@@ -143,6 +143,7 @@ public class ItemWriter {
     public <T, S> List<DataValidationResult> write(List<AbstractMap.SimpleEntry<Row, T>> items, DataSegmentDto dataSegment, long dataRequestId, String... companyRefCode) {
         log.info("Confirming Item writer #{}", companyRefCode);
         if (dataSegment.getId() == EDataSegment.APPLICANT_EMERGENCY_DATA.getId()) {
+            log.info("start Applicant emergency data upload with data segment: {}", dataSegment.getId());
             JpaRepository applicantRepository = (JpaRepository) context.getBean(repositoryRegistry.get(EDataSegment.APPLICANT_DATA));
             List<DataRequestRecordDto> dataRequestRecords = new ArrayList<>();
             List<S> savedItems = new ArrayList<>();
@@ -225,6 +226,7 @@ public class ItemWriter {
         }
 
         if (dataSegment.getId() == EDataSegment.STAFF_APPLICANT_GROUP_DATA.getId()) {
+            log.info("start Staff Applicant Group Data upload with data segment: {}", dataSegment.getId());
             List<DataValidationResult> dataValidationResults = new ArrayList<>();
             items.forEach(entry -> {
                 //mark row with error
@@ -240,11 +242,15 @@ public class ItemWriter {
                 applicantBasicInfoDto.setPassportNumber(staffApplicantGroupDto.getPassportNumber());
                 applicantBasicInfoDto.setDateOfBirthGregorian(staffApplicantGroupDto.getDateOfBirthGregorian());
                 applicantBasicInfoDto.setDateOfBirthHijri(staffApplicantGroupDto.getDateOfBirthHijri());
+                log.info("Query for getLatestCompanyRitualSeasonByRitualSeason with company code: {} and ritualType code: {}, and seson: {}", staffApplicantGroupDto.getCompanyCode(), staffApplicantGroupDto.getRitualTypeCode(), staffApplicantGroupDto.getSeason());
                 CompanyRitualSeasonDto companyRitualSeasonDto = companyRitualSeasonService.getLatestCompanyRitualSeasonByRitualSeason(staffApplicantGroupDto.getCompanyCode(), staffApplicantGroupDto.getRitualTypeCode(), staffApplicantGroupDto.getSeason());
                 if (companyRitualSeasonDto != null) {
+                    log.info("Query for getApplicantGroupByReferenceNumberAndCompanyRitualSeasonId for reference number: {} and companyRitualSeasonId: {}", staffApplicantGroupDto.getGroupReferenceNumber(), companyRitualSeasonDto.getId());
                     ApplicantGroupDto applicantGroupDto = applicantGroupService.getApplicantGroupByReferenceNumberAndCompanyRitualSeasonId(staffApplicantGroupDto.getGroupReferenceNumber(), companyRitualSeasonDto.getId());
                     if (applicantGroupDto != null) {
+                        log.info("start query for findGroupLeaderByBasicInfo");
                         CompanyStaffDto groupLeader = companyStaffService.findGroupLeaderByBasicInfo(staffApplicantGroupDto.getStaffIdNumber(), staffApplicantGroupDto.getStaffPassportNumber(), staffApplicantGroupDto.getStaffDateOfBirthGregorian(), staffApplicantGroupDto.getStaffDateOfBirthHijri());
+                        log.info("end query for findGroupLeaderByBasicInfo");
                         applicantGroupDto.setGroupLeader(groupLeader);
                         if (uniqueGroupLeader.containsKey(applicantGroupDto.getReferenceNumber())) {
                             if (uniqueGroupLeader.get(applicantGroupDto.getReferenceNumber()) != groupLeader.getId()) {
@@ -254,7 +260,9 @@ public class ItemWriter {
                             uniqueGroupLeader.put(applicantGroupDto.getReferenceNumber(), groupLeader.getId());
                         }
                         //TODO: fetch UIN instead of the whole applicant object
+                        log.info("start query for findByBasicInfo");
                         ApplicantDto applicantDto = applicantService.findByBasicInfo(applicantBasicInfoDto);
+                        log.info("end query for findByBasicInfo");
                         if (applicantDto != null) {
                             chatContactService.createGroupLeaderContact(applicantDto.getDigitalIds().get(0).getUin(), groupLeader, staffApplicantGroupDto.getSeason());
                             groupApplicantListService.registerUserToGroup(applicantDto.getDigitalIds().get(0).getUin(), staffApplicantGroupDto.getGroupReferenceNumber());
@@ -262,7 +270,9 @@ public class ItemWriter {
                             //this applicant not found in db in time of processing
                             log.error("this applicant not found in db in time of processing");
                         }
+                        log.info("start save applicant Group");
                         applicantGroupService.save(applicantGroupDto);
+                        log.info("end save applicant Group");
                     } else {
                         //this applicant group not found in db in time of processing
                         log.error("this applicant group not found in db in time of processing");
@@ -275,6 +285,7 @@ public class ItemWriter {
                 }
 
             });
+            log.info("end Staff Applicant Group Data upload with data segment: {}", dataSegment.getId());
             return dataValidationResults;
         }
 
@@ -285,6 +296,7 @@ public class ItemWriter {
         }
 
         if (dataSegment.getId() == EDataSegment.GROUP_DATA.getId()) {
+            log.info("start upload Group Data with data segment ID: {}", dataSegment.getId());
             List<DataRequestRecordDto> dataRequestRecords = new ArrayList<>();
             List<S> savedItems = new ArrayList<>();
             JpaRepository repository = (JpaRepository) context.getBean(repositoryRegistry.get(EDataSegment.fromId(dataSegment.getId())));
@@ -292,17 +304,20 @@ public class ItemWriter {
             items.forEach(entry -> {
                 S savedItem;
                 GroupDataDto groupDataDto = (GroupDataDto) entry.getValue();
+                log.info("Query for getLatestCompanyRitualSeasonByRitualSeason with company code: {} and ritual type code: {} and season year: {}", companyRefCode[0], groupDataDto.getRitualTypeCode(), seasonYear);
                 CompanyRitualSeasonDto companyRitualSeasonDto = companyRitualSeasonService.getLatestCompanyRitualSeasonByRitualSeason(companyRefCode[0], groupDataDto.getRitualTypeCode(), seasonYear);
                 if (companyRitualSeasonDto == null) {
                     dataValidationResults.add(DataValidationResult.builder().valid(false).cell(entry.getKey().getCell(5)).errorMessages(Collections.singletonList(EExcelItemReaderErrorType.NOT_APPLICANT_GROUP_FOUND.getMessage())).valid(false).build());
                     return;
                 }
                 // String companyCode = companyRefCode[0].contains("_") ? companyRefCode[0].substring(0, companyRefCode[0].indexOf("_")) : companyRefCode[0];
+                log.info("Quer for getApplicantGroupByReferenceNumberAndCompanyRitualSeasonId with group reference number: {} and companyRitualSeasonId: {}", groupDataDto.getGroupReferenceNumber(), companyRitualSeasonDto.getId());
                 ApplicantGroupDto applicantGroupDto = applicantGroupService.getApplicantGroupByReferenceNumberAndCompanyRitualSeasonId(groupDataDto.getGroupReferenceNumber(), companyRitualSeasonDto.getId());
                 if (applicantGroupDto == null) {
                     dataValidationResults.add(DataValidationResult.builder().valid(false).cell(entry.getKey().getCell(5)).errorMessages(Collections.singletonList(EExcelItemReaderErrorType.NOT_APPLICANT_GROUP_FOUND.getMessage())).valid(false).build());
                     return;
                 }
+                log.info("Query for applicant findByBasicInfo with idNumber: {} and passportNumber: {} and nationalityCode: {}", groupDataDto.getIdNumber(), groupDataDto.getPassportNumber(), groupDataDto.getNationalityCode());
                 ApplicantLiteDto applicantLiteDto = applicantLiteService.findByBasicInfo(groupDataDto.getIdNumber(), groupDataDto.getPassportNumber(), groupDataDto.getNationalityCode());
 
                 // validate applicant is delted false and package reference number is not null
@@ -312,12 +327,14 @@ public class ItemWriter {
                 }
 
                 // validate applicant is belong to loggend in  user company
+                log.info("validate applicant with company code: {}", companyRefCode[0]);
                 if(!validationService.isValidApplicant(applicantLiteDto, companyRefCode[0])){
                     dataValidationResults.add(DataValidationResult.builder().valid(false).cell(entry.getKey().getCell(1)).errorMessages(Collections.singletonList(EExcelItemReaderErrorType.NOT_APPLICANT_FOUND.getMessage())).valid(false).build());
                     return;
                 }
 
                 // check applicant is already exist for that group then no need to add new update the existin applicant
+                log.info("Query for group application list findByUin with uin: {}", applicantLiteDto.getDigitalIds().get(0).getUin());
                 GroupApplicantListDto existingGroupApplicant = groupApplicantListService.findByUin(applicantLiteDto.getDigitalIds().get(0).getUin());
 
                 GroupApplicantListDto groupApplicantListDto = GroupApplicantListDto.builder()
@@ -366,10 +383,12 @@ public class ItemWriter {
             });
             // update saved items
             repository.saveAll(savedItems);
+            log.info("end upload Group Data with data segment ID: {}", dataSegment.getId());
             return dataValidationResults;
         }
 
         if (dataSegment.getId() == EDataSegment.MAIN_GROUP_DATA.getId()) {
+            log.info("start upload main group data with data segment id: {}", dataSegment.getId());
             List<DataRequestRecordDto> dataRequestRecords = new ArrayList<>();
             List<S> savedItems = new ArrayList<>();
             JpaRepository repository = (JpaRepository) context.getBean(repositoryRegistry.get(EDataSegment.fromId(dataSegment.getId())));
@@ -383,6 +402,7 @@ public class ItemWriter {
                         ritualTypeCodeCellIndex = field.getAnnotation(CellIndex.class).index();
                 }
                 GroupMainDataDto groupMainDataDto = (GroupMainDataDto) entry.getValue();
+                log.info("Query for getLatestCompanyRitualSeasonByRitualSeason with company code: {} and ritual type code: {} and season year: {}", companyRefCode[0], groupMainDataDto.getRitualTypeCode(), seasonYear);
                 CompanyRitualSeasonBasicDto companyRitualSeasonDto = companyRitualSeasonBasicService.getLatestCompanyRitualSeasonByRitualSeason(companyRefCode[0], groupMainDataDto.getRitualTypeCode(), seasonYear);
                 if (companyRitualSeasonDto == null) {
                     dataValidationResults.add(DataValidationResult.builder().valid(false).cell(entry.getKey().getCell(ritualTypeCodeCellIndex)).errorMessages(Collections.singletonList(EExcelItemReaderErrorType.NOT_RITUAL_TYPE_FOUND.getMessage())).valid(false).build());
@@ -390,6 +410,7 @@ public class ItemWriter {
                 }
 
                 Long existingStaffId = companyStaffService.findIdByBasicInfo(groupMainDataDto.getStaffIdNumber(), groupMainDataDto.getStaffPassportNumber(), groupMainDataDto.getNationalityCode());
+                log.info("Staff id found: {}", existingStaffId);
                 Boolean existsStaffInCompany = companyStaffService.exitsStaffInCompany(existingStaffId, companyRitualSeasonDto.getId());
                 if(!existsStaffInCompany){
                     dataValidationResults.add(DataValidationResult.builder().valid(false).cell(entry.getKey().getCell(1)).errorMessages(Collections.singletonList(EExcelItemReaderErrorType.INVALID_ID_NUMBER.getMessage())).valid(false).build());
@@ -457,14 +478,17 @@ public class ItemWriter {
             });
             // update saved items
             repository.saveAll(savedItems);
+            log.info("end upload main group data with data segment id: {}", dataSegment.getId());
             return dataValidationResults;
         }
 
         if (dataSegment.getId() == EDataSegment.APPLICANT_HOUSING_DATA.getId()) {
+            log.info("start applicant housing data with data segment id: {}", dataSegment.getId());
             List<DataValidationResult> dataValidationResults = new ArrayList<>();
             items.forEach(entry -> {
                 ApplicantHousingDataDto applicantHousingDataDto = (ApplicantHousingDataDto) entry.getValue();
                 Long applicantId = applicantService.findIdByBasicInfo(applicantHousingDataDto.getIdNumber(), applicantHousingDataDto.getPassportNumber(), applicantHousingDataDto.getNationalityCode());
+                log.info("Applicant Id found: {}", applicantId);
                 if (applicantId == null) {
                     dataValidationResults.add(DataValidationResult.builder().valid(false).cell(entry.getKey().getCell(1)).errorMessages(Collections.singletonList(EExcelItemReaderErrorType.INVALID_ID_NUMBER.getMessage())).valid(false).build());
                     return;
@@ -472,17 +496,21 @@ public class ItemWriter {
 
                 // validate applicant is delted false and package reference number is not null
                 if(!applicantService.isValidApplicant(applicantId)){
+                    log.info("Applicant is not valid with applicantID: {}", applicantId);
                     dataValidationResults.add(DataValidationResult.builder().valid(false).cell(entry.getKey().getCell(1)).errorMessages(Collections.singletonList(EExcelItemReaderErrorType.INVALID_ID_NUMBER.getMessage())).valid(false).build());
                     return;
                 }
                 // validate applicant is belong to loggend in  user company
                 if(!validationService.isValidApplicant(applicantLiteService.findOne(applicantId), companyRefCode[0])){
+                    log.info("Applicant is not belong to company with applicantID: {} and company code: {}", applicantId, companyRefCode[0]);
                     dataValidationResults.add(DataValidationResult.builder().valid(false).cell(entry.getKey().getCell(1)).errorMessages(Collections.singletonList(EExcelItemReaderErrorType.NOT_APPLICANT_FOUND.getMessage())).valid(false).build());
                     return;
                 }
 
+                log.info("Check applicant package is exits for applicantId: {}", applicantId);
                 ApplicantPackageDto applicantPackageDto = applicantPackageService.findJpaApplicantPackageByApplicantId(applicantId);
                 if (applicantPackageDto == null) {
+                    log.info("Applicant package not found for applicantId: {}", applicantId);
                     dataValidationResults.add(DataValidationResult.builder().valid(false).cell(entry.getKey().getCell(1)).errorMessages(Collections.singletonList(EExcelItemReaderErrorType.APPLICANT_PACKAGE_NOT_FOUND.getMessage())).valid(false).build());
                     return;
                 }
@@ -490,7 +518,10 @@ public class ItemWriter {
                 List<PackageHousingDto> menaHousingList = packageHousingService.findAllByRitualPackageIdAndSiteCode(applicantPackageDto.getRitualPackage().getId(), ECampSite.MENA.name());
                 List<PackageHousingDto> arafetHousingList = packageHousingService.findAllByRitualPackageIdAndSiteCode(applicantPackageDto.getRitualPackage().getId(), ECampSite.ARAFAT.name());
 
+                log.info("Pakcge housing for mena : {}", menaHousingList);
+                log.info("Pakcge housing for arafat : {}", arafetHousingList);
                 if (menaHousingList.isEmpty()) {
+                    log.info("Package house mena not found, create a new package housing for mena");
                     PackageHousingDto packageHousingMena = PackageHousingDto.builder()
                             .ritualPackage(applicantPackageDto.getRitualPackage())
                             .housingZone(HousingZoneDto.builder().id(1L).build())
@@ -502,7 +533,9 @@ public class ItemWriter {
                             .validityStart(new GregorianCalendar(2022, Calendar.JULY, 5).getTime())
                             .validityEnd(new GregorianCalendar(2022, Calendar.JULY, 13).getTime())
                             .build();
+                    log.info("Start creating a packing housing for mena: {}", packageHousingMena);
                     packageHousingMena = packageHousingService.save(packageHousingMena);
+                    log.info("End creating a packing housing for mena: {}", packageHousingMena);
 
                     ApplicantPackageHousingBasicDto applicantPackageHousingBasicDto = ApplicantPackageHousingBasicDto.builder()
                             .applicantPackageId(applicantPackageDto.getId())
@@ -514,20 +547,27 @@ public class ItemWriter {
                             .siteRoom(applicantHousingDataDto.getMenaRoom())
                             .siteTent(applicantHousingDataDto.getMenaTent())
                             .build();
+                    log.info("Start creating a applicant packing housing for mena: {}", applicantPackageHousingBasicDto);
                     applicantPackageHousingBasicService.save(applicantPackageHousingBasicDto);
+                    log.info("Start creating a applicant packing housing for mena: {}", applicantPackageHousingBasicDto);
                 } else {
                     menaHousingList.forEach(menaHousing ->{
+                        log.info("Package house found, update applicant Package housing with menaPakckageHousing: {}", menaHousing.getId());
                         ApplicantPackageHousingDto applicantPackageHousingMena = applicantPackageHousingService.findByApplicantPackageIdAndHousingPackageId(applicantPackageDto.getId(), menaHousing.getId());
                         if (applicantPackageHousingMena != null) {
+                            log.info("Applicant package found, update the existing applicant package housing with: {}", applicantPackageHousingMena);
                             applicantPackageHousingMena.setSiteCampRefCode(applicantHousingDataDto.getMenaCampRefCode());
                             applicantPackageHousingMena.setSiteBedNumber(applicantHousingDataDto.getMenaBedNumber());
                             applicantPackageHousingMena.setSiteCorridor(applicantHousingDataDto.getMenaCorridor());
                             applicantPackageHousingMena.setSiteFloor(applicantHousingDataDto.getMenaFloor());
                             applicantPackageHousingMena.setSiteRoom(applicantHousingDataDto.getMenaRoom());
                             applicantPackageHousingMena.setSiteTent(applicantHousingDataDto.getMenaTent());
+                            log.info("Start updating applicant package housing with: {}", applicantPackageHousingMena);
                             applicantPackageHousingService.save(applicantPackageHousingMena);
+                            log.info("End updating applicant package housing with: {}", applicantPackageHousingMena);
 
                         } else {
+                            log.info("Applicant package not found, create new applicant package housing with menapackageHousing: {}", menaHousing.getId());
                             ApplicantPackageHousingBasicDto applicantPackageHousingBasicDto = ApplicantPackageHousingBasicDto.builder()
                                     .applicantPackageId(applicantPackageDto.getId())
                                     .packageHousingId(menaHousing.getId())
@@ -538,13 +578,16 @@ public class ItemWriter {
                                     .siteRoom(applicantHousingDataDto.getMenaRoom())
                                     .siteTent(applicantHousingDataDto.getMenaTent())
                                     .build();
+                            log.info("Start creating applicant package housing with: {}", applicantPackageHousingBasicDto);
                             applicantPackageHousingBasicService.save(applicantPackageHousingBasicDto);
+                            log.info("End creating applicant package housing with: {}", applicantPackageHousingBasicDto);
                         }
                     });
                 }
 
                 if (arafetHousingList.isEmpty()) {
-                    PackageHousingDto packageHousingMena = PackageHousingDto.builder()
+                    log.info("Package house arafat not found, create a new package housing for arafat");
+                    PackageHousingDto arafatHousing = PackageHousingDto.builder()
                             .ritualPackage(applicantPackageDto.getRitualPackage())
                             .housingZone(HousingZoneDto.builder().id(1L).build())
                             .referenceNumber(applicantHousingDataDto.getArafetCampRefCode())
@@ -555,11 +598,13 @@ public class ItemWriter {
                             .validityStart(new GregorianCalendar(2022, Calendar.JULY, 8).getTime())
                             .validityEnd(new GregorianCalendar(2022, Calendar.JULY, 8).getTime())
                             .build();
-                    packageHousingMena = packageHousingService.save(packageHousingMena);
+                    log.info("Start creating a packing housing for mena: {}", arafatHousing);
+                    arafatHousing = packageHousingService.save(arafatHousing);
+                    log.info("End creating a packing housing for mena: {}", arafatHousing);
 
                     ApplicantPackageHousingBasicDto applicantPackageHousingBasicDto = ApplicantPackageHousingBasicDto.builder()
                             .applicantPackageId(applicantPackageDto.getId())
-                            .packageHousingId(packageHousingMena.getId())
+                            .packageHousingId(arafatHousing.getId())
                             .siteCampRefCode(applicantHousingDataDto.getArafetCampRefCode())
                             .siteBedNumber(applicantHousingDataDto.getArafetBedNumber())
                             .siteCorridor(applicantHousingDataDto.getArafetCorridor())
@@ -567,20 +612,27 @@ public class ItemWriter {
                             .siteRoom(applicantHousingDataDto.getArafetRoom())
                             .siteTent(applicantHousingDataDto.getArafetTent())
                             .build();
+                    log.info("Start creating a applicant packing housing for arafat: {}", applicantPackageHousingBasicDto);
                     applicantPackageHousingBasicService.save(applicantPackageHousingBasicDto);
+                    log.info("End creating a applicant packing housing for arafat: {}", applicantPackageHousingBasicDto);
                 } else {
                     arafetHousingList.forEach(arafatHousing -> {
+                        log.info("Package house found, update applicant Package housing with araafatPakckageHousing: {}", arafatHousing.getId());
                         ApplicantPackageHousingDto applicantPackageHousingArafet = applicantPackageHousingService.findByApplicantPackageIdAndHousingPackageId(applicantPackageDto.getId(), arafatHousing.getId());
                         if (applicantPackageHousingArafet != null) {
+                            log.info("Applicant package found, update the existing applicant package housing with: {}", applicantPackageHousingArafet);
                             applicantPackageHousingArafet.setSiteCampRefCode(applicantHousingDataDto.getArafetCampRefCode());
                             applicantPackageHousingArafet.setSiteBedNumber(applicantHousingDataDto.getArafetBedNumber());
                             applicantPackageHousingArafet.setSiteCorridor(applicantHousingDataDto.getArafetCorridor());
                             applicantPackageHousingArafet.setSiteFloor(applicantHousingDataDto.getArafetFloor());
                             applicantPackageHousingArafet.setSiteRoom(applicantHousingDataDto.getArafetRoom());
                             applicantPackageHousingArafet.setSiteTent(applicantHousingDataDto.getArafetTent());
+                            log.info("Start updating applicant package housing with: {}", applicantPackageHousingArafet);
                             applicantPackageHousingService.save(applicantPackageHousingArafet);
+                            log.info("End updating applicant package housing with: {}", applicantPackageHousingArafet);
 
                         } else {
+                            log.info("Applicant package not found, create new applicant package housing with arafatHousing: {}", arafatHousing.getId());
                             ApplicantPackageHousingBasicDto applicantPackageHousingBasicDto = ApplicantPackageHousingBasicDto.builder()
                                     .applicantPackageId(applicantPackageDto.getId())
                                     .packageHousingId(arafatHousing.getId())
@@ -591,7 +643,9 @@ public class ItemWriter {
                                     .siteRoom(applicantHousingDataDto.getArafetRoom())
                                     .siteTent(applicantHousingDataDto.getArafetTent())
                                     .build();
+                            log.info("Start creating applicant package housing with: {}", applicantPackageHousingBasicDto);
                             applicantPackageHousingBasicService.save(applicantPackageHousingBasicDto);
+                            log.info("End creating applicant package housing with: {}", applicantPackageHousingBasicDto);
                         }
                     });
                 }
@@ -603,7 +657,7 @@ public class ItemWriter {
 
         // saving staff full main data
         if (dataSegment.getId() == EDataSegment.STAFF_FULL_MAIN_DATA.getId()) {
-
+            log.info("Start data upload for Staff main data with data segment Id: {}", dataSegment.getId());
             // save all items and build data records
             List<DataRequestRecordDto> dataRequestRecords = new ArrayList<>();
             List<S> savedItems = new ArrayList<>();
@@ -626,7 +680,7 @@ public class ItemWriter {
 
                     // set default avatar if the photo is null
                     if(companyStaffFullData.getPhoto() == null){
-
+                        log.info("Staff image not found set default image base on gender");
                         BufferedImage defaultImage;
 
                         if(companyStaffFullData.getGender().equals("M")) {
@@ -634,7 +688,7 @@ public class ItemWriter {
                         } else {
                             defaultImage = ImageUtils.loadFromClasspath(DEFAULT_AVATAR_FEMALE);
                         }
-
+                        log.info("Default Image path: {}", defaultImage);
                         ByteArrayOutputStream bos = new ByteArrayOutputStream();
                         final String defaultAvatar;
 
@@ -651,8 +705,10 @@ public class ItemWriter {
                     }
 
                     // check company ritual season exist for the ritual type, seasson and company
+                    log.info("Query for getCompanyRitualSeason with company code: {} and ritul type: {} and seasonyear: {}", companyRefCode[0], companyStaffFullData.getTypeCode(), seasonYear);
                     CompanyRitualSeasonDto companyRitualSeasonDto = companyRitualSeasonService.getCompanyRitualSeason(companyRefCode[0], companyStaffFullData.getTypeCode(), seasonYear);
                     if(companyRitualSeasonDto == null){
+                        log.info("Company ritual season not for staff");
                         dataValidationResults.add(DataValidationResult.builder().valid(false).cell(entry.getKey().getCell(ritualTypeCodeCellIndex)).errorMessages(Collections.singletonList(EExcelItemReaderErrorType.NOT_RITUAL_TYPE_FOUND.getMessage())).valid(false).build());
                         return;
                     }
@@ -671,13 +727,16 @@ public class ItemWriter {
                     // copy properties from company staff full data to company staff
 
                     // BeanUtils.copyProperties(staff, companyStaffFullData);
+                    log.info("Start check existing staff data with: {}", staff.getIdNumber(), staff.getPassportNumber(), staff.getNationalityCode());
                     CompanyStaffDto existingStaff = companyStaffService.findByBasicInfo(staff.getIdNumber(), staff.getPassportNumber(), staff.getNationalityCode());
 
                     if(existingStaff != null){
+                        log.info("Validate start existing is group leader and belong to same company {}", existingStaff.getId());
                         if(applicantGroupBasicService.existsByGroupLeader(existingStaff.getId()) && !companyStaffService.exitsStaffInCompany(existingStaff.getId(), companyRitualSeasonDto.getId())){
                             dataValidationResults.add(DataValidationResult.builder().valid(false).cell(entry.getKey().getCell(1)).errorMessages(Collections.singletonList(EExcelItemReaderErrorType.STAFF_ID_ALREADY_EXITS_IN_COMPANY.getMessage())).valid(false).build());
                             return;
                         }
+                        log.info("Validate end existing is group leader and belong to same company {}", existingStaff.getId());
                     }
                     // if record exists already in DB we need to update it
                     if (existingStaff != null) {
@@ -734,6 +793,7 @@ public class ItemWriter {
 
             // update saved items
             repository.saveAll(savedItems);
+            log.info("End data upload for Staff main data with data segment Id: {}", dataSegment.getId());
             return dataValidationResults;
         }
 

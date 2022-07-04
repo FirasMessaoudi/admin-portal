@@ -26,7 +26,10 @@ public class ComplaintAttachmentLiteService extends GenericService<JpaComplaintA
 
 
     public ComplaintAttachmentLiteDto save(ComplaintAttachmentLiteDto dto){
-        return getMapper().fromEntity(getRepository().save(getMapper().toEntity(dto, mappingContext)), mappingContext);
+        log.info("ComplaintAttachmentLiteService ::: Start save with ComplaintAttachmentLiteDto", dto);
+        ComplaintAttachmentLiteDto complaintAttachmentLiteDto = getMapper().fromEntity(getRepository().save(getMapper().toEntity(dto, mappingContext)), mappingContext);
+        log.info("ComplaintAttachmentLiteService ::: Finish save");
+        return complaintAttachmentLiteDto;
     }
 }
 

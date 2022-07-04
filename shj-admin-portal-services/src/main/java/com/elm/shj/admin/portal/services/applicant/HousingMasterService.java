@@ -30,7 +30,10 @@ public class HousingMasterService extends GenericService<JpaHousingMaster, Housi
     private final HousingMasterRepository housingMasterRepository;
 
     public boolean existsByHousingReferenceCode(String code) {
-        return housingMasterRepository.existsByHousingReferenceCode(code);
+        log.info("Start existsByHousingReferenceCode code: {}", code);
+        boolean isHousingMasterExists = housingMasterRepository.existsByHousingReferenceCode(code);
+        log.info("Finish existsByHousingReferenceCode code: {}", code);
+        return isHousingMasterExists;
     }
 
     @Transactional(isolation = Isolation.READ_UNCOMMITTED)

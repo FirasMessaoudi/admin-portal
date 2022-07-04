@@ -55,6 +55,7 @@ public class IntegrationService {
 
 
     public void callCRMCreateProfile(ApplicantRitualVo ritual, String mobileNumber, CrmAuthResponse accessTokenWsResponse) {
+        log.info("start callCRMCreateProfile for mobile number {}", mobileNumber);
         ApplicantCreateUserVoCRM user = new ApplicantCreateUserVoCRM();
         user.setCustomerType(ECustomerTypeCRM.PILGRIM.getCrmCode());
         user.setDigitalID(ritual.getApplicant().getUin());
@@ -97,13 +98,14 @@ public class IntegrationService {
             user.setEmail(StringUtils.EMPTY);
         user.setMobileNumber(mobileNumber);
 
-
+        log.info("end callCRMCreateProfile for mobile number {}", mobileNumber);
         CreateUserCRMDto createUserCRMDto = callCRM(crmCreateUserProfileUrl, HttpMethod.POST, user, accessTokenWsResponse.getToken(),
                 new ParameterizedTypeReference<CreateUserCRMDto>() {
                 });
     }
 
     public ComplaintUpdateCRMDto callCRMCreateTicket(ApplicantComplaintVo complaint, Integer ticketMainType, CrmAuthResponse accessTokenWsResponse) {
+        log.info("start callCRMCreateTicket for ticketMainType {}", ticketMainType);
         ApplicantCreateComplaintVoCRM newComplaint = new ApplicantCreateComplaintVoCRM();
         newComplaint.setDigitalID(complaint.getApplicantRitual().getApplicant().getUin());
         if (complaint.getApplicantRitual().getApplicant().getIdNumber() != null )
@@ -142,13 +144,14 @@ public class IntegrationService {
         else
             newComplaint.setCampNumber(StringUtils.EMPTY);
         newComplaint.setAttachmentType(StringUtils.EMPTY);
-
+        log.info("end callCRMCreateTicket for ticketMainType {}", ticketMainType);
         return callCRM(crmCreateComplaintUrl, HttpMethod.POST, newComplaint, accessTokenWsResponse.getToken(),
                 new ParameterizedTypeReference<ComplaintUpdateCRMDto>() {
                 });
     }
 
     public ComplaintUpdateCRMDto callCRMCreateIncident(ApplicantIncidentLiteDto incident, ApplicantRitualVo ritual, CrmAuthResponse accessTokenWsResponse) {
+        log.info("start callCRMCreateIncident");
         ApplicantCreateComplaintVoCRM newComplaint = new ApplicantCreateComplaintVoCRM();
         newComplaint.setDigitalID(ritual.getApplicant().getUin());
         if (ritual.getApplicant().getIdNumber() != null )
@@ -191,6 +194,7 @@ public class IntegrationService {
         ComplaintUpdateCRMDto updateCRMDto = callCRM(crmCreateComplaintUrl, HttpMethod.POST, newComplaint, accessTokenWsResponse.getToken(),
                 new ParameterizedTypeReference<ComplaintUpdateCRMDto>() {
                 });
+        log.info("end callCRMCreateIncident");
         return updateCRMDto;
     }
 
@@ -220,6 +224,7 @@ public class IntegrationService {
 
     @Async
     public void callCRMIncident(ApplicantIncidentLiteDto incident) {
+        log.info("start callCRMIncident");
         try {
             CrmAuthResponse accessTokenWsResponse = callCrmAuth();
             if (CrmAuthResponse.ECrmResponseStatus.SUCCESS.getCode() != accessTokenWsResponse.getResponseCode()) {
@@ -228,10 +233,17 @@ public class IntegrationService {
             }
             ApplicantRitualVo ritual = applicantRitualBasicRepository.findByIdForCrm(incident.getApplicantRitualId());
 
+            if(ritual == null){
+                log.info("ritual not found in callCRMIncident");
+            }
+
             callCRMCreateProfile(ritual, incident.getMobileNumber(), accessTokenWsResponse);
 
             ComplaintUpdateCRMDto updateCRMDto = callCRMCreateIncident(incident, ritual, accessTokenWsResponse);
 
+            if(updateCRMDto == null){
+                log.info("crm  not found in callCRMIncident");
+            }
 
             applicantIncidentLiteRepository.updateCRMTicketNumber(incident.getId(), updateCRMDto.getCrmTicketNumber());
             log.info("complaint successfully created #{}", incident.getId());

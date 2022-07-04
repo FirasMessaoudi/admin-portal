@@ -53,6 +53,7 @@ public class CompanyRitualStepService extends GenericService<JpaCompanyRitualSte
      * @return list of company ritual steps
      */
     public List<CompanyRitualStepDto> findCompanyRitualStepsByApplicantUin(String applicantUin) {
+        log.info("Start findCompanyRitualStepsByApplicantUin with applicantUin: {}", applicantUin);
         try {
             //TODO: aflaifel: get the group id only, no need to get the group applicant list object.
             Optional<JpaGroupApplicantList> groupApplicantList = groupApplicantListRepository.findTopByApplicantUinOrderByCreationDateDesc(applicantUin);
@@ -60,8 +61,10 @@ public class CompanyRitualStepService extends GenericService<JpaCompanyRitualSte
                 List<JpaCompanyRitualStep> companyRitualSteps = companyRitualStepRepository.findByApplicantGroupIdOrderByStepIndexAsc(groupApplicantList.get().getApplicantGroup().getId());
                 List<CompanyRitualStepDto> result = mapList(companyRitualSteps);
                 result.forEach(companyRitualStep -> companyRitualStep.setReferenceNumber(companyRitualSteps.get(0).getApplicantGroup().getReferenceNumber()));
+                log.info("Finish findCompanyRitualStepsByApplicantUin with applicantUin: {}", applicantUin);
                 return result;
             } else {
+                log.info("Finish findCompanyRitualStepsByApplicantUin not found with applicantUin: {}", applicantUin);
                 return null;
             }
         } catch (Exception e) {
@@ -77,8 +80,10 @@ public class CompanyRitualStepService extends GenericService<JpaCompanyRitualSte
      * @return company ritual step that is active for current day
      */
     public List<CompanyRitualStepDto> findTodayCompanyRitualStepsByCompanyRitualSeasonId(long companyRitualSeasonId) {
+        log.info("Start findTodayCompanyRitualStepsByCompanyRitualSeasonId with companyRitualSeasonId: {}", companyRitualSeasonId);
         List<JpaCompanyRitualStep> jpaRitualSteps = companyRitualStepRepository.findByApplicantGroupCompanyRitualSeasonId(companyRitualSeasonId);
         List<CompanyRitualStepDto> ritualSteps = mapList(jpaRitualSteps);
+        log.info("Finish findTodayCompanyRitualStepsByCompanyRitualSeasonId with companyRitualSeasonId: {}", companyRitualSeasonId);
         return ritualSteps.stream().filter(r -> {
             LocalDate date = r.getTime().toInstant()
                     .atZone(ZoneId.systemDefault())
@@ -86,7 +91,6 @@ public class CompanyRitualStepService extends GenericService<JpaCompanyRitualSte
             return date.isEqual(LocalDate.now());
 
         }).collect(Collectors.toList());
-
     }
 
     /**
@@ -95,10 +99,11 @@ public class CompanyRitualStepService extends GenericService<JpaCompanyRitualSte
      * @return company ritual steps
      */
     public List<CompanyRitualStepDto> findCompanyRitualStepsByCompanyRitualSeasonId(long companyRitualSeasonId) {
+        log.info("Start findCompanyRitualStepsByCompanyRitualSeasonId with companyRitualSeasonId: {}", companyRitualSeasonId);
         List<JpaCompanyRitualStep> jpaRitualSteps = companyRitualStepRepository.findByApplicantGroupCompanyRitualSeasonId(companyRitualSeasonId);
         List<CompanyRitualStepDto> ritualSteps = mapList(jpaRitualSteps);
+        log.info("Finish findCompanyRitualStepsByCompanyRitualSeasonId with companyRitualSeasonId: {}", companyRitualSeasonId);
         return ritualSteps;
-
     }
 
 

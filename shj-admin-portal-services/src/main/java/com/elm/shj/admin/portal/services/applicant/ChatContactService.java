@@ -131,7 +131,7 @@ public class ChatContactService extends GenericService<JpaChatContact, ChatConta
         ChatContactDto chatContactDto = findApplicantChatContact(digitalId, companyStaff.map(CompanyStaffLiteDto::getSuin).orElse(null));
         if (chatContactDto != null) {
             if (chatContactDto.isDeleted()) {
-                log.debug("createStaffContact chat contact already exist calling updateUserDefinedChatContact ChatContactDtoId: {}", chatContactDto.getId());
+                log.info("createStaffContact chat contact already exist calling updateUserDefinedChatContact ChatContactDtoId: {}", chatContactDto.getId());
                 updateUserDefinedChatContact(chatContactDto.getId(), chatContactDto, false);
             }
             log.info("Finish createStaffContact chat contact already exist ChatContactDtoId: {}", chatContactDto.getId());
@@ -351,7 +351,7 @@ public class ChatContactService extends GenericService<JpaChatContact, ChatConta
                 return RELATIVE.name();
             }
         }
-
+        log.info("Finish mapOwnerRelationship relativeRelationshipCode: {}, gender: {}",relativeRelationshipCode, gender);
         return COMPANION.name();
     }
 

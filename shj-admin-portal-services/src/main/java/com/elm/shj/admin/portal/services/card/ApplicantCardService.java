@@ -81,7 +81,10 @@ public class ApplicantCardService extends GenericService<JpaApplicantCard, Appli
      * @return the list of applicants' cards
      */
     public Page<ApplicantCardDto> findAll(Pageable pageable) {
-        return mapPage(applicantCardRepository.findAllApplicantCards(ECardStatus.REISSUED.name(), pageable));
+        log.info("Start findAllApplicantCards");
+        Page<ApplicantCardDto> applicantCardDtoPage= mapPage(applicantCardRepository.findAllApplicantCards(ECardStatus.REISSUED.name(), pageable));
+        log.info("Finish findAllApplicantCards");
+        return applicantCardDtoPage;
     }
 
     /**
@@ -100,18 +103,22 @@ public class ApplicantCardService extends GenericService<JpaApplicantCard, Appli
     public Page<ApplicantCardDto> findPrintingCards(String uin, String idNumber, String hamlahNumber, String motawefNumber,
                                                     String passportNumber, String nationalityCode, List<Long> excludedCardsIds,
                                                     Pageable pageable) {
-        log.debug("Find printing cards...");
-        return mapPage(applicantCardRepository.findPrintingCards(ECardStatus.READY_TO_PRINT.name(),
+        log.info("Start findPrintingCards...");
+        Page<ApplicantCardDto> applicantCardDtoPage = mapPage(applicantCardRepository.findPrintingCards(ECardStatus.READY_TO_PRINT.name(),
                 EPrintRequestStatus.NEW.name(), uin, idNumber, passportNumber, nationalityCode,
                 excludedCardsIds.size() == 0 ? Arrays.asList(-1L) : excludedCardsIds, pageable));
+        log.info("Finish findPrintingCards...");
+        return applicantCardDtoPage;
     }
 
     public List<ApplicantCardDto> findAllPrintingCards(String uin, String idNumber, String hamlahNumber, String motawefNumber,
                                                        String passportNumber, String nationalityCode, List<Long> excludedCardsIds) {
-        log.debug("Find all printing cards...");
-        return mapList(applicantCardRepository.findAllPrintingCards(ECardStatus.READY_TO_PRINT.name(),
+        log.info("Start findAllPrintingCards...");
+        List<ApplicantCardDto> applicantCardDtoList = mapList(applicantCardRepository.findAllPrintingCards(ECardStatus.READY_TO_PRINT.name(),
                 EPrintRequestStatus.NEW.name(), uin, idNumber, passportNumber, nationalityCode,
                 excludedCardsIds.size() == 0 ? Arrays.asList(-1L) : excludedCardsIds));
+        log.info("Finish findAllPrintingCards...");
+        return applicantCardDtoList;
     }
 
     /**
@@ -122,12 +129,14 @@ public class ApplicantCardService extends GenericService<JpaApplicantCard, Appli
      * @return the list of applicant cards
      */
     public Page<ApplicantCardDto> searchApplicantCards(ApplicantCardSearchCriteriaDto criteria, Pageable pageable) {
+        log.info("Start findAllPrintingCards with ApplicantCardSearchCriteriaDto: {}", criteria);
         Page<ApplicantCardDto> applicantCardDtos = mapPage(applicantCardRepository.findAll(withApplicantCardFilter(criteria), pageable));
         applicantCardDtos.getContent().forEach(applicantCardDto -> {
             ApplicantRitualDto applicantRitualDto = applicantRitualService.findApplicantRitualWithContactsAndRelatives(applicantCardDto.getApplicantRitual().getId());
             ApplicantPackageDto applicantPackageDto = applicantRitualDto.getApplicantPackage();
             applicantCardDto.getApplicantRitual().setTypeCode(applicantPackageDto.getRitualPackage().getCompanyRitualSeason().getRitualSeason().getRitualTypeCode());
         });
+        log.info("Finish findAllPrintingCards with ApplicantCardSearchCriteriaDto: {}", criteria);
         return applicantCardDtos;
     }
 
@@ -194,7 +203,7 @@ public class ApplicantCardService extends GenericService<JpaApplicantCard, Appli
      **/
     @Transactional
     public ApplicantCardDto changeCardStatus(ApplicantCardDto card, String actionCode, Optional<Long> userId) {
-
+        log.info("Start changeCardStatus with actionCode: {}", actionCode);
         if (actionCode.equalsIgnoreCase(ECardStatusAction.CANCEL_CARD.name())) {
             card.setStatusCode(ECardStatus.CANCELLED.name());
         } else if (actionCode.equalsIgnoreCase(ECardStatusAction.ACTIVATE_CARD.name())) {
@@ -208,8 +217,10 @@ public class ApplicantCardService extends GenericService<JpaApplicantCard, Appli
             userCardStatusAuditService.saveUserCardStatusAudit(card, userId.get());
             ApplicantCardDto savedCard = save(ApplicantCardDto.builder().applicantRitual(card.getApplicantRitual()).statusCode(ECardStatus.READY_TO_PRINT.name()).build());
             userCardStatusAuditService.saveUserCardStatusAudit(savedCard, userId.get());
+            log.info("Finish changeCardStatus with actionCode: {} after generate new applicant card after mark old one as reissued.", actionCode);
             return savedCard;
         }
+        log.info("Finish changeCardStatus with actionCode: {}", actionCode);
         userCardStatusAuditService.saveUserCardStatusAudit(card, userId.get());
         return save(card);
     }
@@ -221,7 +232,7 @@ public class ApplicantCardService extends GenericService<JpaApplicantCard, Appli
      * @return the   final applicant card to be returned
      */
     public ApplicantCardDto buildApplicantCard(ApplicantCardDto applicantCardDto) {
-
+        log.info("Start buildApplicantCard with ApplicantCardDto: {}", applicantCardDto);
         ApplicantRitualDto applicantRitualDto = applicantRitualService.findApplicantRitualWithContactsAndRelatives(applicantCardDto.getApplicantRitual().getId());
 
         applicantCardDto.setApplicantRitual(applicantRitualDto);
@@ -255,6 +266,7 @@ public class ApplicantCardService extends GenericService<JpaApplicantCard, Appli
                 }
             }
         }
+        log.info("Finish buildApplicantCard");
         return applicantCardDto;
     }
 
@@ -265,7 +277,10 @@ public class ApplicantCardService extends GenericService<JpaApplicantCard, Appli
      * @return the  applicant cards
      */
     public ApplicantCardDto findApplicantCard(long cardId) {
-        return getMapper().fromEntity(applicantCardRepository.findByIdAndStatusCodeNot(cardId, ECardStatus.REISSUED.name()), mappingContext);
+        log.info("Start findApplicantCard with cardId: {}", cardId);
+        ApplicantCardDto applicantCardDto = getMapper().fromEntity(applicantCardRepository.findByIdAndStatusCodeNot(cardId, ECardStatus.REISSUED.name()), mappingContext);
+        log.info("Finish findApplicantCard with cardId: {}", cardId);
+        return applicantCardDto;
     }
 
     /**
@@ -273,6 +288,7 @@ public class ApplicantCardService extends GenericService<JpaApplicantCard, Appli
      */
     @Transactional
     public void markEligibleCardsAsExpired() {
+        log.info("Start markEligibleCardsAsExpired");
         List<String> excludedCardsStatuses = Stream.of(ECardStatus.EXPIRED.name(), ECardStatus.CANCELLED.name(), ECardStatus.REISSUED.name()).collect(Collectors.toList());
         List<JpaApplicantCard> cardsToExpire = applicantCardRepository.findCardsToExpire(Date.from(LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant()), excludedCardsStatuses);
         if (CollectionUtils.isEmpty(cardsToExpire)) return;
@@ -287,6 +303,7 @@ public class ApplicantCardService extends GenericService<JpaApplicantCard, Appli
         });
         applicantCardRepository.saveAll(cardsToExpire);
         userCardStatusAuditService.saveAll(cardStatusAuditList);
+        log.info("Finish markEligibleCardsAsExpired");
     }
 
     /**
@@ -296,18 +313,29 @@ public class ApplicantCardService extends GenericService<JpaApplicantCard, Appli
      * @return the list of printing cards
      */
     public List<ApplicantCardDto> findApplicantCards(List<Long> cardsIds) {
-        log.debug("Find cards by ids  ...");
-        return mapList(applicantCardRepository.findApplicantCards(cardsIds));
+        log.info("Start findApplicantCards with cardsIds: {}", cardsIds);
+        List<ApplicantCardDto> applicantCardDtoList= mapList(applicantCardRepository.findApplicantCards(cardsIds));
+        log.info("Finish findApplicantCards with cardsIds: {}", cardsIds);
+        return applicantCardDtoList;
     }
     public List<ApplicantCardDto> findApplicantCardsByPrintRequestBatchIdAndDigitalIds(long batchId, Set<String> digitalIdSet) {
-        return mapList(applicantCardRepository.findApplicantCardsByPrintRequestBatchIdAndDigitalIds(digitalIdSet.stream().collect(Collectors.toList()),batchId));
+        log.info("Start findApplicantCardsByPrintRequestBatchIdAndDigitalIds with batchId: {}, digitalIdSet: {}", batchId, digitalIdSet);
+        List<ApplicantCardDto> applicantCardDtoList = mapList(applicantCardRepository.findApplicantCardsByPrintRequestBatchIdAndDigitalIds(digitalIdSet.stream().collect(Collectors.toList()),batchId));
+        log.info("Finish findApplicantCardsByPrintRequestBatchIdAndDigitalIds with batchId: {}, digitalIdSet: {}", batchId, digitalIdSet);
+        return applicantCardDtoList;
     }
 
     public ApplicantCardDto findApplicantCardByApplicantRitualId(long applicantRitualId) {
-        return getMapper().fromEntity(applicantCardRepository.findByApplicantRitualIdAndStatusCodeNotIn(applicantRitualId, Arrays.asList(ECardStatus.CANCELLED.name(), ECardStatus.EXPIRED.name(), ECardStatus.SUSPENDED.name(), ECardStatus.REISSUED.name())), mappingContext);
+        log.info("Start findApplicantCardByApplicantRitualId with applicantRitualId: {}", applicantRitualId);
+        ApplicantCardDto applicantCardDto = getMapper().fromEntity(applicantCardRepository.findByApplicantRitualIdAndStatusCodeNotIn(applicantRitualId, Arrays.asList(ECardStatus.CANCELLED.name(), ECardStatus.EXPIRED.name(), ECardStatus.SUSPENDED.name())), mappingContext);
+        log.info("Finish findApplicantCardByApplicantRitualId with applicantRitualId: {}", applicantRitualId);
+        return applicantCardDto;
     }
 
     public void updateCardStatus(List<Long> cardsIds){
+        log.info("Start updateCardStatus with cardsIds: {}", cardsIds);
         applicantCardRepository.updateCardStatus(cardsIds, ECardStatus.SENT_FOR_PRINT.name());
+        log.info("Finish updateCardStatus with cardsIds: {}", cardsIds);
+
     }
 }

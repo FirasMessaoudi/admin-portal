@@ -81,6 +81,7 @@ public class DashboardService {
         long totalNumberOfInactiveRoles = roleRepository.countDistinctByDeletedFalseAndActivated(false);
 
         DashboardVo hourlyDashboard = loadDailyDashboardData();
+        log.info("Finish loading dashboard data");
 
         return DashboardVo.builder()
                 // users
@@ -112,13 +113,14 @@ public class DashboardService {
      * @return
      */
     public DashboardVo loadDailyDashboardData() {
-
+        log.info("Start loadDailyDashboardData");
         Date startOfDayDate = Date.from(Instant.from(LocalDate.now().atStartOfDay(ZoneId.systemDefault())));
 
         List<CountVo> createdUsersCountVoList = userRepository.countHourlyCreatedUsers(startOfDayDate);
         List<CountVo> activeUsersCountVoList = userRepository.countHourlyActiveInactiveUsers(startOfDayDate, true);
         List<CountVo> inactiveUsersCountVoList = userRepository.countHourlyActiveInactiveUsers(startOfDayDate, false);
         List<CountVo> deletedUsersCountVoList = userRepository.countHourlyDeletedUsers(startOfDayDate);
+        log.info("Finish loadDailyDashboardData");
 
         return DashboardVo.builder()
                 .createdUsersCountVoList(createdUsersCountVoList)
@@ -134,6 +136,7 @@ public class DashboardService {
      * @return
      */
     public DashboardVo loadWeeklyDashboardData() {
+        log.info("Start loadWeeklyDashboardData");
 
         Date startOfWeekDate = Date.from(Instant.from(LocalDate.now()
                 .with(TemporalAdjusters.previousOrSame(DayOfWeek.SUNDAY))
@@ -143,6 +146,7 @@ public class DashboardService {
         List<CountVo> activeUsersCountVoList = userRepository.countWeekDayActiveInactiveUsers(startOfWeekDate, true);
         List<CountVo> inactiveUsersCountVoList = userRepository.countWeekDayActiveInactiveUsers(startOfWeekDate, false);
         List<CountVo> deletedUsersCountVoList = userRepository.countWeekDayDeletedUsers(startOfWeekDate);
+        log.info("Finish loadWeeklyDashboardData");
 
         return DashboardVo.builder()
                 .createdUsersCountVoList(createdUsersCountVoList)
@@ -158,6 +162,8 @@ public class DashboardService {
      * @return
      */
     public DashboardVo loadMonthlyDashboardData() {
+        log.info("Start loadMonthlyDashboardData");
+
         Date startOfMonthDate = Date.from(Instant.from(LocalDate.now().
                 with(TemporalAdjusters.firstDayOfMonth()).
                 atStartOfDay(ZoneId.systemDefault())));
@@ -166,6 +172,7 @@ public class DashboardService {
         List<CountVo> activeUsersCountVoList = userRepository.countMonthDayActiveInactiveUsers(startOfMonthDate, true);
         List<CountVo> inactiveUsersCountVoList = userRepository.countMonthDayActiveInactiveUsers(startOfMonthDate, false);
         List<CountVo> deletedUsersCountVoList = userRepository.countMonthDayDeletedUsers(startOfMonthDate);
+        log.info("Finish loadMonthlyDashboardData");
 
         return DashboardVo.builder()
                 .createdUsersCountVoList(createdUsersCountVoList)
@@ -181,7 +188,7 @@ public class DashboardService {
      * @return
      */
     public DashboardGeneralNumbersVo loadDashboardGeneralNumbersByHijriSeason(int hijriSeason) {
-
+        log.info("Start loadMonthlyDashboardData with hijriSeason: {}", hijriSeason);
         long totalNumberOfApplicants = applicantRepository.countAllApplicantsByHijriSeason(hijriSeason);
         long totalNumberOfMaleApplicants = applicantRepository.countAllApplicantsByGenderByHijriSeason(EGender.MALE.getCode(), hijriSeason);
         long totalNumberOfFemaleApplicants = applicantRepository.countAllApplicantsByGenderByHijriSeason(EGender.FEMALE.getCode(), hijriSeason);
@@ -194,6 +201,7 @@ public class DashboardService {
         long totalNumberOfUsersInstalledApp = applicantRepository.countAllByMobileLoggedInIsNotNull(hijriSeason, hajjRituals);
         long totalNumberOfLoggedInUsersFromMobile = applicantRepository.countAllByMobileLoggedInTrue(hijriSeason, hajjRituals);
         long totalNumberOfLoggedOutUsersFromMobile = totalNumberOfUsersInstalledApp - totalNumberOfLoggedInUsersFromMobile;
+        log.info("Finish loadMonthlyDashboardData with hijriSeason: {}", hijriSeason);
 
         return DashboardGeneralNumbersVo.builder()
                 .totalNumberOfApplicants(totalNumberOfApplicants)
@@ -214,11 +222,13 @@ public class DashboardService {
      * @return
      */
     public DashboardCameraNumbersVo loadDashboardCamerasNumbers(int seasonYear) {
+        log.info("Start loadDashboardCamerasNumbers with seasonYear: {}", seasonYear);
 
         //cameras related data
         long totalNumberOfActiveCameras = cameraRepository.countCameraByStatusAndHijriYear("active", seasonYear);
         long totalNumberOfInactiveCameras = cameraRepository.countCameraByStatusAndHijriYear("inactive", seasonYear);
 
+        log.info("Finish loadDashboardCamerasNumbers with seasonYear: {}", seasonYear);
         return DashboardCameraNumbersVo.builder()
                 .totalNumberOfActiveCameras(totalNumberOfActiveCameras)
                 .totalNumberOfInactiveCameras(totalNumberOfInactiveCameras)
@@ -226,6 +236,8 @@ public class DashboardService {
     }
 
     public DashboardIncidentNumbersVo loadDashboardIncidentNumbers(int seasonYear) {
+        log.info("Start loadDashboardIncidentNumbers with seasonYear: {}", seasonYear);
+
         List<JpaApplicantIncident> allApplicantIncident = applicantIncidentRepository.findAllByCurrentSeason(seasonYear);
         long totalNumberOfResolvedIncidents = applicantIncidentRepository.countAllResolvedIncidents(seasonYear, hajjRituals);
         long totalNumberOfUnResolvedIncidents = applicantIncidentRepository.countAllUnResolvedIncidents(seasonYear, hajjRituals);
@@ -260,6 +272,7 @@ public class DashboardService {
             countVo.setPercentage(String.format("%.2f", (double) entry.getValue() / totalNumberOfRegisteredIncidents * 100));
             countVoList.add(countVo);
         }
+        log.info("Finish loadDashboardIncidentNumbers with seasonYear: {}", seasonYear);
         return DashboardIncidentNumbersVo.builder()
                 .totalNumberOfRegisteredIncidents(totalNumberOfRegisteredIncidents)
                 .totalNumberOfResolvedIncidents(totalNumberOfResolvedIncidents)
@@ -286,6 +299,7 @@ public class DashboardService {
     }
 
     public List<CountVo> pilgrimsCountListsByAgesRange(int hijriYear) {
+        log.info("Start pilgrimsCountListsByAgesRange with hijriYear: {}", hijriYear);
         List<CountVo> countVoList = new ArrayList<>();
         String[] arrOfRanges = this.agesRange.split(",");
         long totalApplicants = applicantRepository.countTotalApplicantsFromCurrentSeason(hijriYear, hajjRituals);
@@ -301,11 +315,12 @@ public class DashboardService {
             countVo.setPercentage(String.format("%.2f", (double) applicantsNumber / totalApplicants * 100));
             countVoList.add(countVo);
         }
+        log.info("Finish pilgrimsCountListsByAgesRange with hijriYear: {}", hijriYear);
         return countVoList;
     }
 
     public List<CountVo> listCountApplicantsByNationalities(int seasonYear) {
-        log.info("Season year  :{}", seasonYear);
+        log.info("Start listCountApplicantsByNationalities with seasonYear: {}", seasonYear);
         List<CountVo> applicantsByNationality = applicantRepository.countApplicantsByNationality(seasonYear);
         applicantsByNationality.sort(Comparator.comparing(CountVo::getCount).reversed());
         long totalApplicants = applicantRepository.countTotalApplicantsFromCurrentSeason(seasonYear, hajjRituals);
@@ -316,43 +331,67 @@ public class DashboardService {
             if(countVoList.size()>4)
                 break;
         }
+        log.info("Finish listCountApplicantsByNationalities with seasonYear: {}", seasonYear);
         return countVoList;
     }
 
     public List<LocalizedCountVo> loadCompaniesWithMaxApplicantsCountByHijriSeason(int currentHijriYear) {
-        return companyRepository.findCompaniesWithMaxApplicantsByHijriSeason(currentHijriYear, hajjRituals, PageRequest.of(0, maxCompanyChartSize)).getContent();
+        log.info("Start loadCompaniesWithMaxApplicantsCountByHijriSeason with currentHijriYear: {}", currentHijriYear);
+        List<LocalizedCountVo> localizedCountVoList = companyRepository.findCompaniesWithMaxApplicantsByHijriSeason(currentHijriYear, hajjRituals, PageRequest.of(0, maxCompanyChartSize)).getContent();
+        log.info("Finish loadCompaniesWithMaxApplicantsCountByHijriSeason with currentHijriYear: {}", currentHijriYear);
+        return localizedCountVoList;
     }
 
     public List<LocalizedCountVo> loadCompaniesWithMinApplicantsCountByHijriSeason(int currentHijriYear) {
-        return companyRepository.findCompaniesWithMinApplicantsByHijriSeason(currentHijriYear, hajjRituals, PageRequest.of(0, maxCompanyChartSize)).getContent();
+        log.info("Start loadCompaniesWithMinApplicantsCountByHijriSeason with currentHijriYear: {}", currentHijriYear);
+        List<LocalizedCountVo> localizedCountVoList = companyRepository.findCompaniesWithMinApplicantsByHijriSeason(currentHijriYear, hajjRituals, PageRequest.of(0, maxCompanyChartSize)).getContent();
+        log.info("Finish loadCompaniesWithMinApplicantsCountByHijriSeason with currentHijriYear: {}", currentHijriYear);
+        return localizedCountVoList;
     }
 
     public List<LocalizedCountVo> loadCampsWithMaxApplicantsCountByHijriSeason(int currentHijriYear, ECampSite siteCode) {
-        return packageHousingRepository.findCampsWithMaxApplicantsByHijriSeason(
+        log.info("Start loadCampsWithMaxApplicantsCountByHijriSeason with currentHijriYear: {}", currentHijriYear);
+        List<LocalizedCountVo> localizedCountVoList = packageHousingRepository.findCampsWithMaxApplicantsByHijriSeason(
                 currentHijriYear, hajjRituals, siteCode.name(), PageRequest.of(0, maxCompanyChartSize)).getContent();
+        log.info("Finish loadCampsWithMaxApplicantsCountByHijriSeason with currentHijriYear: {}", currentHijriYear);
+        return localizedCountVoList;
     }
 
     public List<LocalizedCountVo> loadCampsWithMinApplicantsCountByHijriSeason(int currentHijriYear, ECampSite siteCode) {
-        return packageHousingRepository.findCampsWithMinApplicantsByHijriSeason(
+        log.info("Start loadCampsWithMinApplicantsCountByHijriSeason with currentHijriYear: {}", currentHijriYear);
+        List<LocalizedCountVo> localizedCountVoList = packageHousingRepository.findCampsWithMinApplicantsByHijriSeason(
                 currentHijriYear, hajjRituals, siteCode.name(), PageRequest.of(0, maxCompanyChartSize)).getContent();
+        log.info("Finish loadCampsWithMinApplicantsCountByHijriSeason with currentHijriYear: {}", currentHijriYear);
+        return localizedCountVoList;
     }
 
     public List<LocationVo> getIncidentsLocationsFromCurrentSeason(int hijriYear) {
-        return applicantIncidentRepository.getIncidentsLocationsBySeasonAndRitualType(hijriYear, hajjRituals).stream().filter(c -> c.getLat() != null && c.getLng() != null).collect(Collectors.toList());
+        log.info("Start loadCampsWithMinApplicantsCountByHijriSeason with hijriYear: {}", hijriYear);
+        List<LocationVo> locationVoList =  applicantIncidentRepository.getIncidentsLocationsBySeasonAndRitualType(hijriYear, hajjRituals).stream().filter(c -> c.getLat() != null && c.getLng() != null).collect(Collectors.toList());
+        log.info("Finish loadCampsWithMinApplicantsCountByHijriSeason with hijriYear: {}", hijriYear);
+        return locationVoList;
     }
 
     public List<LocalizedCountVo> loadCompaniesWithMaxIncidentsCount(int seasonYear) {
-        return applicantIncidentRepository.findCompaniesWithMaxIncidents(seasonYear, hajjRituals, PageRequest.of(0, maxCompanyChartSize)).getContent();
+        log.info("Start loadCompaniesWithMaxIncidentsCount with seasonYear: {}", seasonYear);
+        List<LocalizedCountVo> localizedCountVoList =  applicantIncidentRepository.findCompaniesWithMaxIncidents(seasonYear, hajjRituals, PageRequest.of(0, maxCompanyChartSize)).getContent();
+        log.info("Finish loadCompaniesWithMaxIncidentsCount with seasonYear: {}", seasonYear);
+        return localizedCountVoList;
     }
 
     public List<LocalizedCountVo> loadCompaniesWithMinIncidentsCount(int seasonYear) {
-        return applicantIncidentRepository.findCompaniesWithMinIncidents(seasonYear, hajjRituals, PageRequest.of(0, maxCompanyChartSize)).getContent();
+        log.info("Start loadCompaniesWithMinIncidentsCount with seasonYear: {}", seasonYear);
+        List<LocalizedCountVo> localizedCountVoList = applicantIncidentRepository.findCompaniesWithMinIncidents(seasonYear, hajjRituals, PageRequest.of(0, maxCompanyChartSize)).getContent();
+        log.info("Finish loadCompaniesWithMinIncidentsCount with seasonYear: {}", seasonYear);
+        return localizedCountVoList;
     }
 
     public DashboardMobileNumbersVo getMobileAppDownloadsFromCurrentSeason(int seasonYear) {
+        log.info("Start getMobileAppDownloadsFromCurrentSeason with seasonYear: {}", seasonYear);
         long totalNumberOfMobileAppDownloads = applicantRepository.countAllByMobileLoggedInIsNotNull(seasonYear, hajjRituals);
         long totalNumberOfLoggedInUsersFromMobile = applicantRepository.countAllByMobileLoggedInTrue(seasonYear, hajjRituals);
         long totalNumberOfLoggedOutUsersFromMobile = totalNumberOfMobileAppDownloads - totalNumberOfLoggedInUsersFromMobile;
+        log.info("Finish getMobileAppDownloadsFromCurrentSeason with seasonYear: {}", seasonYear);
         return DashboardMobileNumbersVo.builder()
                 .totalNumberOfMobileAppDownloads(totalNumberOfMobileAppDownloads)
                 .totalNumberOfLoggedInUsers(totalNumberOfLoggedInUsersFromMobile)
@@ -365,14 +404,21 @@ public class DashboardService {
     }
 
     public List<LocalizedCountVo> loadCompaniesWithMaxApplicantsRegisteredCount(int seasonYear) {
-        return applicantRepository.loadCompaniesWithMaxApplicantsRegisteredCount(seasonYear, PageRequest.of(0, maxApplicantRegistereByCompanySize)).getContent();
+        log.info("Start loadCompaniesWithMaxApplicantsRegisteredCount with seasonYear: {}", seasonYear);
+        List<LocalizedCountVo> localizedCountVoList = applicantRepository.loadCompaniesWithMaxApplicantsRegisteredCount(seasonYear, PageRequest.of(0, maxApplicantRegistereByCompanySize)).getContent();
+        log.info("Finish loadCompaniesWithMaxApplicantsRegisteredCount with seasonYear: {}", seasonYear);
+        return localizedCountVoList;
     }
 
     public List<LocalizedCountVo> loadCompaniesWithMinApplicantsRegisteredCount(int seasonYear) {
-        return applicantRepository.loadCompaniesWithMinApplicantsRegisteredCount(seasonYear, PageRequest.of(0, maxApplicantRegistereByCompanySize)).getContent();
+        log.info("Start loadCompaniesWithMinApplicantsRegisteredCount with seasonYear: {}", seasonYear);
+        List<LocalizedCountVo> localizedCountVoList = applicantRepository.loadCompaniesWithMinApplicantsRegisteredCount(seasonYear, PageRequest.of(0, maxApplicantRegistereByCompanySize)).getContent();
+        log.info("Finish loadCompaniesWithMinApplicantsRegisteredCount with seasonYear: {}", seasonYear);
+        return localizedCountVoList;
     }
 
     public int[] getMobileLoggedInUsers(int seasonYear) {
+        log.info("Start getMobileLoggedInUsers with seasonYear: {}", seasonYear);
         int[] loggedInUsers = new int[DAYS_RANGE];
         LocalDate now = LocalDate.now();
         Date startDate = Date.from(Instant.from(now.minusDays(DAYS_RANGE - 1).atStartOfDay(ZoneId.systemDefault())));
@@ -382,10 +428,12 @@ public class DashboardService {
             groupedLoggedInUsers.stream().filter(item -> item.getLabelNumber() == now.minusDays(finalI).getDayOfMonth()).findAny()
                     .ifPresent(item -> loggedInUsers[DAYS_RANGE - finalI - 1] = (int) item.getCount());
         }
+        log.info("Finish getMobileLoggedInUsers with seasonYear: {}", seasonYear);
         return loggedInUsers;
     }
 
     public int[] getMobileUsers(int seasonYear) {
+        log.info("Start getMobileUsers with seasonYear: {}", seasonYear);
         LocalDate now = LocalDate.now();
         Date startDate = Date.from(Instant.from(now.minusDays(DAYS_RANGE - 1).atStartOfDay(ZoneId.systemDefault())));
         int previousMobileUsers = mobileAuditLogRepository.countPreviousMobileUsers(seasonYear, hajjRituals, startDate);
@@ -403,14 +451,19 @@ public class DashboardService {
             sum += mobileUsers[i];
             mobileUsers[i] += sum;
         }
+        log.info("Finish getMobileUsers with seasonYear: {}", seasonYear);
         return mobileUsers;
     }
 
     public List<ApplicantMobileTrackingVo> findActiveApplicantWithLocationBySeason(int seasonYear) {
-        return applicantRepository.findActiveApplicantWithLocationBySeason(seasonYear);
+        log.info("Start findActiveApplicantWithLocationBySeason with seasonYear: {}", seasonYear);
+        List<ApplicantMobileTrackingVo> applicantMobileTrackingVoList = applicantRepository.findActiveApplicantWithLocationBySeason(seasonYear);
+        log.info("Finish findActiveApplicantWithLocationBySeason with seasonYear: {}", seasonYear);
+        return applicantMobileTrackingVoList;
     }
 
     public List<CountVo> loadMobileAppUsersCountByAgeRange(int hijriYear) {
+        log.info("Start loadMobileAppUsersCountByAgeRange with hijriYear: {}", hijriYear);
         List<CountVo> countVoList = new ArrayList<>();
         Arrays.stream(this.mobileUsersAgeRange.split(",")).forEach(range -> {
             CountVo countVo = new CountVo();
@@ -422,6 +475,7 @@ public class DashboardService {
             countVo.setCount(applicantsNumber);
             countVoList.add(countVo);
         });
+        log.info("Finish loadMobileAppUsersCountByAgeRange with hijriYear: {}", hijriYear);
         return countVoList;
     }
 

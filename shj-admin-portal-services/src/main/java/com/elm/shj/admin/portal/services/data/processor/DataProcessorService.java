@@ -57,6 +57,7 @@ public class DataProcessorService {
      */
     @SuppressWarnings({"rawtypes", "unchecked"})
     public <T> DataProcessorResult<T> processRequestFile(Resource requestFile, DataSegmentDto dataSegment) throws IOException {
+        log.info("start processRequestFile for dataSegment", dataSegment.getTemplateFileName());
         // create suitable reader;
         ExcelItemReader<T> excelItemReader = excelItemReaderFactory.create(dataSegment);
         // load workbook
@@ -72,21 +73,30 @@ public class DataProcessorService {
             if (row.getRowNum() != headerRowNum && !isBlankRow(row)) {
                 try {
                     // read item
+                    log.info("Read items with row: {}", row);
                     T item = excelItemReader.read(row ,headerRowNum);
                     // add all reading errors
+                    log.info("Add all errors in dataValidations Results: {}", excelItemReader.getDataReadingErrors());
                     dataValidationResults.addAll(excelItemReader.getDataReadingErrors());
                     // run validations
                     Set<ConstraintViolation<T>> violations = new HashSet<>(validator.validate(item));
+                    log.info("Validate Item level one: {}", violations);
                     violations.addAll(validator.validate(item, CheckFirst.class));
+                    log.info("Validate Item level two: {}", violations);
                     violations.addAll(validator.validate(item, CheckSecond.class));
+                    log.info("Validate Item level three: {}", violations);
                     if (violations.isEmpty()) {
                         // if no validation errors than add item
+                        log.info("No violation found for item: {}", item);
                         parsedItems.add(new AbstractMap.SimpleEntry<>(row, item));
                     } else {
                         // otherwise add errors
+                        log.info("violation found for item: {}", item);
                         violations.forEach(v -> dataValidationResults.add(DataValidationResult.builder().valid(false).cell(excelItemReader.findCellByPropertyName(row, v.getPropertyPath().toString())).errorMessages(Collections.singletonList(v.getMessage())).valid(false).build()));
                     }
                 } catch (Exception e) {
+                    log.error("Error while processRequestFile full error: {}", e);
+                    log.error("Error while processRequestFile message: {}", e.getMessage());
                     ReflectionUtils.handleReflectionException(e);
                 }
             }
@@ -96,6 +106,8 @@ public class DataProcessorService {
         result.setDataValidationResults(dataValidationResults);
         result.setParsedItems(parsedItems);
         result.setWithErrors(dataValidationResults.stream().anyMatch(dvr -> !dvr.isValid()));
+        log.info("parsed item results: {}", parsedItems);
+        log.info("end processRequestFile for dataSegment", dataSegment.getTemplateFileName());
         return result;
     }
 

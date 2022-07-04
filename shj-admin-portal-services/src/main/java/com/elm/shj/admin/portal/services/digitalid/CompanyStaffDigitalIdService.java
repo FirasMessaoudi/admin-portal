@@ -63,6 +63,7 @@ public class CompanyStaffDigitalIdService extends GenericService<JpaCompanyStaff
      * @return the generated smart id
      */
     public String generate(CompanyStaffDto staff , int seasonYear) {
+        log.info("Start Generates smart id for specific company staff with CompanyStaffDto: {}", staff);
         // check inputs
         Assert.notNull(staff.getGender(), "Invalid Staff  Gender!");
         Assert.isTrue(Arrays.asList("M", "F").contains(staff.getGender().toUpperCase()), "Invalid Staff Gender!");
@@ -76,6 +77,7 @@ public class CompanyStaffDigitalIdService extends GenericService<JpaCompanyStaff
         String partialSmartId = suinPrefix + serialDigits;
         String checkDigit = calculateCheckDigit(partialSmartId);
         // return staff smart id
+        log.info("Finish Generates smart id for specific company staff with CompanyStaffDto");
         return partialSmartId + checkDigit;
 
     }
@@ -88,6 +90,7 @@ public class CompanyStaffDigitalIdService extends GenericService<JpaCompanyStaff
      * @return the check digit
      */
     public static String calculateCheckDigit(String suin) {
+        log.info("Start Calculates the last digits for the given smart id number with suin: {}", suin);
         if (suin == null)
             return null;
         String digit;
@@ -113,6 +116,7 @@ public class CompanyStaffDigitalIdService extends GenericService<JpaCompanyStaff
 
         /* convert to string to be easier to take the last digit */
         digit = sum + "";
+        log.info("Finish Calculates the last digits for the given smart id number with suin: {}", suin);
         return digit.substring(digit.length() - 1);
     }
 
@@ -129,7 +133,10 @@ public class CompanyStaffDigitalIdService extends GenericService<JpaCompanyStaff
      * @return the list of companyStaff
      */
     public List<CompanyStaffDigitalIdDto> findAllWithoutDigitalId() {
-        return mapList(companyStaffDigitalIdRepository.findBySuinIsNull());
+        log.info("Start findAllWithoutDigitalId");
+        List<CompanyStaffDigitalIdDto> companyStaffDigitalIdDtoList = mapList(companyStaffDigitalIdRepository.findBySuinIsNull());
+        log.info("Finish findAllWithoutDigitalId");
+        return companyStaffDigitalIdDtoList;
     }
 
     /**
@@ -137,10 +144,16 @@ public class CompanyStaffDigitalIdService extends GenericService<JpaCompanyStaff
      * @return status code of the give suin
      */
     public String findStaffSuinStatusCode(String suin) {
-        return companyStaffDigitalIdRepository.findStaffSuinStatusCode(suin);
+        log.info("Start findStaffSuinStatusCode with suin: {}", suin);
+        String statusCode = companyStaffDigitalIdRepository.findStaffSuinStatusCode(suin);
+        log.info("Finish findStaffSuinStatusCode with suin: {}", suin);
+        return statusCode;
     }
 
     public void updateDigitalIdStatus(long staffId) {
+        log.info("Start updateDigitalIdStatus with staffId: {}", staffId);
         companyStaffDigitalIdRepository.updateDigitalIdStatusByStaffId(staffId);
+        log.info("Finish updateDigitalIdStatus with staffId: {}", staffId);
+
     }
 }
