@@ -67,7 +67,7 @@ public class StaffController {
     @GetMapping("/staff/all/{suin}")
     public List<BadgeVO> findStaffBadgeFrontAndBack(@PathVariable String suin) {
         List<BadgeVO> badges = new ArrayList<>();
-        badges.add(badgeService.generateStaffCard(suin));
+        badges.add(badgeService.generateStaffCard(suin, false));
         badges.add(badgeService.generateStaffBackBadge(suin));
         badges.add(badgeService.generatePrePrintedStaffCard(suin));
         return badges;

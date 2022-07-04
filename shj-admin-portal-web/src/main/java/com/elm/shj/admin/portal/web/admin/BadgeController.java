@@ -42,7 +42,7 @@ public class BadgeController {
         //TODO: do some validation for the passed digital id and return error message if needed
         if (digitalId.length() == 14) {
             //valid uin
-            return badgeService.generateApplicantBadge(digitalId);
+            return badgeService.generateApplicantBadge(digitalId, false);
         }
         return null;
     }
@@ -52,7 +52,7 @@ public class BadgeController {
     public BadgeVO generateStaffBadge(@PathVariable String digitalId) {
         if (digitalId.length() == 12) {
             // valid suin
-            return badgeService.generateStaffCard(digitalId);
+            return badgeService.generateStaffCard(digitalId, false);
         }
         return null;
     }
@@ -60,7 +60,7 @@ public class BadgeController {
     @GetMapping("/applicant/all/{applicantUin}")
     public List<BadgeVO> findApplicantBadgeFrontAndBack(@PathVariable String applicantUin) {
         List<BadgeVO> badges = new ArrayList<>();
-        badges.add(badgeService.generateApplicantBadge(applicantUin));
+        badges.add(badgeService.generateApplicantBadge(applicantUin, true));
         badges.add(badgeService.generateBackBadge(applicantUin));
         badges.add(badgeService.generatePrePrintedApplicantBadge(applicantUin));
         badges.add(badgeService.generatePrePrintedBackBadge(applicantUin));
@@ -71,7 +71,7 @@ public class BadgeController {
     @GetMapping("/staff/all/{suin}")
     public List<BadgeVO> findStaffBadgeFrontAndBack(@PathVariable String suin) {
         List<BadgeVO> badges = new ArrayList<>();
-        badges.add(badgeService.generateStaffCard(suin));
+        badges.add(badgeService.generateStaffCard(suin, true));
         badges.add(badgeService.generateStaffBackBadge(suin));
         badges.add(badgeService.generatePrePrintedStaffCard(suin));
         return badges;

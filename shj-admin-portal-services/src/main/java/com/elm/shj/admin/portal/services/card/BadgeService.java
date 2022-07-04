@@ -86,7 +86,7 @@ public class BadgeService {
         }
     }
 
-    public BadgeVO generateStaffCard(String suin) {
+    public BadgeVO generateStaffCard(String suin, boolean prePrinted) {
         Optional<CompanyStaffVO> staffRitual = companyStaffService.findStaffRitualBySuin(suin);
         if (staffRitual.isEmpty()) {
             log.error("Cannot generate badge, no details for the staff with {} suin", suin);
@@ -116,11 +116,11 @@ public class BadgeService {
         g2d.setColor(new Color(86, 86, 86));
         addPilgrimImage(g2d, staffData.getPhoto(), true);
 
-        addNameAndNationality(g2d, staffData.getFullNameAr(), staffData.getFullNameEn(), nationalityAr, nationalityEn, false);
+        addNameAndNationality(g2d, staffData.getFullNameAr(), staffData.getFullNameEn(), nationalityAr, nationalityEn, prePrinted);
 
         addRitual(g2d, ritualType, staffData.getRitualSeason() + "");
 
-        addCompanyRectangle(g2d, null, staffData, suin, false);
+        addCompanyRectangle(g2d, null, staffData, suin, prePrinted);
         String imgStr = null;
         try {
             imgStr = ImageUtils.imgToBase64StringBmp(badgeImage);
@@ -195,7 +195,7 @@ public class BadgeService {
     }
 
 
-    public BadgeVO generateApplicantBadge(String uin) {
+    public BadgeVO generateApplicantBadge(String uin, boolean prePrinted) {
         // get the last applicant package
         Long applicantPackageId = applicantPackageService.findLatestIdByApplicantUIN(uin);
         ApplicantRitualCardLiteDto applicantRitualCardLite = applicantCardService.findCardDetailsByUinAndPackageId(uin, applicantPackageId).orElse(null);
@@ -224,10 +224,10 @@ public class BadgeService {
         g2d.setColor(new Color(86, 86, 86));
         addPilgrimImage(g2d, applicantRitualCardLite.getPhoto(), true);
 
-        addNameAndNationality(g2d, applicantRitualCardLite.getFullNameAr(), applicantRitualCardLite.getFullNameEn(), nationalityAr, nationalityEn, false);
+        addNameAndNationality(g2d, applicantRitualCardLite.getFullNameAr(), applicantRitualCardLite.getFullNameEn(), nationalityAr, nationalityEn, prePrinted);
 
         addRitual(g2d, ritualType, applicantRitualCardLite.getHijriSeason() + "");
-        addCompanyRectangle(g2d, applicantRitualCardLite, null, uin, false);
+        addCompanyRectangle(g2d, applicantRitualCardLite, null, uin, prePrinted);
 
         String imgStr = null;
         try {
@@ -576,7 +576,43 @@ public class BadgeService {
         g2d.draw(verticalLine);
 
         if (applicantRitualCard != null) {
-            writeTable(g2d, rectWidth, rectX, rectY + 25, new String[]{makeLabelFit(applicantRitualCard.getServiceNameEn()), makeLabelFit(applicantRitualCard.getEstablishmentNameEn())}, new String[]{makeLabelFit(applicantRitualCard.getServiceNameAr()), makeLabelFit(applicantRitualCard.getEstablishmentNameAr())}, isPrePrinted);
+            if (Arrays.asList(8, 9, 10).contains(applicantRitualCard.getEstablishmentId())) {
+                writeTable(g2d, rectWidth, rectX, rectY + 25, new String[]{makeLabelFit(applicantRitualCard.getCompanyName()), makeLabelFit(applicantRitualCard.getEstablishmentNameEn())}, new String[]{makeLabelFit(applicantRitualCard.getCompanyNameAr()), makeLabelFit(applicantRitualCard.getEstablishmentNameAr())}, isPrePrinted);
+            } else {
+                writeTable(g2d, rectWidth, rectX, rectY - 10, new String[]{" ", makeLabelFit(applicantRitualCard.getEstablishmentNameEn())}, new String[]{" ", makeLabelFit(applicantRitualCard.getEstablishmentNameAr())}, isPrePrinted);
+                FontRenderContext frc = g2d.getFontRenderContext();
+                LineMetrics lm;
+                Font font = shaaerFont.deriveFont(20f);
+
+                g2d.setColor(new Color(0xFF212121));
+                String labelAr = "مركز الخدمة الميدانية";
+                lm = font.getLineMetrics(labelAr, frc);
+                TextLayout layout = new TextLayout(labelAr, font, frc);
+                if (!isPrePrinted) {
+                    layout.draw(g2d, rectX + (int) (rectWidth / 2 - font.getStringBounds(labelAr, frc).getWidth()) / 2, rectY - 10 + lm.getHeight() + 26);
+                }
+
+                String labelEn = "Field Service Center";
+                lm = font.getLineMetrics(labelEn, frc);
+                layout = new TextLayout(labelEn, font, frc);
+                g2d.setColor(isPrePrinted ? new Color(0xFF212121) : new Color(0xFF6e6d6b));
+                if (!isPrePrinted) {
+                    layout.draw(g2d, rectX + (int) (rectWidth / 2 - font.getStringBounds(labelEn, frc).getWidth()) / 2, rectY - 10 + lm.getHeight() + 66);
+                    g2d.setStroke(new BasicStroke(1, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0, new float[]{9}, 0));
+                    g2d.drawLine(22, (int) (rectY + rectHeight * 0.6), (int) (rectWidth / 2) + 22, (int) (rectY + rectHeight * 0.6));
+                }
+                font = shaaerFont.deriveFont(22f);
+                font = font.deriveFont(
+                        Collections.singletonMap(
+                                TextAttribute.WEIGHT, TextAttribute.WEIGHT_BOLD));
+
+                String crNumber = applicantRitualCard.getCrNumber() != null ? applicantRitualCard.getCrNumber() : " ";
+                lm = font.getLineMetrics(crNumber, frc);
+                layout = new TextLayout(crNumber, font, frc);
+                g2d.setColor(new Color(0xFF212121));
+                layout.draw(g2d, rectX + (int) (rectWidth / 2 - font.getStringBounds(crNumber, frc).getWidth()) / 2, rectY - 10 + lm.getHeight() + 120);
+
+            }
         } else {
             writeTable(g2d, rectWidth, rectX, isPrePrinted ? rectY + 35 : rectY, new String[]{makeLabelFit(staffData.getCompanyLabelEn()), makeLabelFit(getGroupLeaderLabel(staffData.getJobTitleCode(), "en"))}, new String[]{makeLabelFit(staffData.getCompanyLabelAr()), makeLabelFit(getGroupLeaderLabel(staffData.getJobTitleCode(), "ar"))}, isPrePrinted);
             if (!isPrePrinted) {
@@ -748,7 +784,6 @@ public class BadgeService {
         LineMetrics lm;
         TextLayout layout;
         for (int i = 0; i < labelAr.length; i++) {
-            System.out.println(labelAr[i]);
             font = shaaerFont.deriveFont(21f);
             /*font = font.deriveFont(
                     Collections.singletonMap(

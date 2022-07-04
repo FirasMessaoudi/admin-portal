@@ -1111,7 +1111,7 @@ public class IntegrationWsController {
      */
     @GetMapping("/badge/generate/{applicantUin}/{withQr}")
     public ResponseEntity<WsResponse<?>> findApplicantBadge(@PathVariable String applicantUin, @PathVariable boolean withQr) {
-        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(badgeService.generateApplicantBadge(applicantUin)).build());
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(badgeService.generateApplicantBadge(applicantUin, false)).build());
 
     }
 
@@ -1121,7 +1121,7 @@ public class IntegrationWsController {
      */
     @GetMapping("/badge/staff/generate/{suin}")
     public ResponseEntity<WsResponse<?>> findStaffBadge(@PathVariable String suin) {
-        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(badgeService.generateStaffCard(suin)).build());
+        return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.SUCCESS.getCode()).body(badgeService.generateStaffCard(suin, false)).build());
 
     }
 

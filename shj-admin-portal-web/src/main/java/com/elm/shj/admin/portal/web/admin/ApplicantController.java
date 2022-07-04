@@ -10,13 +10,11 @@ import com.elm.shj.admin.portal.services.dto.AuthorityConstants;
 import com.elm.shj.admin.portal.services.dto.BadgeVO;
 import com.elm.shj.admin.portal.services.dto.NotificationTemplateCategorizingDto;
 import com.elm.shj.admin.portal.web.navigation.Navigation;
-import com.elm.shj.admin.portal.web.ws.WsResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.security.RolesAllowed;
@@ -74,14 +72,14 @@ public class ApplicantController {
 
     @GetMapping("/badge/generate/{applicantUin}/{withQr}")
     public BadgeVO findApplicantBadge(@PathVariable String applicantUin, @PathVariable boolean withQr) {
-        return badgeService.generateApplicantBadge(applicantUin);
+        return badgeService.generateApplicantBadge(applicantUin, false);
 
     }
 
     @GetMapping("/badge/applicant/frontback/{applicantUin}")
     public List<BadgeVO> findApplicantBadgeFrontAndBack(@PathVariable String applicantUin) {
         List<BadgeVO> badges = new ArrayList<>();
-        badges.add(badgeService.generateApplicantBadge(applicantUin));
+        badges.add(badgeService.generateApplicantBadge(applicantUin, false));
         badges.add(badgeService.generateBackBadge(applicantUin));
         return badges;
     }
@@ -89,7 +87,7 @@ public class ApplicantController {
     @GetMapping("/applicant/all/{applicantUin}")
     public List<BadgeVO> findApplicantFullBadgeFrontAndBack(@PathVariable String applicantUin) {
         List<BadgeVO> badges = new ArrayList<>();
-        badges.add(badgeService.generateApplicantBadge(applicantUin));
+        badges.add(badgeService.generateApplicantBadge(applicantUin, false));
         badges.add(badgeService.generateBackBadge(applicantUin));
         badges.add(badgeService.generatePrePrintedApplicantBadge(applicantUin));
         badges.add(badgeService.generatePrePrintedBackBadge(applicantUin));
