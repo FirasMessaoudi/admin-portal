@@ -50,8 +50,8 @@ public class DashboardController {
     private final DashboardService dashboardService;
     private final CompanyService companyService;
     private final TokenService tokenService;
-    @Value("${bi.server.url}")
-    private String biServerUrl;
+    @Value("${bi.server.domain}")
+    private String biServerDomain;
 
     @Value("${bi.dashboard.uri}")
     private String biDashboardUri;
@@ -234,7 +234,7 @@ public class DashboardController {
     @GetMapping("/bi")
     @PreAuthorize("hasAuthority('" + AuthorityConstants.ADMIN_DASHBOARD + "')")
     public String buildDashboardUrl() {
-        return JSONObject.quote(HttpHost.DEFAULT_SCHEME_NAME + "://" + biServerUrl + "/trusted/" + tokenService.generateTrustedToken() + "/" + biDashboardUri + "?&:embed=y&COMPANY_UID=" + ADMIN_BI_UID);
+        return JSONObject.quote(HttpHost.DEFAULT_SCHEME_NAME + "://" + biServerDomain + "/trusted/" + tokenService.generateTrustedToken() + "/" + biDashboardUri + "?&:embed=y&COMPANY_UID=" + ADMIN_BI_UID);
     }
 
 }
