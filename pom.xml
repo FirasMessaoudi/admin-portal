@@ -18,7 +18,7 @@
         <module>shj-admin-portal-orm</module>
         <module>shj-admin-portal-services</module>
         <module>shj-admin-portal-web</module>
-        <module>shj-admin-portal-web-fe</module>
+<!--        <module>shj-admin-portal-web-fe</module>-->
         <!--<module>shj-admin-portal-automation</module>-->
     </modules>
 
