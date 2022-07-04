@@ -22,7 +22,7 @@ public interface GroupApplicantListRepository extends JpaRepository<JpaGroupAppl
     long countByApplicantGroupId(long id);
 
 
-    @Query(value = "SELECT NEW com.elm.shj.admin.portal.orm.entity.ApplicantVo(a.fullNameAr, a.fullNameEn, adi.uin, a.photo,a.idNumber,a.passportNumber) From JpaGroupApplicantList g " +
+    @Query(value = "SELECT NEW com.elm.shj.admin.portal.orm.entity.ApplicantVo(a.fullNameAr, a.fullNameEn, adi.uin, a.photo,a.idNumber,a.passportNumber, a.gender) From JpaGroupApplicantList g " +
             "JOIN g.applicantGroup ag JOIN ag.groupLeader gl JOIN gl.digitalIds di JOIN JpaApplicantDigitalId adi ON adi.uin = g.applicantUin JOIN JpaApplicant a ON adi.applicantId = a.id WHERE di.suin = :suin "
     )
     List<ApplicantVo> findApplicantDetailsWithoutLocationByGroupeLeaderSuin(@Param("suin") String suin);

@@ -76,23 +76,43 @@ public class ApplicantController {
 
     }
 
-    @GetMapping("/badge/applicant/frontback/{applicantUin}")
-    public List<BadgeVO> findApplicantBadgeFrontAndBack(@PathVariable String applicantUin) {
+
+    /**
+     * @param applicantUin
+     * @return applicant full cards to be printed as bmp
+     */
+    @GetMapping("/applicant/all/{applicantUin}")
+    public List<BadgeVO> findFullImages(@PathVariable String applicantUin) {
         List<BadgeVO> badges = new ArrayList<>();
-        badges.add(badgeService.generateApplicantBadge(applicantUin, false));
-        badges.add(badgeService.generateBackBadge(applicantUin));
+        badges.add(badgeService.generateApplicantBadge(applicantUin, true));
+        badges.add(badgeService.generateBackBadge(applicantUin, true));
         return badges;
+
     }
 
-    @GetMapping("/applicant/all/{applicantUin}")
-    public List<BadgeVO> findApplicantFullBadgeFrontAndBack(@PathVariable String applicantUin) {
+    /**
+     * @param applicantUin
+     * @return applicant partial cards to be printed as bmp
+     */
+    @GetMapping("/applicant/preprinted/{applicantUin}")
+    public List<BadgeVO> findPartialImages(@PathVariable String applicantUin) {
         List<BadgeVO> badges = new ArrayList<>();
-        badges.add(badgeService.generateApplicantBadge(applicantUin, false));
-        badges.add(badgeService.generateBackBadge(applicantUin));
         badges.add(badgeService.generatePrePrintedApplicantBadge(applicantUin));
         badges.add(badgeService.generatePrePrintedBackBadge(applicantUin));
         return badges;
 
+    }
+
+    /**
+     * @param applicantUin
+     * @return applicant images for preview as png
+     */
+    @GetMapping("/applicant/preview/{applicantUin}")
+    public List<BadgeVO> findApplicantBadgePreview(@PathVariable String applicantUin) {
+        List<BadgeVO> badges = new ArrayList<>();
+        badges.add(badgeService.generateApplicantBadge(applicantUin, false));
+        badges.add(badgeService.generateBackBadge(applicantUin, false));
+        return badges;
     }
 
 }

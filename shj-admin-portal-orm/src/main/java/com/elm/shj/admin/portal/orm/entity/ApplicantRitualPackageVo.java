@@ -23,4 +23,6 @@ public class ApplicantRitualPackageVo {
     private String typeCode;
     private int seasonYear;
     private long companyRitualSeasonId;
+    private Long applicantRitualId;
+    private String packageReferenceNumber;
 }
