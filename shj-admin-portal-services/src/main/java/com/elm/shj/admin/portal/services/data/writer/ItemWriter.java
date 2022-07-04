@@ -411,6 +411,12 @@ public class ItemWriter {
                         .build();
                 if (existingApplicantGroupId != null) {
                     applicantGroupDto.setId(existingApplicantGroupId);
+                } else {
+                    ApplicantGroupDto applicantGroup = applicantGroupService.getApplicantGroupByReferenceNumberAndCompany(groupMainDataDto.getGroupReferenceNumber(), companyRefCode[0]);
+                    if(applicantGroup != null){
+                        dataValidationResults.add(DataValidationResult.builder().valid(false).cell(entry.getKey().getCell(5)).errorMessages(Collections.singletonList(EExcelItemReaderErrorType.DUPLICATE_VALUE.getMessage())).valid(false).build());
+                        return;
+                    }
                 }
 
                 savedItem = (S) repository.save(mapperRegistry.get(EDataSegment.fromId(dataSegment.getId())).toEntity(applicantGroupDto, mappingContext));
