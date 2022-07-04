@@ -80,7 +80,7 @@ public class ApplicantController {
     public List<BadgeVO> findApplicantBadgeFrontAndBack(@PathVariable String applicantUin) {
         List<BadgeVO> badges = new ArrayList<>();
         badges.add(badgeService.generateApplicantBadge(applicantUin, false));
-        badges.add(badgeService.generateBackBadge(applicantUin));
+        badges.add(badgeService.generateBackBadge(applicantUin, false));
         return badges;
     }
 
@@ -88,7 +88,7 @@ public class ApplicantController {
     public List<BadgeVO> findApplicantFullBadgeFrontAndBack(@PathVariable String applicantUin) {
         List<BadgeVO> badges = new ArrayList<>();
         badges.add(badgeService.generateApplicantBadge(applicantUin, false));
-        badges.add(badgeService.generateBackBadge(applicantUin));
+        badges.add(badgeService.generateBackBadge(applicantUin, false));
         badges.add(badgeService.generatePrePrintedApplicantBadge(applicantUin));
         badges.add(badgeService.generatePrePrintedBackBadge(applicantUin));
         return badges;
