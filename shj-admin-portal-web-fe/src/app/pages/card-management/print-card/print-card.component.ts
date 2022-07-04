@@ -154,7 +154,10 @@ export class PrintCardComponent implements OnInit {
   {
     const headers = { 'content-type': 'application/json'};       
       const body=JSON.stringify(printRequest);      
-      this.cardService.sendPrintRequestToPrinter(body,headers).subscribe(data =>{});
+      this.cardService.sendPrintRequestToPrinter(body,headers).subscribe(data =>
+      {
+        this.toastr.success(this.translate.instant('printing-management.print_request_done_successfully'), this.translate.instant('printing-management.title'));
+      });
   }
  
 }
