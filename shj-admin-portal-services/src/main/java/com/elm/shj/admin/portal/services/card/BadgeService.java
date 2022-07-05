@@ -403,7 +403,7 @@ public class BadgeService {
         int yDif = 400 + topBackground.getHeight() + 30;
         BufferedImage phone = ImageUtils.loadFromClasspath(BADGE_RESOURCES_PATH + "phone-icon.PNG");
         if (phone != null && contactNumber != null) {
-            g2d.drawImage(ImageUtils.resizeImage(phone, 48, 48), xDif - 25, yDif - 8, null);
+            g2d.drawImage(ImageUtils.resizeImage(phone, 38, 38), xDif - 36, yDif + (isPrePrinted ? -74 : -42), null);
         }
         if (contactNumber != null) {
             g2d.setColor(Color.black);
@@ -411,7 +411,7 @@ public class BadgeService {
                     Collections.singletonMap(
                             TextAttribute.WEIGHT, TextAttribute.WEIGHT_ULTRABOLD)).deriveFont(24f);
             TextLayout layout = new TextLayout(contactNumber + "", font, frc);
-            layout.draw(g2d, xDif + 5, yDif);
+            layout.draw(g2d, xDif + 5, yDif + (isPrePrinted ? -32 : 0));
         }
     }
 
@@ -475,8 +475,7 @@ public class BadgeService {
 
         FontRenderContext frc = g2d.getFontRenderContext();
 
-        Font font = shaaerFont.deriveFont(26f);
-        font = font.deriveFont(
+        Font font = shaaerFont.deriveFont(
                 Collections.singletonMap(
                         TextAttribute.WEIGHT, TextAttribute.WEIGHT_ULTRABOLD)).deriveFont(26f);
 
@@ -506,7 +505,9 @@ public class BadgeService {
             g2d.setColor(new Color(86, 86, 86));
         else
             g2d.setColor(Color.black);
-        font = shaaerFont.deriveFont(22f);
+        font = font = shaaerFont.deriveFont(
+                Collections.singletonMap(
+                        TextAttribute.WEIGHT, TextAttribute.WEIGHT_ULTRABOLD)).deriveFont(22f);
         fm = g2d.getFontMetrics(font);
 
         yDif += 30;
@@ -552,8 +553,7 @@ public class BadgeService {
             BufferedImage barCodeImage = MatrixToImageWriter.toBufferedImage(bitMatrix);
             int yDiff = isApplicant ? BADGE_HEIGHT - barCodeImage.getHeight() - 34 : BADGE_HEIGHT - barCodeImage.getHeight() - 54;
             g2d.drawImage(barCodeImage, (BADGE_WIDTH - barCodeImage.getWidth()) / 2, yDiff, null);
-        }
-        catch (WriterException e) {
+        } catch (WriterException e) {
             log.error("Error while writing the bar code", e);
         }
     }
@@ -669,10 +669,9 @@ public class BadgeService {
 
         yDif += 45;
         g2d.setColor(Color.black);
-        font = shaaerFont.deriveFont(24f);
-        font = font.deriveFont(
+        font = shaaerFont.deriveFont(
                 Collections.singletonMap(
-                        TextAttribute.WEIGHT, TextAttribute.WEIGHT_ULTRABOLD));
+                        TextAttribute.WEIGHT, TextAttribute.WEIGHT_ULTRABOLD)).deriveFont(24f);
         layout = new TextLayout(value, font, frc);
         layout.draw(g2d, xDif - 10, isPrePrinted ? yDif + 60 : yDif);
         font = font.deriveFont(
@@ -692,12 +691,11 @@ public class BadgeService {
             layout.draw(g2d, xDifLeft, yDifLeft);
         yDifLeft += 45;
         g2d.setColor(Color.black);
-        font = shaaerFont.deriveFont(22f);
-        font = font.deriveFont(
+        font = shaaerFont.deriveFont(
                 Collections.singletonMap(
-                        TextAttribute.WEIGHT, TextAttribute.WEIGHT_ULTRABOLD));
+                        TextAttribute.WEIGHT, TextAttribute.WEIGHT_ULTRABOLD)).deriveFont(24f);
         layout = new TextLayout(uin, font, frc);
-        layout.draw(g2d, xDifLeft - 20, isPrePrinted ? yDifLeft + 40 : yDifLeft);
+        layout.draw(g2d, xDifLeft - 20, isPrePrinted ? yDifLeft + 20 : yDifLeft);
     }
 
     public String makeLabelFit(String label) {
@@ -740,6 +738,7 @@ public class BadgeService {
 
         return output;
     }
+
     protected int toARGB(String nm) {
         Long longValue = Long.decode(nm);
         int i = longValue.intValue();
@@ -757,7 +756,7 @@ public class BadgeService {
         Font font;
         LineMetrics lm;
         TextLayout layout;
-        for (int i = 0; i< headersAr.length; i++) {
+        for (int i = 0; i < headersAr.length; i++) {
             font = shaaerFont.deriveFont(25f);
             font = font.deriveFont(
                     Collections.singletonMap(
@@ -774,7 +773,7 @@ public class BadgeService {
             font = shaaerFont.deriveFont(26f);
             lm = font.getLineMetrics(values[i], frc);
             layout = new TextLayout(values[i], font, frc);
-            layout.draw(g2d, rectX + (i * rectWidth/ headersAr.length) + (int) (rectWidth/ headersAr.length - font.getStringBounds(values[i], frc).getWidth()) / 2, rectY + lm.getHeight() + 56);
+            layout.draw(g2d, rectX + (i * rectWidth / headersAr.length) + (int) (rectWidth / headersAr.length - font.getStringBounds(values[i], frc).getWidth()) / 2, rectY + lm.getHeight() + 56);
         }
     }
 
@@ -785,29 +784,25 @@ public class BadgeService {
         LineMetrics lm;
         TextLayout layout;
         for (int i = 0; i < labelAr.length; i++) {
-            font = shaaerFont.deriveFont(21f);
-            font = font.deriveFont(
+            font = shaaerFont.deriveFont(
                     Collections.singletonMap(
-                            TextAttribute.WEIGHT, TextAttribute.WEIGHT_ULTRABOLD));
-            font = font.deriveFont(
+                            TextAttribute.WEIGHT, TextAttribute.WEIGHT_ULTRABOLD)).deriveFont(
                     Collections.singletonMap(
-                            TextAttribute.FOREGROUND, new Color(prePrinted ? 0xFF000000 : 0xFF212121)));
+                            TextAttribute.FOREGROUND, new Color(prePrinted ? 0xFF000000 : 0xFF212121))).deriveFont(21f);
             // header AR
             lm = font.getLineMetrics(labelAr[i], frc);
 
             layout = new TextLayout(labelAr[i], font, frc);
             g2d.setColor(new Color(prePrinted ? 0xFF000000 : 0xFF212121));
-            layout.draw(g2d, rectX + (i * rectWidth / labelAr.length) + (int) (rectWidth / labelAr.length - font.getStringBounds(labelAr[i], frc).getWidth()) / 2, rectY + lm.getHeight() + 26);
+            layout.draw(g2d, rectX + (i * rectWidth / labelAr.length) + (int) (rectWidth / labelAr.length - font.getStringBounds(labelAr[i], frc).getWidth()) / 2, rectY + lm.getHeight() + 56);
             // header EN
-            font = shaaerFont.deriveFont(21f);
-            //  g2d.setColor(new Color(86, 86, 86, 20));
             lm = font.getLineMetrics(labelEn[i], frc);
             layout = new TextLayout(labelEn[i], font, frc);
             if (!prePrinted && !isBlack)
                 g2d.setColor(new Color(prePrinted ? 0xFF000000 : 0xFF6e6d6b));
             else
                 g2d.setColor(new Color(prePrinted ? 0xFF000000 : 0xFF212121));
-            layout.draw(g2d, rectX + (i * rectWidth / labelAr.length) + (int) (rectWidth / labelAr.length - font.getStringBounds(labelEn[i], frc).getWidth()) / 2, rectY + lm.getHeight() + 66);
+            layout.draw(g2d, rectX + (i * rectWidth / labelAr.length) + (int) (rectWidth / labelAr.length - font.getStringBounds(labelEn[i], frc).getWidth()) / 2, rectY + lm.getHeight() + 96);
             // values
             /*font = shaaerFont.deriveFont(26f);
             lm = font.getLineMetrics(values[i], frc);
