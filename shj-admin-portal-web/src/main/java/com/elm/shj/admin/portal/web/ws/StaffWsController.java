@@ -90,7 +90,7 @@ public class StaffWsController {
                 staff = companyStaffService.findStaffBySuin(value);
             } else {
                 log.debug("findApplicantOrStaff value: {} findStaffBySuinAndCardId ", value);
-                staff = companyStaffService.findStaffBySuinAndCardId(value);
+                staff = companyStaffService.findStaffBySuin(value);
             }
             if (staff.isPresent()) {
                 ApplicantStaffVO applicantStaffVO = staff.get();

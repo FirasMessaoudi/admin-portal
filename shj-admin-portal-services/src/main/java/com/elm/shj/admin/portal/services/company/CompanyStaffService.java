@@ -312,14 +312,24 @@ public class CompanyStaffService extends GenericService<JpaCompanyStaff, Company
 
     public Optional<ApplicantStaffVO> findStaffByIdNumber(String idNumber) {
         log.info("Start findStaffByIdNumber with idNumber: {}", idNumber);
-        ApplicantStaffVO staffByIdNumber = companyStaffRepository.findStaffByIdNumber(idNumber, EDigitalIdStatus.VALID.name(), ECardStatus.CANCELLED.name(), ECardStatus.SUSPENDED.name());
+        ApplicantStaffVO staffByIdNumber = null;
+        List<ApplicantStaffVO> staffByIdNumberList = companyStaffRepository.findStaffByIdNumber(idNumber, EDigitalIdStatus.VALID.name(), ECardStatus.CANCELLED.name(), ECardStatus.SUSPENDED.name());
+        if(staffByIdNumberList.isEmpty() == false){
+            log.info(" findStaffBySuin has multiple cards with idNumber: {}, and card count: {}", idNumber,staffByIdNumberList.size());
+            staffByIdNumber = staffByIdNumberList.get(0);
+        }
         log.info("Finish findStaffByIdNumber with idNumber: {}", idNumber);
         return staffByIdNumber == null? Optional.empty(): Optional.of(staffByIdNumber);
     }
 
     public Optional<ApplicantStaffVO> findStaffBySuin(String suin) {
         log.info("Start findStaffBySuin with suin: {}", suin);
-        ApplicantStaffVO staffByIdNumber = companyStaffRepository.findStaffBySuin(suin, EDigitalIdStatus.VALID.name(), ECardStatus.CANCELLED.name(), ECardStatus.SUSPENDED.name());
+        ApplicantStaffVO staffByIdNumber = null;
+        List<ApplicantStaffVO> staffByIdNumberList = companyStaffRepository.findStaffBySuin(suin, EDigitalIdStatus.VALID.name(), ECardStatus.CANCELLED.name(), ECardStatus.SUSPENDED.name());
+        if(staffByIdNumberList.isEmpty() ==false ){
+            log.info(" findStaffBySuin has multiple cards with suin: {}, and card count: {}", suin,staffByIdNumberList.size());
+            staffByIdNumber = staffByIdNumberList.get(0);
+        }
         log.info("Finish findStaffBySuin with suin: {}", suin);
         return staffByIdNumber == null? Optional.empty(): Optional.of(staffByIdNumber);
     }
