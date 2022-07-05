@@ -140,7 +140,6 @@ public interface CompanyStaffRepository extends JpaRepository<JpaCompanyStaff, L
             "where digitalId.suin = :suin " +
             "and cards.statusCode <> 'REISSUED' " +
             "and cards.statusCode <> 'EXPIRED'" +
-            "and cards.statusCode <> 'REISSUED'" +
             "and cards.statusCode <> 'CANCELlED'")
     CompanyStaffVO findStaffMainData(@Param("suin") String suin);
 
