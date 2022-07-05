@@ -73,7 +73,6 @@ public class DataProcessorService {
             if (row.getRowNum() != headerRowNum && !isBlankRow(row)) {
                 try {
                     // read item
-                    log.info("Read items with row: {}", row);
                     T item = excelItemReader.read(row ,headerRowNum);
                     // add all reading errors
                     log.info("Add all errors in dataValidations Results: {}", excelItemReader.getDataReadingErrors());
@@ -87,16 +86,13 @@ public class DataProcessorService {
                     log.info("Validate Item level three: {}", violations);
                     if (violations.isEmpty()) {
                         // if no validation errors than add item
-                        log.info("No violation found for item: {}", item);
                         parsedItems.add(new AbstractMap.SimpleEntry<>(row, item));
                     } else {
                         // otherwise add errors
-                        log.info("violation found for item: {}", item);
                         violations.forEach(v -> dataValidationResults.add(DataValidationResult.builder().valid(false).cell(excelItemReader.findCellByPropertyName(row, v.getPropertyPath().toString())).errorMessages(Collections.singletonList(v.getMessage())).valid(false).build()));
                     }
                 } catch (Exception e) {
                     log.error("Error while processRequestFile full error: {}", e);
-                    log.error("Error while processRequestFile message: {}", e.getMessage());
                     ReflectionUtils.handleReflectionException(e);
                 }
             }
