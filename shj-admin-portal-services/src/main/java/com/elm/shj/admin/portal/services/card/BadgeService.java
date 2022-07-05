@@ -611,7 +611,7 @@ public class BadgeService {
                 lm = font.getLineMetrics(crNumber, frc);
                 layout = new TextLayout(crNumber, font, frc);
                 g2d.setColor(new Color(0xFF212121));
-                layout.draw(g2d, rectX + (int) (rectWidth / 2 - font.getStringBounds(crNumber, frc).getWidth()) / 2, isPrePrinted ? rectY + 30 : rectY - 10 + lm.getHeight() + 120);
+                layout.draw(g2d, rectX + (int) (rectWidth / 2 - font.getStringBounds(crNumber, frc).getWidth()) / 2, isPrePrinted ? rectY + 190 : rectY - 10 + lm.getHeight() + 120);
 
             }
         } else {
