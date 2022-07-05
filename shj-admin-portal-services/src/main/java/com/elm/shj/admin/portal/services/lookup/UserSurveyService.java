@@ -19,6 +19,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -46,7 +49,7 @@ public class UserSurveyService extends GenericService<JpaUserSurvey, UserSurveyD
         Calendar cal = Calendar.getInstance();
         Date currentDate = cal.getInstance().getTime();
         if (surveyType.equals("DAILY")) {
-            if (cal.get(Calendar.HOUR_OF_DAY) <= dailySurveyActivationHour) {
+            if (LocalDateTime.now().isBefore(LocalDateTime.of(LocalDate.now(), LocalTime.of(dailySurveyActivationHour,0)))) {
                 cal.add(Calendar.DATE, -1);
                 currentDate = cal.getTime();
             }
