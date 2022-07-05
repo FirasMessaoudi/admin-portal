@@ -403,7 +403,7 @@ public class BadgeService {
         int yDif = 400 + topBackground.getHeight() + 30;
         BufferedImage phone = ImageUtils.loadFromClasspath(BADGE_RESOURCES_PATH + "phone-icon.PNG");
         if (phone != null && contactNumber != null) {
-            g2d.drawImage(ImageUtils.resizeImage(phone, 36, 36), xDif - 36, yDif + (isPrePrinted ? -66 : -42), null);
+            g2d.drawImage(ImageUtils.resizeImage(phone, 36, 36), xDif - 36, yDif + (isPrePrinted ? -66 : -38), null);
         }
         if (contactNumber != null) {
             g2d.setColor(Color.black);
