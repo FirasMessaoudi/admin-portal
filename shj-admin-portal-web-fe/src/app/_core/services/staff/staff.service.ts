@@ -52,12 +52,12 @@ export class StaffService {
 
   getStaffAllBadge(uin:String): Observable<any> { 
     const headers= new HttpHeaders().set('CALLER-TYPE', 'WEB-SERVICE');    
-    return this.http.get<any>(`/core/api/company-staff/staff/all//${uin}`,{ 'headers': headers });
+    return this.http.get<any>(`/core/api/company-staff/staff/all/${uin}`,{ 'headers': headers });
   }
 
   getStaffPrePrintedBadge(uin:String): Observable<any> { 
     const headers= new HttpHeaders().set('CALLER-TYPE', 'WEB-SERVICE');    
-    return this.http.get<any>(`/core/api/company-staff/staff/preprinted//${uin}`,{ 'headers': headers });
+    return this.http.get<any>(`/core/api/company-staff/staff/preprinted/${uin}`,{ 'headers': headers });
   }
   
 }
