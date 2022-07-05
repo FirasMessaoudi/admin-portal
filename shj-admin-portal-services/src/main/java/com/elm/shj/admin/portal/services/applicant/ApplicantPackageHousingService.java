@@ -71,7 +71,6 @@ public class ApplicantPackageHousingService extends GenericService<JpaApplicantP
         if (menaHousingList.isEmpty()) {
             PackageHousingDto packageHousingMena = PackageHousingDto.builder()
                     .ritualPackage(applicantPackageDto.getRitualPackage())
-                    .housingZone(HousingZoneDto.builder().id(1L).build())
                     .referenceNumber(updateApplicantHousingCampDto.getMenaCampRefCode())
                     .typeCode(EHousingType.CAMP.name())
                     .siteCode(EHousingSite.MENA.name())
@@ -127,7 +126,6 @@ public class ApplicantPackageHousingService extends GenericService<JpaApplicantP
         if (arafetHousingList.isEmpty()) {
             PackageHousingDto packageHousingMena = PackageHousingDto.builder()
                     .ritualPackage(applicantPackageDto.getRitualPackage())
-                    .housingZone(HousingZoneDto.builder().id(1L).build())
                     .referenceNumber(updateApplicantHousingCampDto.getArafatCampRefCode())
                     .typeCode(EHousingType.CAMP.name())
                     .siteCode(EHousingSite.ARAFAT.name())
@@ -300,7 +298,6 @@ public class ApplicantPackageHousingService extends GenericService<JpaApplicantP
             if (menaHousingList.isEmpty()) {
                 PackageHousingDto packageHousingMena = PackageHousingDto.builder()
                         .ritualPackage(applicantPackageDto.getRitualPackage())
-                        .housingZone(HousingZoneDto.builder().id(1L).build())
                         .referenceNumber(groupApplicantCamp.getMenaCampRefNumber())
                         .typeCode(EHousingType.CAMP.name())
                         .siteCode(EHousingSite.MENA.name())
@@ -341,7 +338,6 @@ public class ApplicantPackageHousingService extends GenericService<JpaApplicantP
             if (arafetHousingList.isEmpty()) {
                 PackageHousingDto packageHousingMena = PackageHousingDto.builder()
                         .ritualPackage(applicantPackageDto.getRitualPackage())
-                        .housingZone(HousingZoneDto.builder().id(1L).build())
                         .referenceNumber(groupApplicantCamp.getArafatCampRefNumber())
                         .typeCode(EHousingType.CAMP.name())
                         .siteCode(EHousingSite.ARAFAT.name())
