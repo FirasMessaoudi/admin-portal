@@ -621,7 +621,11 @@ public class BadgeService {
 
             }
         } else {
-            writeTable(g2d, rectWidth, rectX, isPrePrinted ? rectY + 35 : rectY, new String[]{makeLabelFit(staffData.getCompanyLabelEn()), makeLabelFit(getGroupLeaderLabel("others".equalsIgnoreCase(staffData.getJobTitleCode()) ? staffData.getCustomJobTitle() : staffData.getJobTitleCode(), "en"))}, new String[]{makeLabelFit(staffData.getCompanyLabelAr()), makeLabelFit(getGroupLeaderLabel(staffData.getJobTitleCode(), "ar"))}, isPrePrinted, isBlack);
+            if("OTHERS".equalsIgnoreCase(staffData.getJobTitleCode())){
+                writeTable(g2d, rectWidth, rectX, isPrePrinted ? rectY + 35 : rectY, new String[]{makeLabelFit(staffData.getCompanyLabelEn()), makeLabelFit(null)}, new String[]{makeLabelFit(staffData.getCompanyLabelAr()), makeLabelFit(staffData.getCustomJobTitle())}, isPrePrinted, isBlack);
+            } else {
+                writeTable(g2d, rectWidth, rectX, isPrePrinted ? rectY + 35 : rectY, new String[]{makeLabelFit(staffData.getCompanyLabelEn()), makeLabelFit(getGroupLeaderLabel(staffData.getJobTitleCode(), "en"))}, new String[]{makeLabelFit(staffData.getCompanyLabelAr()), makeLabelFit(getGroupLeaderLabel(staffData.getJobTitleCode(), "ar"))}, isPrePrinted, isBlack);
+            }
             if (!isPrePrinted) {
                 BufferedImage cardBackground = ImageUtils.loadFromClasspath(STAFF_CARD_RESOURCE_FILE_NAME);
                 if (cardBackground != null) {
