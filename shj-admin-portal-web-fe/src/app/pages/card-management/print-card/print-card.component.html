@@ -17,7 +17,7 @@
         <p>{{"card-management.place_blank_card" | translate }}</p>
       </div>
       <div>
-        <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">Print</button>
+        <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">{{"card-management.print_message" | translate }}</button>
       </div>      
     </ng-template>  
 
@@ -30,7 +30,7 @@
         <p>{{"card-management.place_preprinted_card" | translate }}</p>
       </div>
       <div>
-        <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">Print</button>
+        <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">{{"card-management.print_message" | translate }}</button>
       </div>
     </ng-template>
     <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3">
@@ -45,12 +45,12 @@
       <div class="form-group col">
         &nbsp; &nbsp; &nbsp;<input class="form-check-input" id="inlineRadio1" type="radio" name="dualPrintingMode" [(ngModel)]="dualPrintingMode" [value]="true" />
         <label class="form-check-label" for="inlineRadio1">
-        Yes
+          {{"card-management.yes_message" | translate }}
        </label>
        &nbsp; &nbsp; &nbsp;
        <input class="form-check-input" id="inlineRadio2" type="radio" name="dualPrintingMode" [(ngModel)]="dualPrintingMode" [value]="false" />
         <label class="form-check-label" for="inlineRadio2">
-        No
+          {{"card-management.no_message" | translate }}
        </label>
       </div>
       <div class="form-group col">        
@@ -66,7 +66,7 @@
     </div> 
   </form>
   <div class="spinner-border text-success" role="status" *ngIf="showSpinner">
-    <span class="visually-hidden">Loading...</span>
+    <span class="visually-hidden">{{"card-management.loading_message" | translate }}...</span>
   </div>
   <div class="content__section">
     <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3">

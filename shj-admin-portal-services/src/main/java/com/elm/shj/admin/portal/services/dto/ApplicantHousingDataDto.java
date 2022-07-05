@@ -35,7 +35,6 @@ public class ApplicantHousingDataDto implements Serializable {
     @CellIndex(index = 1)
     private String passportNumber;
 
-    @NullOrNotBlank(min = 1, max = 30)
     @CellIndex(index = 2)
     @JsonIgnore
     private String nationality;

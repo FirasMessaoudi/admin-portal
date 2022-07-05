@@ -43,8 +43,8 @@ public interface ApplicantLiteRepository extends JpaRepository<JpaApplicantLite,
 
     @Query("SELECT CASE WHEN COUNT(a)> 0 THEN TRUE ELSE FALSE END " +
             "FROM JpaApplicantLite a WHERE a.deleted is false AND " +
-            "(a.idNumber = :idNumber OR " +
-            "(a.passportNumber = :passportNumber AND a.nationalityCode = :nationalityCode))")
+            "(a.idNumber = :idNumber) OR " +
+            "(a.passportNumber = :passportNumber AND a.nationalityCode = :nationalityCode)")
     boolean existsByBasicInfo(@Param("idNumber") String idNumber,
                               @Param("passportNumber") String passportNumber, @Param("nationalityCode") String nationalityCode);
 

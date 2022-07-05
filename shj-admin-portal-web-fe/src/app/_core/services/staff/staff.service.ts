@@ -45,9 +45,19 @@ export class StaffService {
       );
   }
 
-  getStaffFullBadge(uin:String): Observable<any> { 
+  getStaffPreviewBadge(uin:String): Observable<any> { 
+    const headers= new HttpHeaders().set('CALLER-TYPE', 'WEB-SERVICE');    
+    return this.http.get<any>(`/core/api/company-staff/staff/preview/${uin}`,{ 'headers': headers });
+  }
+
+  getStaffAllBadge(uin:String): Observable<any> { 
     const headers= new HttpHeaders().set('CALLER-TYPE', 'WEB-SERVICE');    
     return this.http.get<any>(`/core/api/company-staff/staff/all/${uin}`,{ 'headers': headers });
+  }
+
+  getStaffPrePrintedBadge(uin:String): Observable<any> { 
+    const headers= new HttpHeaders().set('CALLER-TYPE', 'WEB-SERVICE');    
+    return this.http.get<any>(`/core/api/company-staff/staff/preprinted/${uin}`,{ 'headers': headers });
   }
   
 }

@@ -64,14 +64,42 @@ public class StaffController {
         return companyStaffService.findRegisteredStaff();
     }
 
+    /**
+     * @param suin
+     * @return staff full cards to be printed as bmp
+     */
     @GetMapping("/staff/all/{suin}")
     public List<BadgeVO> findStaffBadgeFrontAndBack(@PathVariable String suin) {
         List<BadgeVO> badges = new ArrayList<>();
-        badges.add(badgeService.generateStaffCard(suin));
-        badges.add(badgeService.generateStaffBackBadge(suin));
+        badges.add(badgeService.generateStaffCard(suin, true));
+        badges.add(badgeService.generateStaffBackBadge(suin, true));
+        return badges;
+    }
+
+    /**
+     * @param suin
+     * @return staff partial card to be printed as bmp
+     */
+    @GetMapping("/staff/preprinted/{suin}")
+    public List<BadgeVO> findStaffPartialCard(@PathVariable String suin) {
+        List<BadgeVO> badges = new ArrayList<>();
+
         badges.add(badgeService.generatePrePrintedStaffCard(suin));
         return badges;
     }
+
+    /**
+     * @param suin
+     * @return staff images for preview
+     */
+    @GetMapping("/staff/preview/{suin}")
+    public List<BadgeVO> findStaffBadgePreview(@PathVariable String suin) {
+        List<BadgeVO> badges = new ArrayList<>();
+        badges.add(badgeService.generateStaffCard(suin, false));
+        badges.add(badgeService.generateStaffBackBadge(suin, false));
+        return badges;
+    }
+
 
 
 }

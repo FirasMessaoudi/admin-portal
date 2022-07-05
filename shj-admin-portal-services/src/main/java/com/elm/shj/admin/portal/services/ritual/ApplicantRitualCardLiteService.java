@@ -93,6 +93,7 @@ public class ApplicantRitualCardLiteService extends GenericService<JpaApplicantR
         returnedDto.setCardId(applicantCardDto.getId());
         returnedDto.setCardNumber(applicantCardDto.getReferenceNumber());
         returnedDto.setEstablishmentId(company.getEstablishmentRefCode() != null ? company.getEstablishmentRefCode() : 9);
+        returnedDto.setCrNumber(company.getCrNumber());
         CompanyLiteDto establishment = companyService.findByBasicInfo(company.getEstablishmentRefCode() != null ? company.getEstablishmentRefCode() + "" : 9 + "", 1);
         if (establishment != null) {
             log.info("found  findByBasicInfo with establishmentRefCode: {}", company.getEstablishmentRefCode());

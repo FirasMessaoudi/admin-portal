@@ -160,9 +160,9 @@ export class UserDefinedNotificationAddComponent implements OnInit {
 
   initSearchApplicantForm(): void {
     this.searchApplicantForm = this.formBuilder.group({
-      uin: '',
-      idNumber: '',
-      passportNumber: '',
+      uin: null,
+      idNumber: null,
+      passportNumber: null,
     });
   }
   initSearchStaffForm(): void {
