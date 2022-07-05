@@ -403,7 +403,7 @@ public class BadgeService {
         int yDif = 400 + topBackground.getHeight() + 30;
         BufferedImage phone = ImageUtils.loadFromClasspath(BADGE_RESOURCES_PATH + "phone-icon.PNG");
         if (phone != null && contactNumber != null) {
-            g2d.drawImage(ImageUtils.resizeImage(phone, 38, 38), xDif - 36, yDif + (isPrePrinted ? -74 : -42), null);
+            g2d.drawImage(ImageUtils.resizeImage(phone, 36, 36), xDif - 36, yDif + (isPrePrinted ? -74 : -42), null);
         }
         if (contactNumber != null) {
             g2d.setColor(Color.black);
@@ -411,7 +411,7 @@ public class BadgeService {
                     Collections.singletonMap(
                             TextAttribute.WEIGHT, TextAttribute.WEIGHT_ULTRABOLD)).deriveFont(24f);
             TextLayout layout = new TextLayout(contactNumber + "", font, frc);
-            layout.draw(g2d, xDif + 5, yDif + (isPrePrinted ? -32 : 0));
+            layout.draw(g2d, xDif + 5, yDif + (isPrePrinted ? -42 : 0));
         }
     }
 
@@ -695,7 +695,7 @@ public class BadgeService {
                 Collections.singletonMap(
                         TextAttribute.WEIGHT, TextAttribute.WEIGHT_ULTRABOLD)).deriveFont(24f);
         layout = new TextLayout(uin, font, frc);
-        layout.draw(g2d, xDifLeft - 20, isPrePrinted ? yDifLeft + 20 : yDifLeft);
+        layout.draw(g2d, xDifLeft - 20, isPrePrinted ? yDifLeft + 60 : yDifLeft);
     }
 
     public String makeLabelFit(String label) {
