@@ -543,7 +543,7 @@ public class BadgeService {
                 }
             }
         } catch (Exception e) {
-            log.debug(e.getMessage());
+            log.error(e.getMessage());
         }
     }
 
