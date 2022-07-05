@@ -507,7 +507,6 @@ public class ItemWriter {
                 if (menaHousingList.isEmpty()) {
                     PackageHousingDto packageHousingMena = PackageHousingDto.builder()
                             .ritualPackage(applicantPackageDto.getRitualPackage())
-                            .housingZone(HousingZoneDto.builder().id(1L).build())
                             .referenceNumber(applicantHousingDataDto.getMenaCampRefCode())
                             .typeCode(EHousingType.CAMP.name())
                             .siteCode(EHousingSite.MENA.name())
@@ -515,6 +514,7 @@ public class ItemWriter {
                             .locationNameAr(applicantHousingDataDto.getMenaCampRefCode())
                             .validityStart(new GregorianCalendar(2022, Calendar.JULY, 5).getTime())
                             .validityEnd(new GregorianCalendar(2022, Calendar.JULY, 13).getTime())
+                            .isDefault(Boolean.TRUE)
                             .build();
                     packageHousingMena = packageHousingService.save(packageHousingMena);
 
@@ -560,7 +560,6 @@ public class ItemWriter {
                 if (arafetHousingList.isEmpty()) {
                     PackageHousingDto arafatHousing = PackageHousingDto.builder()
                             .ritualPackage(applicantPackageDto.getRitualPackage())
-                            .housingZone(HousingZoneDto.builder().id(1L).build())
                             .referenceNumber(applicantHousingDataDto.getArafetCampRefCode())
                             .typeCode(EHousingType.CAMP.name())
                             .siteCode(EHousingSite.ARAFAT.name())
@@ -568,6 +567,7 @@ public class ItemWriter {
                             .locationNameAr(applicantHousingDataDto.getArafetCampRefCode())
                             .validityStart(new GregorianCalendar(2022, Calendar.JULY, 8).getTime())
                             .validityEnd(new GregorianCalendar(2022, Calendar.JULY, 8).getTime())
+                            .isDefault(Boolean.TRUE)
                             .build();
                     arafatHousing = packageHousingService.save(arafatHousing);
 

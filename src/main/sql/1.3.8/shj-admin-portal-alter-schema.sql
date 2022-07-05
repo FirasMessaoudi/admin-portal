@@ -25,4 +25,10 @@ GO
 ALTER TABLE shc_portal.shc_applicant_package_transportation ALTER column vehicle_number nvarchar(650) null
 GO
 
+ALTER TABLE shc_portal.shc_package_housing ALTER column location_name_ar nvarchar(650) null
+GO
+
+ALTER TABLE shc_portal.shc_package_housing ALTER column location_name_en nvarchar(650) null
+GO
+
 

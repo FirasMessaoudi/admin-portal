@@ -82,6 +82,8 @@ public interface ApplicantLiteRepository extends JpaRepository<JpaApplicantLite,
             "AND applicantDigitalId.statusCode=:digitalIdStatus " +
             "AND card.statusCode <> :canceledCardStatus " +
             "AND card.statusCode <> :suspendedCardStatus " +
+            "AND card.statusCode <> 'REISSUED' " +
+            "AND card.statusCode <> 'EXPIRED'  " +
             "order by applicantPackage.startDate desc, applicantPackage.creationDate desc"
     )
     List<ApplicantStaffVO> findApplicantRitualByIdNumber(@Param("idNumber") String idNumber, @Param("digitalIdStatus") String digitalIdStatus, @Param("canceledCardStatus") String canceledCardStatus, @Param("suspendedCardStatus") String suspendedCardStatus);
@@ -107,6 +109,8 @@ public interface ApplicantLiteRepository extends JpaRepository<JpaApplicantLite,
             "AND applicantDigitalId.statusCode=:digitalIdStatus " +
             "AND card.statusCode <> :canceledCardStatus " +
             "AND card.statusCode <> :suspendedCardStatus " +
+            "AND card.statusCode <> 'REISSUED' " +
+            "AND card.statusCode <> 'EXPIRED'  " +
             "order by applicantPackage.startDate desc, applicantPackage.creationDate desc "
     )
     List<ApplicantStaffVO> findApplicantRitualByUin(@Param("uin") String uin, @Param("digitalIdStatus") String digitalIdStatus, @Param("canceledCardStatus") String canceledCardStatus, @Param("suspendedCardStatus") String suspendedCardStatus);
