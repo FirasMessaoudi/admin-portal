@@ -146,6 +146,9 @@ public class ApplicantCardService extends GenericService<JpaApplicantCard, Appli
             List<Predicate> predicates = new ArrayList<>();
             predicates.add(criteriaBuilder.equal(root.join("applicantRitual").join("applicant").get("deleted"), Boolean.FALSE));
 
+            predicates.add(criteriaBuilder.notEqual(root.get("statusCode"), ECardStatus.EXPIRED.name()));
+            predicates.add(criteriaBuilder.notEqual(root.get("statusCode"), ECardStatus.REISSUED.name()));
+
             if (criteria.getRitualSeason() != null) {
                 predicates.add(criteriaBuilder.equal(root.get("applicantRitual").get("applicantPackage").get("ritualPackage").get("companyRitualSeason").get("ritualSeason").get("seasonYear"), criteria.getRitualSeason()));
             }

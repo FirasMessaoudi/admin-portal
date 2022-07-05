@@ -20,7 +20,18 @@ export class ApplicantService {
     return this.http.get<any>(`/core/api/applicants/badge/applicant/frontback/${uin}`,{ 'headers': headers });
   }
 
-  getApplicantFullBadge(uin:String): Observable<any> { 
+  getApplicantPreview(uin:String): Observable<any> { 
+    const headers= new HttpHeaders().set('CALLER-TYPE', 'WEB-SERVICE');    
+    return this.http.get<any>(`/core/api/applicants/applicant/preview//${uin}`,{ 'headers': headers });
+  }
+
+
+  getApplicantPrePrinted(uin:String): Observable<any> { 
+    const headers= new HttpHeaders().set('CALLER-TYPE', 'WEB-SERVICE');    
+    return this.http.get<any>(`/core/api/applicants/applicant/preprinted/${uin}`,{ 'headers': headers });
+  }
+
+  getApplicantAll(uin:String): Observable<any> { 
     const headers= new HttpHeaders().set('CALLER-TYPE', 'WEB-SERVICE');    
     return this.http.get<any>(`/core/api/applicants/applicant/all/${uin}`,{ 'headers': headers });
   }
