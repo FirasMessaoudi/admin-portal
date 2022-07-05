@@ -363,7 +363,7 @@ public class BadgeService {
         xDif = 110;
         font = font.deriveFont(
                 Collections.singletonMap(
-                        TextAttribute.WEIGHT, TextAttribute.WEIGHT_BOLD));
+                        TextAttribute.WEIGHT, TextAttribute.WEIGHT_ULTRABOLD));
         layout = new TextLayout("تطبيق الحج", font, frc);
         layout.draw(g2d, xDif, yDif);
         yDif += 35;
@@ -381,7 +381,7 @@ public class BadgeService {
         xDif = 180 + fm.stringWidth("download the ");
         font = font.deriveFont(
                 Collections.singletonMap(
-                        TextAttribute.WEIGHT, TextAttribute.WEIGHT_BOLD));
+                        TextAttribute.WEIGHT, TextAttribute.WEIGHT_ULTRABOLD));
         layout = new TextLayout("Hajj Application", font, frc);
         layout.draw(g2d, xDif, yDif);
 
@@ -403,13 +403,13 @@ public class BadgeService {
         int yDif = 400 + topBackground.getHeight() + 30;
         BufferedImage phone = ImageUtils.loadFromClasspath(BADGE_RESOURCES_PATH + "phone-icon.PNG");
         if (phone != null && contactNumber != null) {
-            g2d.drawImage(ImageUtils.resizeImage(phone, 42, 42), xDif - 25, yDif - 42, null);
+            g2d.drawImage(ImageUtils.resizeImage(phone, 48, 48), xDif - 25, yDif - 8, null);
         }
         if (contactNumber != null) {
             g2d.setColor(Color.black);
             font = font.deriveFont(
                     Collections.singletonMap(
-                            TextAttribute.WEIGHT, TextAttribute.WEIGHT_BOLD)).deriveFont(24f);
+                            TextAttribute.WEIGHT, TextAttribute.WEIGHT_ULTRABOLD)).deriveFont(24f);
             TextLayout layout = new TextLayout(contactNumber + "", font, frc);
             layout.draw(g2d, xDif + 5, yDif);
         }
@@ -476,6 +476,9 @@ public class BadgeService {
         FontRenderContext frc = g2d.getFontRenderContext();
 
         Font font = shaaerFont.deriveFont(26f);
+        font = font.deriveFont(
+                Collections.singletonMap(
+                        TextAttribute.WEIGHT, TextAttribute.WEIGHT_ULTRABOLD)).deriveFont(26f);
 
         FontMetrics fm = g2d.getFontMetrics(font);
 
@@ -604,7 +607,7 @@ public class BadgeService {
                 font = shaaerFont.deriveFont(24f);
                 font = font.deriveFont(
                         Collections.singletonMap(
-                                TextAttribute.WEIGHT, TextAttribute.WEIGHT_BOLD));
+                                TextAttribute.WEIGHT, TextAttribute.WEIGHT_ULTRABOLD));
 
                 String crNumber = applicantRitualCard.getCrNumber() != null ? applicantRitualCard.getCrNumber() : " ";
                 lm = font.getLineMetrics(crNumber, frc);
@@ -633,8 +636,6 @@ public class BadgeService {
         g2d.fillRoundRect(rectX, rectYApplicant, rectWidth, rectHeightDetails, 24, 24);
         g2d.setColor(new Color(isPrePrinted ? 0xFF000000 : 0xFF212121));
         Font font = shaaerFont.deriveFont(20f);
-
-
         String labelEn;
         String labelAr;
         String value;
@@ -668,12 +669,12 @@ public class BadgeService {
 
         yDif += 45;
         g2d.setColor(Color.black);
-        font = shaaerFont.deriveFont(22f);
+        font = shaaerFont.deriveFont(24f);
         font = font.deriveFont(
                 Collections.singletonMap(
-                        TextAttribute.WEIGHT, TextAttribute.WEIGHT_BOLD));
+                        TextAttribute.WEIGHT, TextAttribute.WEIGHT_ULTRABOLD));
         layout = new TextLayout(value, font, frc);
-        layout.draw(g2d, xDif - 10, isPrePrinted ? yDif + 40 : yDif);
+        layout.draw(g2d, xDif - 10, isPrePrinted ? yDif + 60 : yDif);
         font = font.deriveFont(
                 Collections.singletonMap(
                         TextAttribute.WEIGHT, TextAttribute.WEIGHT_REGULAR));
@@ -694,7 +695,7 @@ public class BadgeService {
         font = shaaerFont.deriveFont(22f);
         font = font.deriveFont(
                 Collections.singletonMap(
-                        TextAttribute.WEIGHT, TextAttribute.WEIGHT_BOLD));
+                        TextAttribute.WEIGHT, TextAttribute.WEIGHT_ULTRABOLD));
         layout = new TextLayout(uin, font, frc);
         layout.draw(g2d, xDifLeft - 20, isPrePrinted ? yDifLeft + 40 : yDifLeft);
     }
@@ -760,7 +761,7 @@ public class BadgeService {
             font = shaaerFont.deriveFont(25f);
             font = font.deriveFont(
                     Collections.singletonMap(
-                            TextAttribute.WEIGHT, TextAttribute.WEIGHT_BOLD));
+                            TextAttribute.WEIGHT, TextAttribute.WEIGHT_ULTRABOLD));
             // header AR
             lm = font.getLineMetrics(headersAr[i], frc);
             layout = new TextLayout(headersAr[i], font, frc);
@@ -785,9 +786,12 @@ public class BadgeService {
         TextLayout layout;
         for (int i = 0; i < labelAr.length; i++) {
             font = shaaerFont.deriveFont(21f);
-            /*font = font.deriveFont(
+            font = font.deriveFont(
                     Collections.singletonMap(
-                            TextAttribute.WEIGHT, TextAttribute.WEIGHT_BOLD));*/
+                            TextAttribute.WEIGHT, TextAttribute.WEIGHT_ULTRABOLD));
+            font = font.deriveFont(
+                    Collections.singletonMap(
+                            TextAttribute.FOREGROUND, new Color(prePrinted ? 0xFF000000 : 0xFF212121)));
             // header AR
             lm = font.getLineMetrics(labelAr[i], frc);
 
