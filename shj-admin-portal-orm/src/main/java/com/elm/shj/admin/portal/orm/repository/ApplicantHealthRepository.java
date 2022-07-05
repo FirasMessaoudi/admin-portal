@@ -31,4 +31,6 @@ public interface ApplicantHealthRepository extends JpaRepository<JpaApplicantHea
             "ah.updateDate = CURRENT_TIMESTAMP WHERE ah.applicant.id = :applicantId AND ah.packageReferenceNumber = :packageReferenceNumber")
     int updateApplicantHealthApplicantRitual(@Param("applicantRitualId") long applicantRitualId, @Param("applicantId") long applicantId,
                                              @Param("packageReferenceNumber") String packageReferenceNumber);
+
+
 }

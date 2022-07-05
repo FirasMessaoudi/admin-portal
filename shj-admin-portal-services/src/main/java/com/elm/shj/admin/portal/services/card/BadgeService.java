@@ -533,13 +533,17 @@ public class BadgeService {
     }
 
     private void addPilgrimImage(Graphics2D g2d, String base64Photo, boolean isApplicant) {
-        if (base64Photo != null && !base64Photo.isEmpty()) {
-            BufferedImage pilgrimImage = ImageUtils.loadImageInCircle(base64Photo);
-            if (pilgrimImage != null) {
-                Image img = ImageUtils.resizeImage(pilgrimImage, PHOTO_MAX_HEIGHT, PHOTO_MAX_HEIGHT);
-                int yDif = (int) Math.round(0.2 * 100);
-                g2d.drawImage(img, (BADGE_WIDTH - img.getWidth(null)) / 2, yDif, null);
+        try {
+            if (base64Photo != null && !base64Photo.isEmpty()) {
+                BufferedImage pilgrimImage = ImageUtils.loadImageInCircle(base64Photo);
+                if (pilgrimImage != null) {
+                    Image img = ImageUtils.resizeImage(pilgrimImage, PHOTO_MAX_HEIGHT, PHOTO_MAX_HEIGHT);
+                    int yDif = (int) Math.round(0.2 * 100);
+                    g2d.drawImage(img, (BADGE_WIDTH - img.getWidth(null)) / 2, yDif, null);
+                }
             }
+        } catch (Exception e) {
+            log.debug(e.getMessage());
         }
     }
 
