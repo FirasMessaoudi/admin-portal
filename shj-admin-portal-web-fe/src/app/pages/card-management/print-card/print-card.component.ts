@@ -144,7 +144,7 @@ export class PrintCardComponent implements OnInit {
              if(result && result.length>0) 
              {              
               let printDetails : PrintDetails = { 
-                sessionId:`${this.uin}${Math.random()}${Math.random()}${Math.random()}`,
+                sessionId:`${this.uin}${Math.floor(Math.random() * 11)}`,
                 imageBase64String:result[0].badgeImage,
                 backImageBase64String:result[1].badgeImage,
                 isDualSide:true
@@ -163,7 +163,7 @@ export class PrintCardComponent implements OnInit {
              if(result && result.length>0) 
              {              
               let printDetails : PrintDetails = { 
-                sessionId:`${this.uin}${Math.random()}${Math.random()}${Math.random()}`,
+                sessionId:`${this.uin}${Math.floor(Math.random() * 11)}`,
                 imageBase64String:result[0].badgeImage,
                 backImageBase64String:result[1].badgeImage,
                 isDualSide:true
@@ -192,7 +192,7 @@ export class PrintCardComponent implements OnInit {
              if(result && result.length>0) 
              {             
               let printDetails : PrintDetails = { 
-                sessionId:`${this.uin}${Math.random()}${Math.random()}${Math.random()}`,
+                sessionId:`${this.uin}${Math.floor(Math.random() * 11)}`,
                 imageBase64String:result[0].badgeImage,
                 backImageBase64String:result[1].badgeImage,
                 isDualSide:this.dualPrintingMode
@@ -211,7 +211,7 @@ export class PrintCardComponent implements OnInit {
              if(result && result.length>0) 
              {              
               let printDetails : PrintDetails = { 
-                sessionId:`${this.uin}${Math.random()}${Math.random()}${Math.random()}`,
+                sessionId:`${this.uin}${Math.floor(Math.random() * 11)}`,
                 imageBase64String:result[0].badgeImage,
                 backImageBase64String:null,
                 isDualSide:false
