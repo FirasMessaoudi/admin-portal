@@ -22,7 +22,7 @@ export class ApplicantService {
 
   getApplicantPreview(uin:String): Observable<any> { 
     const headers= new HttpHeaders().set('CALLER-TYPE', 'WEB-SERVICE');    
-    return this.http.get<any>(`/core/api/applicants/applicant/preview//${uin}`,{ 'headers': headers });
+    return this.http.get<any>(`/core/api/applicants/applicant/preview/${uin}`,{ 'headers': headers });
   }
 
 
