@@ -616,7 +616,7 @@ public class BadgeService {
                         Collections.singletonMap(
                                 TextAttribute.WEIGHT, TextAttribute.WEIGHT_ULTRABOLD));
 
-                String crNumber = applicantRitualCard.getCrNumber() != null ? applicantRitualCard.getCrNumber() : " ";
+                String crNumber = StringUtils.isEmpty(applicantRitualCard.getCrNumber()) ? "---" : applicantRitualCard.getCrNumber();
                 lm = font.getLineMetrics(crNumber, frc);
                 layout = new TextLayout(crNumber, font, frc);
                 g2d.setColor(new Color(isPrePrinted ? 0xFF000000 : 0xFF212121));

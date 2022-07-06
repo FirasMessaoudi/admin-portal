@@ -48,7 +48,6 @@ public class DigitalIdScheduler {
      * Scheduled job to create digital IDs for new applicants
      */
     @Scheduled(fixedDelayString = "${scheduler.generate.digital.ids.delay.milliseconds}")
-    @SchedulerLock(name = "generate-digital-ids-task")
     public void generateIdsForNewApplicants() {
         String runningIpAddress;
         try {

@@ -52,7 +52,6 @@ public class ApplicantIncidentScheduler {
      * Scheduled job to create incidents for new applicant records in CRM
      */
     @Scheduled(fixedDelayString = "${scheduler.generate.applicant.incident.delay.milliseconds}")
-    @SchedulerLock(name = "generate-applicant-incident-task")
     public void sendIncidentToCRM() {
         String runningIpAddress;
         try {

@@ -34,7 +34,6 @@ public class NotificationTemplateProcessingScheduler {
     private String schedulerActiveNodes;
 
     @Scheduled(cron = "${scheduler.notification.template.processing.cron}")
-    //@SchedulerLock(name = "notification-template-processing-task")
     public void createNotificationRequests() {
         String runningIpAddress;
         try {

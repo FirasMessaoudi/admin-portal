@@ -11,7 +11,6 @@ import com.elm.shj.admin.portal.services.integration.IntegrationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.javacrumbs.shedlock.core.LockAssert;
-import net.javacrumbs.shedlock.spring.annotation.SchedulerLock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
@@ -53,7 +52,6 @@ public class ApplicantComplaintScheduler {
      * Scheduled job to create complaints for new applicant records in CRM
      */
     @Scheduled(fixedDelayString = "${scheduler.generate.applicant.complaint.delay.milliseconds}")
-    @SchedulerLock(name = "generate-applicant-complaint-task")
     public void sendComplaintToCRM() {
         String runningIpAddress;
         try {

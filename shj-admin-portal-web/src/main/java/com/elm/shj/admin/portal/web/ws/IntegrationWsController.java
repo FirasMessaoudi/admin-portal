@@ -277,6 +277,7 @@ public class IntegrationWsController {
      */
     @PostMapping("/verify")
     public ResponseEntity<WsResponse<?>> verify(@RequestBody @Validated ValidateApplicantCmd command) {
+        log.info("Start verify for {} identifier and {} type.", command.getIdentifier(), command.getType());
         Optional<ApplicantLiteDto> applicant = Optional.empty();
         if (command.getType().equals(ELoginType.uin.name())) {
             applicant = applicantLiteService.findByUin(command.getIdentifier());
@@ -288,6 +289,7 @@ public class IntegrationWsController {
 
 
         if (applicant.isPresent()) {
+            log.info("Found applicant with {} id.", applicant.get().getId());
             boolean dateOfBirthMatched;
             SimpleDateFormat sdf = new SimpleDateFormat(ISO8601_DATE_PATTERN);
             // decide which date of birth to use
@@ -307,7 +309,7 @@ public class IntegrationWsController {
                 dateOfBirthMatched = command.getDateOfBirthHijri() == applicant.get().getDateOfBirthHijri();
             }
             if (!dateOfBirthMatched) {
-                log.debug("unmatched data for {} uin and {} hijri date of birth and {} gregorian date of birth.",
+                log.info("unmatched data for {} uin and {} hijri date of birth and {} gregorian date of birth.",
                         command.getIdentifier(), command.getDateOfBirthHijri(), command.getDateOfBirthGregorian());
                 return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode())
                         .body(WsError.builder().error(WsError.EWsError.APPLICANT_NOT_MATCHED.getCode()).referenceNumber(command.getIdentifier()).build()).build());

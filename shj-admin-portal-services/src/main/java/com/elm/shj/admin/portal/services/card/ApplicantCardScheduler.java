@@ -43,7 +43,6 @@ public class ApplicantCardScheduler {
      * Scheduled job to create cards for new applicant ritual records
      */
     @Scheduled(fixedDelayString = "${scheduler.generate.card.applicant.ritual.delay.milliseconds}")
-    @SchedulerLock(name = "generate-applicant-ritual-cards-task")
     public void generateIdsForNewApplicants() {
         String runningIpAddress;
         try {
