@@ -187,6 +187,12 @@ export class SideNavComponent implements OnInit {
           });
 
           if (link.submenu) {
+
+            if(!this.checkIfSubMenuItemHasRole(link,user.authorities))
+            {
+              link['submenu'] =false;
+            }
+
             link.menuItems.forEach((menuItem: any) => {
               // loop on link submenu roles
               menuItem.roles.forEach((role: any) => {
@@ -200,6 +206,31 @@ export class SideNavComponent implements OnInit {
       });
     }
   }
+
+checkIfSubMenuItemHasRole(link :any,authorities:any) : boolean
+{
+      let hasRole : boolean=false;
+      if(authorities && authorities.length>0)
+      {
+        authorities.forEach(i=> 
+        {
+            if(link && link.menuItems && link.menuItems.length>0)
+            {
+               link.menuItems.forEach(k=> 
+              {
+                  if(k && k.roles && k.roles.length>0)
+                  {
+                    if(k.roles.some(l=> l == i.authority))
+                    hasRole=true;
+                  }
+
+              });                
+                 
+            }
+        });
+      }
+       return hasRole;
+}
 
   resetSeasonYear() {
     let seasonYear = momentHijri(new Date()).iYear();
