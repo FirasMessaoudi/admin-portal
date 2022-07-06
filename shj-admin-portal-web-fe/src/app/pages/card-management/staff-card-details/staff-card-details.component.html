@@ -2,6 +2,9 @@
   <svg-icon styleClass="ml-4 mr-2 flip" icon="arrow-right"></svg-icon>
   <span class="mx-2 px-1">{{'general.btn_back' | translate}}</span>
 </a>
+<div *ngIf="loading" class="preloader" @fade>
+  <div></div><div></div><div></div>
+</div>
 <div class="content__wrapper" *ngIf="!canSeeCardDetails">
   <div class="title__Page">
     <h3 class="sectionTitle">{{'card-management.staff_card_details' | translate }}</h3>

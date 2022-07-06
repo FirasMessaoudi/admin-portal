@@ -61,6 +61,7 @@ public class ApplicantHealthBasicService extends GenericService<JpaApplicantHeal
         }
         if (applicantHealthDto.getSpecialNeeds() != null) {
             if(!applicantHealthDto.getSpecialNeeds().isEmpty()) {
+                applicantHealthDto.setHasSpecialNeeds(Boolean.TRUE);
                 applicantHealthDto.getSpecialNeeds().forEach(applicantHealthSpecialNeedsBasicDto -> {
                     applicantHealthSpecialNeedsBasicDto.setApplicantHealth(applicantHealthDto);
                 });
