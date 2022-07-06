@@ -120,4 +120,5 @@ public class CompanyStaffDto {
     private String countryPhonePrefix;
     private Double latitude;
     private Double longitude;
+    private String suin;
 }
