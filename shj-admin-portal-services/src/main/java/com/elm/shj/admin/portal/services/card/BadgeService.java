@@ -24,6 +24,7 @@ import com.google.zxing.common.BitMatrix;
 import com.google.zxing.pdf417.PDF417Writer;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
@@ -470,10 +471,10 @@ public class BadgeService {
 
 
     private void addNameAndNationality(Graphics2D g2d, String fullNameAr, String fullNameEn, String nationalityAr, String nationalityEn, boolean isPrePrinted, boolean isBlack) {
-        fullNameEn = fullNameEn == null ? "---" : fullNameEn;
-        fullNameAr = fullNameAr == null ? "---" : fullNameAr;
-        nationalityAr = nationalityAr == null ? "---" : nationalityAr;
-        nationalityEn = nationalityEn == null ? "---" : nationalityEn;
+        fullNameEn = StringUtils.isEmpty(fullNameEn) ? "---" : fullNameEn;
+        fullNameAr = StringUtils.isEmpty(fullNameAr) ? "---" : fullNameAr;
+        nationalityAr = StringUtils.isEmpty(nationalityAr) ? "---" : nationalityAr;
+        nationalityEn = StringUtils.isEmpty(nationalityEn) ? "---" : nationalityEn;
 
         FontRenderContext frc = g2d.getFontRenderContext();
 
@@ -566,7 +567,7 @@ public class BadgeService {
 
 
     private void addCompanyRectangle(Graphics2D g2d, ApplicantRitualCardLiteDto applicantRitualCard, CompanyStaffVO staffData, String uin, boolean isPrePrinted, boolean isBlack) {
-        uin = uin == null ? "---" : uin;
+        uin = StringUtils.isEmpty(uin) ? "---" : uin;
         int rectHeightDetails = (int) Math.round(2.13 * 91);
         int rectHeight = applicantRitualCard != null ? (int) Math.round(2 * 84) : (int) Math.round(1.5 * 84);
         int rectWidth = (int) Math.round(6.28 * 96);
