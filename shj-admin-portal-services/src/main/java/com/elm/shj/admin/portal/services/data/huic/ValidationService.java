@@ -286,6 +286,7 @@ public class ValidationService {
     }
 
     private void saveCompanies(HuicCompany huicCompany) {
+        log.info("Start saveCompanies for {} company ref code and {} type code", huicCompany.getCompanyRefCode(), huicCompany.getCompanyTypeCode());
         Long existingCompanyId = companyRepository.findIdByCode(huicCompany.getCompanyRefCode() + "_" + ECompanyType.fromId(huicCompany.getCompanyTypeCode()).name());
         // in case of no establishment and ritual type is internal then link it with establishment 8, otherwise no business so far.
         CompanyDto companyDto = CompanyDto.builder()

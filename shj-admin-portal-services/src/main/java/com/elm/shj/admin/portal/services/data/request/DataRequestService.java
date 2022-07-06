@@ -234,10 +234,8 @@ public class DataRequestService extends GenericService<JpaDataRequest, DataReque
             try {
                 // process the file
                 parserResult = dataRequestProcessor.processRequestFile(originalFile, dataRequest.getDataSegment());
-                log.info("parsed file results: {}", parserResult);
                 // save all parsed items
                 writerValidationResult = itemWriter.write(parserResult.getParsedItems(), dataRequest.getDataSegment(), dataRequestId, companyRefCode);
-                log.info("check file has error : {}", writerValidationResult);
             } catch (Exception e) {
                 log.error("Failed to process the data request id {}.", dataRequestId, e);
                 //update the status of the request
@@ -247,14 +245,11 @@ public class DataRequestService extends GenericService<JpaDataRequest, DataReque
 
             // in case of error, generate the error file and save it in the SFTP
            if(!writerValidationResult.isEmpty()){
-               log.info("file without error : {}", writerValidationResult);
                 parserResult.getDataValidationResults().addAll(writerValidationResult);
                parserResult.setWithErrors(true);
            }
             if (parserResult.isWithErrors()) {
-                log.info("file with error : {}", writerValidationResult);
                 // generate error file
-                log.info("start creating error file for dataRequestId: {}", dataRequestId);
                 Resource errorFile = dataRequestProcessor.generateErrorFile(originalFile, parserResult.getDataValidationResults());
                 // generate file name
                 String fileName = "processing-error";
@@ -269,7 +264,6 @@ public class DataRequestService extends GenericService<JpaDataRequest, DataReque
                 // update the data request status
                 Set<Integer> rowsWithErrors = parserResult.getDataValidationResults().stream().filter(dvr -> !dvr.isValid()).map(dvr -> dvr.getCell().getRow().getRowNum()).collect(Collectors.toSet());
                 ((DataRequestRepository) getRepository()).updateProcessingStatus(dataRequestId, EDataRequestStatus.PROCESSED_WITH_ERRORS.getId(), errorFilePath, rowsWithErrors.size());
-                log.info("End procession with Errors: {}", rowsWithErrors);
                 // return writerValidationResult
             } else {
                 // update the data request status
