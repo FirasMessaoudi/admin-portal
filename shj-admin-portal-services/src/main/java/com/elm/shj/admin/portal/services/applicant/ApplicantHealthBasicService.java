@@ -45,18 +45,28 @@ public class ApplicantHealthBasicService extends GenericService<JpaApplicantHeal
             applicantRitualId = applicantHealthLiteService.findApplicantRitualIdByHealth(applicantHealthDto.getId());
         }
         applicantHealthDto.setPackageReferenceNumber(packageRefNumber);
-        if (applicantHealthDto.getDiseases() != null)
-            applicantHealthDto.getDiseases().forEach(applicantHealthDiseaseBasicDto -> {
-                applicantHealthDiseaseBasicDto.setApplicantHealth(applicantHealthDto);
-            });
-        if (applicantHealthDto.getImmunizations() != null)
-            applicantHealthDto.getImmunizations().forEach(applicantHealthImmunizationBasicDto -> {
-                applicantHealthImmunizationBasicDto.setApplicantHealth(applicantHealthDto);
-            });
-        if (applicantHealthDto.getHasSpecialNeeds() != null)
-            applicantHealthDto.getSpecialNeeds().forEach(applicantHealthSpecialNeedsBasicDto -> {
-                applicantHealthSpecialNeedsBasicDto.setApplicantHealth(applicantHealthDto);
-            });
+        if (applicantHealthDto.getDiseases() != null) {
+            if(!applicantHealthDto.getDiseases().isEmpty()) {
+                applicantHealthDto.getDiseases().forEach(applicantHealthDiseaseBasicDto -> {
+                    applicantHealthDiseaseBasicDto.setApplicantHealth(applicantHealthDto);
+                });
+            }
+        }
+        if (applicantHealthDto.getImmunizations() != null) {
+            if(!applicantHealthDto.getImmunizations().isEmpty()) {
+                applicantHealthDto.getImmunizations().forEach(applicantHealthImmunizationBasicDto -> {
+                    applicantHealthImmunizationBasicDto.setApplicantHealth(applicantHealthDto);
+                });
+            }
+        }
+        if (applicantHealthDto.getSpecialNeeds() != null) {
+            if(!applicantHealthDto.getSpecialNeeds().isEmpty()) {
+                applicantHealthDto.setHasSpecialNeeds(Boolean.TRUE);
+                applicantHealthDto.getSpecialNeeds().forEach(applicantHealthSpecialNeedsBasicDto -> {
+                    applicantHealthSpecialNeedsBasicDto.setApplicantHealth(applicantHealthDto);
+                });
+            }
+        }
         ApplicantHealthBasicDto updatedHealth = save(applicantHealthDto);
         applicantHealthService.updateApplicantHealthApplicantRitual(applicantRitualId, applicantHealthDto.getApplicant().getId(), packageRefNumber);
         log.info("finish update applicant health with id {} ", updatedHealth.getId());

@@ -5,14 +5,12 @@ package com.elm.shj.admin.portal.services.notification;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import net.javacrumbs.shedlock.core.LockAssert;
 import net.javacrumbs.shedlock.spring.annotation.SchedulerLock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
@@ -36,7 +34,7 @@ public class NotificationTemplateProcessingScheduler {
     private String schedulerActiveNodes;
 
     @Scheduled(cron = "${scheduler.notification.template.processing.cron}")
-    @SchedulerLock(name = "notification-template-processing-task")
+    //@SchedulerLock(name = "notification-template-processing-task")
     public void createNotificationRequests() {
         String runningIpAddress;
         try {

@@ -712,7 +712,7 @@
                         <br>{{staff?.fullNameEn}}</td>
                       <td *ngIf="currentLanguage.startsWith('en')">{{staff?.fullNameEn}}
                         <br>{{staff?.fullNameAr}}</td>
-                      <td>{{staff?.digitalIds[0]?.suin}}</td>
+                      <td>{{staff.suin}}</td>
                       <td>{{staff?.idNumber}}</td>
                       <td class="ltr">{{staff?.passportNumber}}</td>
                     </tr>
@@ -791,11 +791,11 @@
               <tr
                 *ngFor="let staff of addedStaff | slice: (addedStaffCurrentPage * addedStaffPageSize) - addedApplicantsPageSize :addedStaffCurrentPage * addedStaffPageSize">
                 <td>{{staff?.fullNameAr}} {{staff?.fullNameEn}}</td>
-                <td>{{staff?.digitalIds[0]?.suin}}</td>
+                <td>{{staff?.suin}}</td>
                 <td>{{staff?.idNumber}}</td>
                 <td class="ltr">{{staff?.passportNumber}}</td>
                 <td>
-                  <button (click)="undoAddApplicant(staff?.id)"
+                  <button (click)="undoAddStaff(staff?.id)"
                           class="btn btn-sm btn-outline-danger tblView"> {{"general.btn_delete" | translate}}
                   </button>
                 </td>

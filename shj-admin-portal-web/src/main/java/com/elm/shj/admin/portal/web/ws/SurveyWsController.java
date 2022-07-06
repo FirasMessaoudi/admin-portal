@@ -60,12 +60,12 @@ public class SurveyWsController {
         log.debug("List survey questions by digital Id {} and survey type {}", digitalId, surveyType);
         Optional<UserSurveyDto> userSurvey = userSurveyService.findSurveyByDigitalIdAndSurveyType(digitalId, surveyType);
         if (userSurvey.isPresent()) {
-            return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode())
+            return ResponseEntity.ok(WsResponse.builder().status(WsError.EWsError.SURVEY_ALREADY_SUBMITTED.getCode())
                     .body(WsError.builder().error(WsError.EWsError.SURVEY_ALREADY_SUBMITTED.getCode())
                             .referenceNumber(digitalId).build()).build());
         } else if (surveyType.equals("END_OF_RITUAL")) {
             if (!userSurveyService.checkApplicantEndOfRitualDateValid(digitalId))
-                return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode())
+                return ResponseEntity.ok(WsResponse.builder().status(WsError.EWsError.SURVEY_NOT_AVAILABLE.getCode())
                         .body(WsError.builder().error(WsError.EWsError.SURVEY_NOT_AVAILABLE.getCode())
                                 .referenceNumber(digitalId).build()).build());
         }
@@ -96,16 +96,16 @@ public class SurveyWsController {
         UserSurveyDto userSurveyDto = surveyFormDto.getUserSurvey();
         List<UserSurveyQuestionDto> userSurveyQuestionDtoList = surveyFormDto.getUserSurveyQuestions();
         if (surveyFormDto.getUserSurvey().getDigitalId() == null || surveyFormDto.getUserSurvey().getDigitalId().equals("")) {
-            return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode())
+            return ResponseEntity.ok(WsResponse.builder().status(WsError.EWsError.USER_NOT_FOUND.getCode())
                     .body(WsError.builder().error(WsError.EWsError.USER_NOT_FOUND.getCode()).referenceNumber(surveyFormDto.getUserSurvey().getDigitalId()).build()).build());
         }
         if (null == surveyFormDto.getUserSurvey().getSurveyType() || !surveyFormDto.getUserSurvey().getSurveyType().equals("DAILY") && !surveyFormDto.getUserSurvey().getSurveyType().equals("END_OF_RITUAL")) {
-            return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode())
+            return ResponseEntity.ok(WsResponse.builder().status(WsError.EWsError.INVALID_SURVEY_TYPE.getCode())
                     .body(WsError.builder().error(WsError.EWsError.INVALID_SURVEY_TYPE.getCode()).referenceNumber(surveyFormDto.getUserSurvey().getDigitalId()).build()).build());
         }
         Optional<UserSurveyDto> userSurvey = userSurveyService.findSurveyByDigitalIdAndSurveyType(surveyFormDto.getUserSurvey().getDigitalId(), surveyFormDto.getUserSurvey().getSurveyType());
         if (userSurvey.isPresent()) {
-            return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode())
+            return ResponseEntity.ok(WsResponse.builder().status(WsError.EWsError.SURVEY_ALREADY_SUBMITTED.getCode())
                     .body(WsError.builder().error(WsError.EWsError.SURVEY_ALREADY_SUBMITTED.getCode())
                             .referenceNumber(userSurveyDto.getDigitalId()).build()).build());
         }

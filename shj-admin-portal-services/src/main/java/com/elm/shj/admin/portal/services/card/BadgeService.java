@@ -24,6 +24,7 @@ import com.google.zxing.common.BitMatrix;
 import com.google.zxing.pdf417.PDF417Writer;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
@@ -60,6 +61,8 @@ public class BadgeService {
     private final static int MOHU_LOGO_MAX_HEIGHT = (int) Math.round(1.15 * 96);
 
 
+    private final static String BADGE_STAFF_QR_URL = "https://shp.haj.gov.sa/#/staff-qr";
+    private final static String BADGE_APPLICANT_QR_URL = "https://shp.haj.gov.sa/#/pilgrim-qr";
     private final static String BADGE_RESOURCES_PATH = "badge/";
     private final static String ELM_FONT_RESOURCE_FILE_NAME = BADGE_RESOURCES_PATH + "DINNextLTArabic-Regular-2.ttf";
 
@@ -152,7 +155,7 @@ public class BadgeService {
 
         ImageUtils.applyQualityRenderingHints(g2d);
         addBackBadgeBg(g2d, null, true);
-        addHeaderQrCode(g2d, suin, staffData.getCardId());
+        addHeaderQrCode(g2d, suin, staffData.getCardId(), BADGE_STAFF_QR_URL);
         addStaffBackBadgeText(g2d);
         addBackBadgeFooter(g2d, null, true);
         String imgStr = null;
@@ -184,7 +187,7 @@ public class BadgeService {
         addBackBadgeText1(g2d, applicantRitualCardLite.getEstablishmentContactNumber(), false);
         addBackBadgeText2(g2d);
         addBackBadgeFooter(g2d, applicantRitualCardLite.getEstablishmentId(), false);
-        addHeaderQrCode(g2d, uin, applicantRitualCardLite.getCardId());
+        addHeaderQrCode(g2d, uin, applicantRitualCardLite.getCardId(), BADGE_APPLICANT_QR_URL);
         String imgStr = null;
         try {
             imgStr = isBmp ? ImageUtils.imgToBase64StringBmp(badgeImage) : ImageUtils.imgToBase64String(badgeImage);
@@ -468,10 +471,10 @@ public class BadgeService {
 
 
     private void addNameAndNationality(Graphics2D g2d, String fullNameAr, String fullNameEn, String nationalityAr, String nationalityEn, boolean isPrePrinted, boolean isBlack) {
-        fullNameEn = fullNameEn == null ? "---" : fullNameEn;
-        fullNameAr = fullNameAr == null ? "---" : fullNameAr;
-        nationalityAr = nationalityAr == null ? "---" : nationalityAr;
-        nationalityEn = nationalityEn == null ? "---" : nationalityEn;
+        fullNameEn = StringUtils.isEmpty(fullNameEn) ? "---" : fullNameEn;
+        fullNameAr = StringUtils.isEmpty(fullNameAr) ? "---" : fullNameAr;
+        nationalityAr = StringUtils.isEmpty(nationalityAr) ? "---" : nationalityAr;
+        nationalityEn = StringUtils.isEmpty(nationalityEn) ? "---" : nationalityEn;
 
         FontRenderContext frc = g2d.getFontRenderContext();
 
@@ -523,8 +526,8 @@ public class BadgeService {
         //layout.draw(g2d, xDif, yDif);
     }
 
-    private void addHeaderQrCode(Graphics2D g2d, String uin, long cardId) {
-        BufferedImage qrCode = makeRoundedCorner(generateQRcode(uin, cardId + "", true), 30);
+    private void addHeaderQrCode(Graphics2D g2d, String uin, long cardId, String url) {
+        BufferedImage qrCode = makeRoundedCorner(generateQRcode(uin, cardId + "", true, url), 30);
         if (qrCode != null) {
             Image img = ImageUtils.resizeImage(qrCode, QR_CODE_BACK_MAX_HEIGHT, QR_CODE_BACK_MAX_HEIGHT);
             int yDif = (int) Math.round(1.70 * 100);
@@ -543,7 +546,7 @@ public class BadgeService {
                 }
             }
         } catch (Exception e) {
-            log.debug(e.getMessage());
+            log.error(e.getMessage());
         }
     }
 
@@ -564,7 +567,7 @@ public class BadgeService {
 
 
     private void addCompanyRectangle(Graphics2D g2d, ApplicantRitualCardLiteDto applicantRitualCard, CompanyStaffVO staffData, String uin, boolean isPrePrinted, boolean isBlack) {
-        uin = uin == null ? "---" : uin;
+        uin = StringUtils.isEmpty(uin) ? "---" : uin;
         int rectHeightDetails = (int) Math.round(2.13 * 91);
         int rectHeight = applicantRitualCard != null ? (int) Math.round(2 * 84) : (int) Math.round(1.5 * 84);
         int rectWidth = (int) Math.round(6.28 * 96);
@@ -621,7 +624,11 @@ public class BadgeService {
 
             }
         } else {
-            writeTable(g2d, rectWidth, rectX, isPrePrinted ? rectY + 35 : rectY, new String[]{makeLabelFit(staffData.getCompanyLabelEn()), makeLabelFit(getGroupLeaderLabel("others".equalsIgnoreCase(staffData.getJobTitleCode()) ? staffData.getCustomJobTitle() : staffData.getJobTitleCode(), "en"))}, new String[]{makeLabelFit(staffData.getCompanyLabelAr()), makeLabelFit(getGroupLeaderLabel(staffData.getJobTitleCode(), "ar"))}, isPrePrinted, isBlack);
+            if("OTHERS".equalsIgnoreCase(staffData.getJobTitleCode())){
+                writeTable(g2d, rectWidth, rectX, isPrePrinted ? rectY + 35 : rectY, new String[]{makeLabelFit(staffData.getCompanyLabelEn()), makeLabelFit(null)}, new String[]{makeLabelFit(staffData.getCompanyLabelAr()), makeLabelFit(staffData.getCustomJobTitle())}, isPrePrinted, isBlack);
+            } else {
+                writeTable(g2d, rectWidth, rectX, isPrePrinted ? rectY + 35 : rectY, new String[]{makeLabelFit(staffData.getCompanyLabelEn()), makeLabelFit(getGroupLeaderLabel(staffData.getJobTitleCode(), "en"))}, new String[]{makeLabelFit(staffData.getCompanyLabelAr()), makeLabelFit(getGroupLeaderLabel(staffData.getJobTitleCode(), "ar"))}, isPrePrinted, isBlack);
+            }
             if (!isPrePrinted) {
                 BufferedImage cardBackground = ImageUtils.loadFromClasspath(STAFF_CARD_RESOURCE_FILE_NAME);
                 if (cardBackground != null) {
@@ -666,7 +673,7 @@ public class BadgeService {
         if (!isPrePrinted)
             layout.draw(g2d, xDif - 10, yDif);
 
-        BufferedImage qrCode = makeRoundedCorner(generateQRcode(uin, applicantRitualCard != null ? applicantRitualCard.getCardId() + "" : staffData.getCardId() + "", false), 30);
+        BufferedImage qrCode = makeRoundedCorner(generateQRcode(uin, applicantRitualCard != null ? applicantRitualCard.getCardId() + "" : staffData.getCardId() + "", false, null), 30);
 
         Image img = ImageUtils.resizeImage(qrCode, QR_CODE_MAX_HEIGHT, QR_CODE_MAX_HEIGHT);
         g2d.drawImage(img, (BADGE_WIDTH - img.getWidth(null)) / 2, yDif - 60, null);
@@ -816,10 +823,10 @@ public class BadgeService {
     }
 
 
-    private BufferedImage generateQRcode(String uin, String cardId, boolean isTransparent) {
+    private BufferedImage generateQRcode(String uin, String cardId, boolean isTransparent, String url) {
         try {
             String charset = "UTF-8";
-            String data = uin + "#" + cardId;
+            String data = url == null ? uin + "#" + cardId: url;
             Map<EncodeHintType, Object> hashMap = new EnumMap<EncodeHintType, Object>(EncodeHintType.class);
             hashMap.put(EncodeHintType.MARGIN, 1);
             BitMatrix matrix = new MultiFormatWriter().encode(new String(data.getBytes(charset), charset), BarcodeFormat.QR_CODE, 300, 300, hashMap);

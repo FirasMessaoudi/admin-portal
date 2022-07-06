@@ -506,6 +506,12 @@ public class CompanyStaffService extends GenericService<JpaCompanyStaff, Company
     public Page<CompanyStaffDto> findAllByCriteriaAndNotInExcludedIds(NotificationTemplateCategorizingDto applicantSearchCriteria, List<Long> excludedIds, Pageable pageable) {
         log.info("Start findByIds wth NotificationTemplateCategorizingDto: {}", applicantSearchCriteria);
         Page<CompanyStaffDto> companyStaffDtoPage = mapPage(companyStaffRepository.findAll(withStaffFilter(applicantSearchCriteria ,excludedIds), pageable));
+        for (CompanyStaffDto staff:
+             companyStaffDtoPage.getContent()) {
+            if(staff.getDigitalIds() !=null && !staff.getDigitalIds().isEmpty()) {
+                staff.setSuin(staff.getDigitalIds().get(0).getSuin());
+            }
+        }
         log.info("finish findByIds wth NotificationTemplateCategorizingDto");
         return companyStaffDtoPage;
     }
@@ -535,7 +541,6 @@ public class CompanyStaffService extends GenericService<JpaCompanyStaff, Company
             return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
         };
     }
-
 
     public CompanyStaffMainFullDataDto saveOrUpdateStaffFullMainData(CompanyStaffMainFullDataDto companyStaffMainFullData, MultipartFile avatar){
         log.info("Start saveOrUpdateStaffFullMainData wth CompanyStaffMainFullDataDto: {}", companyStaffMainFullData);

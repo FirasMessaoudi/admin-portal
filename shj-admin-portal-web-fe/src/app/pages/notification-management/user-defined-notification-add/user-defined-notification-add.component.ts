@@ -409,10 +409,10 @@ export class UserDefinedNotificationAddComponent implements OnInit {
         .map((staff) => staff.id)
         .join(',');
       const notificationTemplateCategorizing =
-        new NotificationTemplateCategorizing(selectedStaffCSV, null,5);
+        new NotificationTemplateCategorizing(null, selectedStaffCSV,5);
       notificationTemplate.notificationTemplateCategorizing =
         notificationTemplateCategorizing;
-      notificationTemplateCategorizing.selectedApplicants =
+      notificationTemplateCategorizing.selectedStaff =
         selectedStaffCSV;
     }
 
@@ -643,6 +643,20 @@ export class UserDefinedNotificationAddComponent implements OnInit {
       this.addedApplicants.length % this.addedApplicantsPageSize === 0
     )
       this.addedApplicantsCurrentPage--;
+  }
+
+  undoAddStaff(staffId: number) {
+    this.addedStaff.splice(
+      this.addedStaff.findIndex(
+        (staff) => staff.id === staffId
+      ),
+      1
+    );
+    if (
+      this.addedStaffCurrentPage !== 1 &&
+      this.addedStaff.length % this.addedStaffPageSize === 0
+    )
+      this.addedStaffCurrentPage--;
   }
 
   setCurrentPage(page: number) {

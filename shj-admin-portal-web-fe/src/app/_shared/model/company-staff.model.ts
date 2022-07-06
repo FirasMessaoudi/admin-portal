@@ -18,8 +18,9 @@ export class CompanyStaff {
     fullNameOrigin: string;
     mobileNumber: string;
     mobileNumberIntl: string;
-    digitalIds: CompanyStaffDigitalId [];
+    digitalIds: Array<CompanyStaffDigitalId>;
     email: string;
     creationDate: Date;
     updateDate: Date;
+    suin:string
 }

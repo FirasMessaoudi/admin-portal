@@ -58,15 +58,18 @@
     </div> 
     <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3">
       <div class="form-group col">
-        <button class="btn btn-dcc-primary px-2" [disabled]="showSpinner" (click)="printFullImage(contentFull)">{{"card-management.print_blank_card" | translate}}</button>
-        &nbsp;&nbsp;<button  class="btn btn-dcc-primary" [disabled]="showSpinner" (click)="printImageOnPrintedDesign(contentPrePrinted)">{{"card-management.print_preprinted_card" | translate}}</button>         
+        <button class="btn btn-dcc-primary px-2" [disabled]="loading" (click)="printFullImage(contentFull)">{{"card-management.print_blank_card" | translate}}</button>
+        &nbsp;&nbsp;<button  class="btn btn-dcc-primary" [disabled]="loading" (click)="printImageOnPrintedDesign(contentPrePrinted)">{{"card-management.print_preprinted_card" | translate}}</button>         
       </div>
       <div class="form-group col">
       </div>
     </div> 
   </form>
-  <div class="spinner-border text-success" role="status" *ngIf="showSpinner">
+  <!-- <div class="spinner-border text-success" role="status" *ngIf="showSpinner">
     <span class="visually-hidden">{{"card-management.loading_message" | translate }}...</span>
+  </div> -->
+  <div *ngIf="loading" class="preloader" @fade>
+    <div></div><div></div><div></div>
   </div>
   <div class="content__section">
     <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3">

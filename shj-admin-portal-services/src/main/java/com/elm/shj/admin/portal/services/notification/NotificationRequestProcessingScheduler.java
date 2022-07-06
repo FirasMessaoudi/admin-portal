@@ -3,21 +3,16 @@
  */
 package com.elm.shj.admin.portal.services.notification;
 
-import com.elm.shj.admin.portal.orm.entity.JpaNotificationRequest;
 import com.elm.shj.admin.portal.orm.repository.NotificationRequestRepository;
 import com.elm.shj.admin.portal.services.dto.ENotificationProcessingStatus;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import net.javacrumbs.shedlock.core.LockAssert;
-import net.javacrumbs.shedlock.spring.annotation.SchedulerLock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.Date;
@@ -43,7 +38,7 @@ public class NotificationRequestProcessingScheduler {
     private String schedulerActiveNodes;
 
     @Scheduled(cron = "${scheduler.notification.processing.cron}")
-    @SchedulerLock(name = "notification-processing-task")
+    //@SchedulerLock(name = "notification-processing-task")
     void sendUserNotifications() {
         String runningIpAddress;
         try {

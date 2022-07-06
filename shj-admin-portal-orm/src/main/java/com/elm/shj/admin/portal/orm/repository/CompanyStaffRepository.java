@@ -67,9 +67,6 @@ public interface CompanyStaffRepository extends JpaRepository<JpaCompanyStaff, L
     boolean existsByBasicInfoAndTitleIsGroupLeader(@Param("idNumber") String idNumber,
                                                    @Param("passportNumber") String passportNumber, @Param("nationalityCode") String nationalityCode, @Param("titleCode") String titleCode);
 
-    @Query("select s from JpaCompanyStaff s where s.id not in (select sdi.companyStaff.id from JpaCompanyStaffDigitalId sdi where sdi.seasonYear =:season)")
-    List<JpaCompanyStaff> findAllWithoutSuin(@Param("season") int season);
-
     @Query("SELECT a " +
             "FROM JpaCompanyStaff a WHERE " +
             "(a.idNumber = :idNumber AND a.dateOfBirthHijri = :dateOfBirthHijri) OR " +
@@ -126,8 +123,6 @@ public interface CompanyStaffRepository extends JpaRepository<JpaCompanyStaff, L
             "staff.mobileNumber =:localMobileNumber, staff.registered = TRUE, staff.updateDate = CURRENT_TIMESTAMP where staff.id =:staffId")
     int updateCompanyStaffLocalNumber(@Param("email") String email,  @Param("localMobileNumber") String localMobileNumber, @Param("staffId") long staffId);
 
-    JpaCompanyStaff findByIdAndRegisteredTrue(long id);
-
     @Query("SELECT NEW com.elm.shj.admin.portal.orm.entity.CompanyStaffVO(" +
             " digitalId.suin, staff.fullNameEn,staff.fullNameAr, staff.titleCode,staff.photo, " +
             " cards.referenceNumber,cards.statusCode,ritualSeason.ritualTypeCode,ritualSeason.seasonYear, company.labelEn, company.labelAr,company.code,staff.idNumber,staff.passportNumber,staff.fullNameOrigin,staff.dateOfBirthGregorian,staff.dateOfBirthHijri,staff.gender,staff.nationalityCode,cards.referenceNumber,cards.id,staff.customJobTitle ) " +
@@ -140,7 +135,6 @@ public interface CompanyStaffRepository extends JpaRepository<JpaCompanyStaff, L
             "where digitalId.suin = :suin " +
             "and cards.statusCode <> 'REISSUED' " +
             "and cards.statusCode <> 'EXPIRED'" +
-            "and cards.statusCode <> 'REISSUED'" +
             "and cards.statusCode <> 'CANCELlED'")
     CompanyStaffVO findStaffMainData(@Param("suin") String suin);
 
@@ -195,18 +189,6 @@ public interface CompanyStaffRepository extends JpaRepository<JpaCompanyStaff, L
             "AND card.id = :cardId ")
    ApplicantStaffVO findStaffBySuinAndCardId(@Param("suin") String suin, @Param("cardId") long cardId);
 
-    @Query("SELECT NEW com.elm.shj.admin.portal.orm.entity.CompanyStaffVO(" +
-            " digitalId.suin, staff.fullNameEn,staff.fullNameAr, staff.titleCode,staff.photo, " +
-            " cards.referenceNumber,cards.statusCode,ritualSeason.ritualTypeCode,ritualSeason.seasonYear, company.labelEn, company.labelAr,company.code,staff.idNumber,staff.passportNumber,staff.fullNameOrigin,staff.dateOfBirthGregorian,staff.dateOfBirthHijri,staff.gender,staff.nationalityCode,cards.referenceNumber,cards.id,staff.customJobTitle ) " +
-            "from JpaCompanyStaff staff " +
-            "join staff.digitalIds digitalId " +
-            "join digitalId.companyStaffCards cards " +
-            "join cards.companyRitualSeason companyRitualSeason " +
-            "join companyRitualSeason.ritualSeason ritualSeason " +
-            "join companyRitualSeason.company company " +
-            "where staff.id = :staffId ")
-    CompanyStaffVO findStaffById(@Param("staffId") long staffId);
-
     @Query("SELECT NEW com.elm.shj.admin.portal.orm.entity.CompanyStaffFullVO(" +
             " digitalId.suin, staff.fullNameEn,staff.fullNameAr, staff.titleCode, staff.customJobTitle, staff.photo, " +
             " cards.referenceNumber,cards.statusCode,ritualSeason.ritualTypeCode,ritualSeason.seasonYear, company.labelEn, company.labelAr,company.code,staff.idNumber,staff.passportNumber,staff.fullNameOrigin,staff.dateOfBirthGregorian,staff.dateOfBirthHijri,staff.gender,staff.nationalityCode,cards.referenceNumber," +
@@ -223,12 +205,6 @@ public interface CompanyStaffRepository extends JpaRepository<JpaCompanyStaff, L
     @Modifying
     @Query("update JpaCompanyStaff staff set staff.titleCode = :jobTitle, staff.customJobTitle = :customJobTitle, staff.updateDate = CURRENT_TIMESTAMP where staff.id =:staffId")
     int updateCompanyStaffJobTitle(@Param("jobTitle") String jobTitle, @Param("customJobTitle") String customJobTitle, @Param("staffId") long staffId);
-
-
-
-    @Query("SELECT cs FROM JpaCompanyStaff cs JOIN cs.digitalIds di JOIN di.companyStaffCards csc JOIN " +
-            "csc.companyRitualSeason cr JOIN cr.company c WHERE c.code=:code AND  c.typeCode =:typeCode")
-    List<JpaCompanyStaff> findStaffByCompanyCodeAndCompanyTypeCode(@Param("code") String code, @Param("typeCode") long typeCode);
 
     @Query("SELECT a FROM JpaCompanyStaff a WHERE a.id IN :selectedStaff")
     List<JpaCompanyStaff> findAllByIds(@Param("selectedStaff") List<Long> selectedStaff);
