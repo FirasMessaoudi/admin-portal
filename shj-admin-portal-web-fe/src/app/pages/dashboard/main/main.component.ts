@@ -124,6 +124,9 @@ export class MainComponent implements OnInit, DashboardComponent {
 
     //Update chart labels on language change
     this.translate.onLangChange.subscribe((event: LangChangeEvent) => {
+      this.mostIncidentDate = this.formatHijriDate(
+        this.incidents.mostIncidentDate
+      );
       this.incidentDoughnutChartLabels = [
         this.lookupService.localizedLabel(this.incidentStatusList, 'RESOLVED'),
         this.lookupService.localizedLabel(
@@ -193,17 +196,8 @@ export class MainComponent implements OnInit, DashboardComponent {
   }
 
   formatHijriDate(date: Date): string {
-    const datePipe = new DatePipe('en-US');
-    let hijriDate = this.dateFormatterService.toDate(
-      this.dateFormatterService.toHijri(
-        this.dateFormatterService.fromDate(date)
-      )
-    );
-    const formattedHijri = momentHijri(date).locale('ar-sa').format('iYYYY iMMMM iDD');
-    const finalHijri = this.dateFormatterService.toEnglishDigits(formattedHijri);
-    return this.currentLanguage.startsWith('ar')
-      ? finalHijri
-      : datePipe.transform(hijriDate, 'dd MMM yyyy');
+    const formattedHijri = momentHijri(date).locale(this.currentLanguage).format('iDD iMMMM iYYYY');
+    return this.dateFormatterService.toEnglishDigits(formattedHijri);
   }
 
   get currentLanguage(): string {
