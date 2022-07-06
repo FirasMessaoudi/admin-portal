@@ -60,6 +60,8 @@ public class BadgeService {
     private final static int MOHU_LOGO_MAX_HEIGHT = (int) Math.round(1.15 * 96);
 
 
+    private final static String BADGE_STAFF_QR_URL = "https://shp.haj.gov.sa/#/staff-qr";
+    private final static String BADGE_APPLICANT_QR_URL = "https://shp.haj.gov.sa/#/pilgrim-qr";
     private final static String BADGE_RESOURCES_PATH = "badge/";
     private final static String ELM_FONT_RESOURCE_FILE_NAME = BADGE_RESOURCES_PATH + "DINNextLTArabic-Regular-2.ttf";
 
@@ -152,7 +154,7 @@ public class BadgeService {
 
         ImageUtils.applyQualityRenderingHints(g2d);
         addBackBadgeBg(g2d, null, true);
-        addHeaderQrCode(g2d, suin, staffData.getCardId());
+        addHeaderQrCode(g2d, suin, staffData.getCardId(), BADGE_STAFF_QR_URL);
         addStaffBackBadgeText(g2d);
         addBackBadgeFooter(g2d, null, true);
         String imgStr = null;
@@ -184,7 +186,7 @@ public class BadgeService {
         addBackBadgeText1(g2d, applicantRitualCardLite.getEstablishmentContactNumber(), false);
         addBackBadgeText2(g2d);
         addBackBadgeFooter(g2d, applicantRitualCardLite.getEstablishmentId(), false);
-        addHeaderQrCode(g2d, uin, applicantRitualCardLite.getCardId());
+        addHeaderQrCode(g2d, uin, applicantRitualCardLite.getCardId(), BADGE_APPLICANT_QR_URL);
         String imgStr = null;
         try {
             imgStr = isBmp ? ImageUtils.imgToBase64StringBmp(badgeImage) : ImageUtils.imgToBase64String(badgeImage);
@@ -523,8 +525,8 @@ public class BadgeService {
         //layout.draw(g2d, xDif, yDif);
     }
 
-    private void addHeaderQrCode(Graphics2D g2d, String uin, long cardId) {
-        BufferedImage qrCode = makeRoundedCorner(generateQRcode(uin, cardId + "", true), 30);
+    private void addHeaderQrCode(Graphics2D g2d, String uin, long cardId, String url) {
+        BufferedImage qrCode = makeRoundedCorner(generateQRcode(uin, cardId + "", true, url), 30);
         if (qrCode != null) {
             Image img = ImageUtils.resizeImage(qrCode, QR_CODE_BACK_MAX_HEIGHT, QR_CODE_BACK_MAX_HEIGHT);
             int yDif = (int) Math.round(1.70 * 100);
@@ -666,7 +668,7 @@ public class BadgeService {
         if (!isPrePrinted)
             layout.draw(g2d, xDif - 10, yDif);
 
-        BufferedImage qrCode = makeRoundedCorner(generateQRcode(uin, applicantRitualCard != null ? applicantRitualCard.getCardId() + "" : staffData.getCardId() + "", false), 30);
+        BufferedImage qrCode = makeRoundedCorner(generateQRcode(uin, applicantRitualCard != null ? applicantRitualCard.getCardId() + "" : staffData.getCardId() + "", false, null), 30);
 
         Image img = ImageUtils.resizeImage(qrCode, QR_CODE_MAX_HEIGHT, QR_CODE_MAX_HEIGHT);
         g2d.drawImage(img, (BADGE_WIDTH - img.getWidth(null)) / 2, yDif - 60, null);
@@ -816,10 +818,10 @@ public class BadgeService {
     }
 
 
-    private BufferedImage generateQRcode(String uin, String cardId, boolean isTransparent) {
+    private BufferedImage generateQRcode(String uin, String cardId, boolean isTransparent, String url) {
         try {
             String charset = "UTF-8";
-            String data = uin + "#" + cardId;
+            String data = url == null ? uin + "#" + cardId: url;
             Map<EncodeHintType, Object> hashMap = new EnumMap<EncodeHintType, Object>(EncodeHintType.class);
             hashMap.put(EncodeHintType.MARGIN, 1);
             BitMatrix matrix = new MultiFormatWriter().encode(new String(data.getBytes(charset), charset), BarcodeFormat.QR_CODE, 300, 300, hashMap);
