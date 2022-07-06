@@ -140,7 +140,6 @@ public interface CompanyStaffRepository extends JpaRepository<JpaCompanyStaff, L
             "where digitalId.suin = :suin " +
             "and cards.statusCode <> 'REISSUED' " +
             "and cards.statusCode <> 'EXPIRED'" +
-            "and cards.statusCode <> 'REISSUED'" +
             "and cards.statusCode <> 'CANCELlED'")
     CompanyStaffVO findStaffMainData(@Param("suin") String suin);
 
@@ -158,9 +157,11 @@ public interface CompanyStaffRepository extends JpaRepository<JpaCompanyStaff, L
             "or staff.passportNumber =:idNumber )" +
             "AND digitalId.statusCode=:digitalIdStatus " +
             "AND card.statusCode <> :canceledCardStatus "+
-            "AND card.statusCode <> :suspendedCardStatus "
-    )
-    ApplicantStaffVO findStaffByIdNumber(@Param("idNumber") String idNumber, @Param("digitalIdStatus") String digitalIdStatus, @Param("canceledCardStatus") String canceledCardStatus, @Param("suspendedCardStatus") String suspendedCardStatus);
+            "AND card.statusCode <> :suspendedCardStatus "+
+            "AND card.statusCode <> 'REISSUED' " +
+            "AND card.statusCode <> 'EXPIRED'  " +
+            "order by card.creationDate desc")
+    List<ApplicantStaffVO> findStaffByIdNumber(@Param("idNumber") String idNumber, @Param("digitalIdStatus") String digitalIdStatus, @Param("canceledCardStatus") String canceledCardStatus, @Param("suspendedCardStatus") String suspendedCardStatus);
 
     @Query("SELECT NEW com.elm.shj.admin.portal.orm.entity.ApplicantStaffVO(" +
             " digitalId.suin, staff.fullNameEn,staff.fullNameAr, ritualSeason.ritualTypeCode,card.statusCode ,staff.photo, " +
@@ -174,8 +175,11 @@ public interface CompanyStaffRepository extends JpaRepository<JpaCompanyStaff, L
             "where digitalId.suin =:suin "+
             "AND digitalId.statusCode=:digitalIdStatus " +
             "AND card.statusCode <> :canceledCardStatus "+
-            "AND card.statusCode <> :suspendedCardStatus ")
-    ApplicantStaffVO findStaffBySuin(@Param("suin") String suin, @Param("digitalIdStatus") String digitalIdStatus, @Param("canceledCardStatus") String canceledCardStatus, @Param("suspendedCardStatus") String suspendedCardStatus);
+            "AND card.statusCode <> :suspendedCardStatus " +
+            "AND card.statusCode <> 'REISSUED' " +
+            "AND card.statusCode <> 'EXPIRED'  " +
+            "order by card.creationDate desc")
+    List<ApplicantStaffVO> findStaffBySuin(@Param("suin") String suin, @Param("digitalIdStatus") String digitalIdStatus, @Param("canceledCardStatus") String canceledCardStatus, @Param("suspendedCardStatus") String suspendedCardStatus);
 
     @Query("SELECT NEW com.elm.shj.admin.portal.orm.entity.ApplicantStaffVO(" +
             " digitalId.suin, staff.fullNameEn,staff.fullNameAr, ritualSeason.ritualTypeCode,card.statusCode ,staff.photo, " +
@@ -188,7 +192,7 @@ public interface CompanyStaffRepository extends JpaRepository<JpaCompanyStaff, L
             "join companyRitualSeason.company company " +
             "where digitalId.suin =:suin " +
             "AND card.id = :cardId ")
-    ApplicantStaffVO findStaffBySuinAndCardId(@Param("suin") String suin, @Param("cardId") long cardId);
+   ApplicantStaffVO findStaffBySuinAndCardId(@Param("suin") String suin, @Param("cardId") long cardId);
 
     @Query("SELECT NEW com.elm.shj.admin.portal.orm.entity.CompanyStaffVO(" +
             " digitalId.suin, staff.fullNameEn,staff.fullNameAr, staff.titleCode,staff.photo, " +

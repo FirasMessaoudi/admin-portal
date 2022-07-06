@@ -189,27 +189,38 @@ public class ApplicantLiteService extends GenericService<JpaApplicantLite, Appli
 
     public Optional<ApplicantStaffVO> findApplicantRitualByIdNumber(String value) {
         log.info("Start findApplicantRitualByIdNumber IdNumber:{}", value);
+        ApplicantStaffVO applicant = null;
         List<ApplicantStaffVO> applicantList = applicantLiteRepository.findApplicantRitualByIdNumber(value, EDigitalIdStatus.VALID.name(), ECardStatus.CANCELLED.name(), ECardStatus.SUSPENDED.name());
         log.info("Finish findApplicantRitualByIdNumber IdNumber:{}", applicantList.size());
-        if (applicantList.size() == 0) {
-            log.info("Finish findApplicantRitualByIdNumber not found IdNumber:{}", value);
+        if (applicantList.isEmpty() == false) {
+            log.info(" findApplicantRitualByIdNumber  found multiple cards with IdNumber:{} and cards count: {}", value,applicantList.size() );
+            applicant = applicantList.get(0);
+
+        }
+        if(applicant == null){
+            log.info("Finish findApplicantRitualByIdNumber not found with IdNumber:{}",value);
             return Optional.empty();
-        } else {
-            log.info("Finish findApplicantRitualByIdNumber found with FullNameEn:{}", applicantList.get(0).getFullNameEn());
-             return  Optional.of(applicantList.get(0));
-         }
+        }
+            log.info("Finish findApplicantRitualByIdNumber found with IdNumber: {}, CardStatusCode:{}",value, applicant.getCardStatusCode());
+             return  Optional.of(applicant);
+
     }
 
     public Optional<ApplicantStaffVO> findApplicantRitualByUin(String uin) {
         log.info("Start findApplicantRitualByUin uin:{}", uin);
+        ApplicantStaffVO applicant = null;
         List<ApplicantStaffVO> applicantList = applicantLiteRepository.findApplicantRitualByUin(uin, EDigitalIdStatus.VALID.name(), ECardStatus.CANCELLED.name(), ECardStatus.SUSPENDED.name());
-        if(applicantList.size() == 0) {
-            log.info("Finish findApplicantRitualByUin not found uin:{}", uin);
-            return Optional.empty();
-        } else {
-            log.info("Finish findApplicantRitualByUin found with FullNameEn:{}", applicantList.get(0).getFullNameEn());
-            return  Optional.of(applicantList.get(0));
+        if (applicantList.isEmpty() == false) {
+            log.info(" findApplicantRitualByUin  found multiple cards with IdNumber:{} and cards count: {}", uin,applicantList.size() );
+            applicant = applicantList.get(0);
+
         }
+        if(applicant == null){
+            log.info("Finish findApplicantRitualByUin not found with IdNumber:{}",uin);
+            return Optional.empty();
+        }
+        log.info("Finish findApplicantRitualByUin found with IdNumber: {}, CardStatusCode:{}",uin, applicant.getCardStatusCode());
+        return  Optional.of(applicant);
     }
 
     public ApplicantEmergencyContactDto findApplicantEmergencyContactByApplicantId(String applicantUin){
