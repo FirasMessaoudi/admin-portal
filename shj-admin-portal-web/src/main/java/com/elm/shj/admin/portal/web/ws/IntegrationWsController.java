@@ -1063,7 +1063,7 @@ public class IntegrationWsController {
         if (!isSaved) {
             return ResponseEntity.ok(
                     WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode())
-                            .body(WsError.builder().error(WsError.EWsError.INVALID_LOCATION_ENTRIES.getCode()).build()).build());
+                            .body(false).build());
         }
 
         return ResponseEntity.ok(
