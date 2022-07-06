@@ -102,7 +102,6 @@ public class DataProcessorService {
         result.setDataValidationResults(dataValidationResults);
         result.setParsedItems(parsedItems);
         result.setWithErrors(dataValidationResults.stream().anyMatch(dvr -> !dvr.isValid()));
-        log.info("parsed item results: {}", parsedItems);
         log.info("end processRequestFile for dataSegment", dataSegment.getTemplateFileName());
         return result;
     }

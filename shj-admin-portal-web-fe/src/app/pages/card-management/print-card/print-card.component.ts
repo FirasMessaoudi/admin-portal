@@ -24,6 +24,7 @@ import { StaffService } from '@core/services/staff/staff.service';
 })
 export class PrintCardComponent implements OnInit { 
 
+  public loading: boolean = false;
   uin:string;
   printDetails: PrintDetails;
   printInfo:PrintInfo;
@@ -97,10 +98,10 @@ export class PrintCardComponent implements OnInit {
 
   loadStaffCardImages()
   {
-   
+  this.loading =true;
    this.staffService.getStaffPreviewBadge(this.uin).subscribe(result =>
      {
-        this.showSpinner=false;
+       this.loading =false;
         if(result && result.length>0) 
        {
         this.base64ImageFront=`data:image/bmp;base64,${result[0].badgeImage}`;   
@@ -112,10 +113,10 @@ export class PrintCardComponent implements OnInit {
 
  loadApplicantCardImages()
  {
-  
+  this.loading =true;
   this.applicantService.getApplicantPreview(this.uin).subscribe(result =>
     {
-       this.showSpinner=false;
+       this.loading=false;
        if(result && result.length>0) 
        {
         this.base64ImageFront=`data:image/bmp;base64,${result[0].badgeImage}`;   
@@ -138,17 +139,19 @@ export class PrintCardComponent implements OnInit {
      
       if(this.personType == this.personTypeCONST)
       {
+        this.loading =true;
         this.applicantService.getApplicantAll(this.uin).subscribe(result =>
           {
              this.showSpinner=false;
              if(result && result.length>0) 
-             {              
+             { 
+              this.loading =false;             
               let printDetails : PrintDetails = { 
                 sessionId:`${this.uin}${Math.floor(Math.random() * 11)}`,
                 imageBase64String:result[0].badgeImage,
                 backImageBase64String:result[1].badgeImage,
                 isDualSide:true
-              };
+              };              
               this.printCard(printDetails);
              }
                
@@ -157,9 +160,11 @@ export class PrintCardComponent implements OnInit {
       }
       else
       {
+        this.loading =true;
         this.staffService.getStaffAllBadge(this.uin).subscribe(result =>
           {
              this.showSpinner=false;
+             this.loading =false;
              if(result && result.length>0) 
              {              
               let printDetails : PrintDetails = { 
@@ -167,7 +172,7 @@ export class PrintCardComponent implements OnInit {
                 imageBase64String:result[0].badgeImage,
                 backImageBase64String:result[1].badgeImage,
                 isDualSide:true
-              };
+              };              
               this.printCard(printDetails);
              }
                
@@ -186,9 +191,11 @@ export class PrintCardComponent implements OnInit {
      
       if(this.personType == this.personTypeCONST)
       {
+        this.loading =true;
         this.applicantService.getApplicantPrePrinted(this.uin).subscribe(result =>
           {
              this.showSpinner=false;
+             this.loading =false;
              if(result && result.length>0) 
              {             
               let printDetails : PrintDetails = { 
@@ -196,7 +203,7 @@ export class PrintCardComponent implements OnInit {
                 imageBase64String:result[0].badgeImage,
                 backImageBase64String:result[1].badgeImage,
                 isDualSide:this.dualPrintingMode
-              };
+              };              
               this.printCard(printDetails);
              }
                
@@ -205,9 +212,11 @@ export class PrintCardComponent implements OnInit {
       }
       else
       {
+        this.loading =true;
         this.staffService.getStaffPrePrintedBadge(this.uin).subscribe(result =>
           {
              this.showSpinner=false;
+             this.loading =false;
              if(result && result.length>0) 
              {              
               let printDetails : PrintDetails = { 
@@ -215,7 +224,7 @@ export class PrintCardComponent implements OnInit {
                 imageBase64String:result[0].badgeImage,
                 backImageBase64String:null,
                 isDualSide:false
-              };
+              };              
               this.printCard(printDetails);
              }
                
@@ -229,13 +238,14 @@ export class PrintCardComponent implements OnInit {
     });
   }    
   printCard(printRequest:PrintDetails) 
-  {
-    const headers = { 'content-type': 'application/json'};       
-      const body=JSON.stringify(printRequest);      
-      this.cardService.sendPrintRequestToPrinter(body,headers).subscribe(data =>
-      {
+  {    
+     const headers = { 'content-type': 'application/json'};       
+     const body=JSON.stringify(printRequest);      
+     this.cardService.sendPrintRequestToPrinter(body,headers).subscribe(data =>
+      {        
         this.toastr.success(this.translate.instant('printing-management.print_request_done_successfully'), this.translate.instant('printing-management.title'));
-      });
+    });
+    
   }
  
 }

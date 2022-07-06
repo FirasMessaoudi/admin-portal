@@ -12,8 +12,6 @@ import com.elm.shj.admin.portal.services.applicant.PackageHousingService;
 import com.elm.shj.admin.portal.services.company.CompanyStaffService;
 import com.elm.shj.admin.portal.services.dto.EUserType;
 import com.elm.shj.admin.portal.services.dto.PackageHousingDto;
-import com.elm.shj.admin.portal.services.prinitng.PrintRequestBatchService;
-import com.elm.shj.admin.portal.services.prinitng.PrintRequestLiteService;
 import com.elm.shj.admin.portal.web.navigation.Navigation;
 import com.elm.shj.admin.portal.web.security.jwt.JwtTokenService;
 import lombok.RequiredArgsConstructor;
@@ -47,8 +45,6 @@ public class StaffWsController {
     private final ApplicantLiteService applicantLiteService;
     private final GroupApplicantListService groupApplicantListService;
     private final PackageHousingService packageHousingService;
-    private final PrintRequestLiteService printRequestLiteService;
-    private final PrintRequestBatchService printRequestBatchService;
 
     /**
      * finds company staff
