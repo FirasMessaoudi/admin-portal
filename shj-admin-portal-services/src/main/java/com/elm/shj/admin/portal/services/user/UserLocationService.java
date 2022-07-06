@@ -37,9 +37,7 @@ public class UserLocationService extends GenericService<JpaUserLocation, UserLoc
                 log.debug("Invalid location Longitude {}", location.getLongitude());
             } else if (location.getLatitude() < -90 || location.getLatitude() > 90) {
                 log.debug("Invalid location Latitude {}", location.getLatitude());
-            } else if (location.getAltitude() < -100000 || location.getAltitude() > 100000) {
-                log.debug("Invalid location Altitude {}", location.getAltitude());
-            }else if (location.getTimestamp() == null || location.getTimestamp().isEmpty()) {
+            } else if (location.getTimestamp() == null || location.getTimestamp().isEmpty()) {
                 log.debug("Invalid location Timestamp {}", location.getTimestamp());
             } else {
                 try {
