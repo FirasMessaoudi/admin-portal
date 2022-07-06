@@ -44,6 +44,7 @@ export class StaffCardDetailsComponent implements OnInit {
   applicantStatuses: Lookup[] = [];
   immunizations: Lookup[] = [];
   renderBackLink = false;
+  public loading: boolean = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -177,9 +178,9 @@ export class StaffCardDetailsComponent implements OnInit {
                 actionCode: this.actions.REPRINT_CARD,
                 cardId: this.card.id                
                 };
-
+                this.loading=true;
                 this.cardService.generatStaffCard(generatCardInput).subscribe(result=>{           
-                  
+                  this.loading=false;
                   if(result && result==true)
                   this.router.navigate(['/card/print',this.card?.companyStaffDigitalId?.suin,'STAFF']); 
                   else

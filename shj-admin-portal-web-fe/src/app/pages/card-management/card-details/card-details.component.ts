@@ -45,7 +45,7 @@ export class CardDetailsComponent implements OnInit {
   immunizations: Lookup[];
   languageNativeName = Language;
   renderBackLink = false; 
-
+  public loading: boolean = false;
 
   constructor(private route: ActivatedRoute,
               private router: Router,
@@ -165,9 +165,11 @@ export class CardDetailsComponent implements OnInit {
                   cardId: this.card.id,
                   ritualId: this.card?.applicantRitual?.id
               };
+           this.loading=true;
            this.cardService.generateCard(generatCardInput).subscribe(result=>{           
             if(result && result == true)
             {
+              this.loading=false;
               this.router.navigate(['/card/print',this.card?.applicantRitual?.applicant?.digitalIds[0]?.uin,'APPLICANT']);                
             }
             else
