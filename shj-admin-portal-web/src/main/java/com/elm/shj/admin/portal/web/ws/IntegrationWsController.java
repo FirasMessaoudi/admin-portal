@@ -923,6 +923,7 @@ public class IntegrationWsController {
 
     @PostMapping("/verify-staff")
     public ResponseEntity<WsResponse<?>> verifyStaff(@RequestBody ValidateStaffCmd validateStaffCmd) {
+        log.info("Start verifyStaff for {} identifier and {} type and {} dob hijri and {} dob gregorian..", validateStaffCmd.getIdentifier(), validateStaffCmd.getType(), validateStaffCmd.getDateOfBirthHijri(), validateStaffCmd.getDateOfBirthGregorian());
         log.info(validateStaffCmd.getIdentifier());
         Optional<CompanyStaffLiteDto> staff = Optional.empty();
         if (validateStaffCmd.getType().equals("suin"))
@@ -933,6 +934,7 @@ public class IntegrationWsController {
             staff = companyStaffService.findByIdNumber(validateStaffCmd.getIdentifier());
 
         if (staff.isPresent()) {
+            log.info("Found the staff with {} id.", staff.get().getId());
             boolean dateOfBirthMatched;
             SimpleDateFormat sdf = new SimpleDateFormat(ISO8601_DATE_PATTERN);
             // decide which date of birth to use
@@ -963,7 +965,7 @@ public class IntegrationWsController {
             }
 
             if (!dateOfBirthMatched) {
-                log.debug("unmatched data for {} suin and {} hijri date of birth and {} gregorian date of birth.",
+                log.info("unmatched data for {} suin and {} hijri date of birth and {} gregorian date of birth.",
                         validateStaffCmd.getIdentifier(), validateStaffCmd.getDateOfBirthHijri(), validateStaffCmd.getDateOfBirthGregorian());
                 return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode())
                         .body(WsError.builder().error(WsError.EWsError.COMPANY_STAFF_NOT_MATCHED.getCode()).referenceNumber(validateStaffCmd.getIdentifier()).build()).build());
