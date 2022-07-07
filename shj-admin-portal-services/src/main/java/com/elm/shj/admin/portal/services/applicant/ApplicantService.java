@@ -399,10 +399,9 @@ public class ApplicantService extends GenericService<JpaApplicant, ApplicantDto,
             missionRefCode = companyRefCode;
         } else if(companyTypeCode.equals(EOrganizerTypes.SERVICE_GROUP.name())){
             serviceGroupRefCode = companyRefCode;
-        } else if(companyTypeCode.equals(EOrganizerTypes.INTERNAL_HAJ_COMPANY.name())){
-            companyCode = String.valueOf(companyRefCode) + "_" + companyTypeCode;
-        } else if(companyTypeCode.equals(EOrganizerTypes.EXTERNAL_HAJ_COMPANY.name())){
-            companyCode = String.valueOf(companyRefCode) + "_" + companyTypeCode;
+        } else if(companyTypeCode.equals(EOrganizerTypes.INTERNAL_HAJ_COMPANY.name()) ||
+                companyTypeCode.equals(EOrganizerTypes.EXTERNAL_HAJ_COMPANY.name()) || companyTypeCode.equals(EOrganizerTypes.GOVERNMENT_AGENCY.name())){
+            companyCode = companyRefCode + "_" + companyTypeCode;
         }
 
         if(applicantSearchCriteriaDto.getGroupNumber() != null && !applicantSearchCriteriaDto.getGroupNumber().equals("")){
@@ -456,10 +455,9 @@ public class ApplicantService extends GenericService<JpaApplicant, ApplicantDto,
             missionRefCode = companyRefCode;
         } else if(companyTypeCode.equals(EOrganizerTypes.SERVICE_GROUP.name())){
             serviceGroupRefCode = companyRefCode;
-        } else if(companyTypeCode.equals(EOrganizerTypes.INTERNAL_HAJ_COMPANY.name())){
-            companyCode = String.valueOf(companyRefCode) + "_" + companyTypeCode;
-        } else if(companyTypeCode.equals(EOrganizerTypes.EXTERNAL_HAJ_COMPANY.name())){
-            companyCode = String.valueOf(companyRefCode) + "_" + companyTypeCode;
+        } else if(companyTypeCode.equals(EOrganizerTypes.INTERNAL_HAJ_COMPANY.name()) ||
+                companyTypeCode.equals(EOrganizerTypes.EXTERNAL_HAJ_COMPANY.name()) || companyTypeCode.equals(EOrganizerTypes.GOVERNMENT_AGENCY.name())){
+            companyCode = companyRefCode + "_" + companyTypeCode;
         }
         AtomicInteger cellIndex = new AtomicInteger();
 
@@ -533,10 +531,9 @@ public class ApplicantService extends GenericService<JpaApplicant, ApplicantDto,
             missionRefCode = companyRefCode;
         } else if(companyTypeCode.equals(EOrganizerTypes.SERVICE_GROUP.name())){
             serviceGroupRefCode = companyRefCode;
-        } else if(companyTypeCode.equals(EOrganizerTypes.INTERNAL_HAJ_COMPANY.name())){
-            companyCode = String.valueOf(companyRefCode) + "_" + companyTypeCode;
-        } else if(companyTypeCode.equals(EOrganizerTypes.EXTERNAL_HAJ_COMPANY.name())){
-            companyCode = String.valueOf(companyRefCode) + "_" + companyTypeCode;
+        } else if(companyTypeCode.equals(EOrganizerTypes.INTERNAL_HAJ_COMPANY.name()) ||
+                companyTypeCode.equals(EOrganizerTypes.EXTERNAL_HAJ_COMPANY.name()) || companyTypeCode.equals(EOrganizerTypes.GOVERNMENT_AGENCY.name())){
+            companyCode = companyRefCode + "_" + companyTypeCode;
         }
         AtomicInteger cellIndex = new AtomicInteger();
 

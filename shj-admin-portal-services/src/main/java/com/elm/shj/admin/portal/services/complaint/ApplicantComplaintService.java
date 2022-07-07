@@ -95,9 +95,8 @@ public class ApplicantComplaintService extends GenericService<JpaApplicantCompla
             missionRefCode = companyRefCode;
         } else if(companyTypeCode.equals(EOrganizerTypes.SERVICE_GROUP.name())){
             serviceGroupRefCode = companyRefCode;
-        } else if(companyTypeCode.equals(EOrganizerTypes.INTERNAL_HAJ_COMPANY.name())){
-            companyCode = companyRefCode + "_" + companyTypeCode;
-        } else if(companyTypeCode.equals(EOrganizerTypes.EXTERNAL_HAJ_COMPANY.name())){
+        } else if(companyTypeCode.equals(EOrganizerTypes.INTERNAL_HAJ_COMPANY.name()) ||
+                companyTypeCode.equals(EOrganizerTypes.EXTERNAL_HAJ_COMPANY.name()) || companyTypeCode.equals(EOrganizerTypes.GOVERNMENT_AGENCY.name())){
             companyCode = companyRefCode + "_" + companyTypeCode;
         }
         Page<com.elm.shj.admin.portal.orm.entity.ApplicantComplaintVo> applicantComplaintVoPage = applicantComplaintRepository.findApplicantComplaintFilter(criteria.getComplaintNumber(), criteria.getComplaintType(),
