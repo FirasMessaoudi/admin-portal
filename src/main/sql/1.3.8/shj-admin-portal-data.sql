@@ -171,5 +171,89 @@ INSERT INTO shc_portal.shc_chatbot_item (id, code, lang, label, parent_code) VAL
 INSERT INTO shc_portal.shc_chatbot_item (id, code, lang, label, parent_code) VALUES (170, 'SEPCIAL_NEEDS_SERVICES', 'fr', 'Quels sont les services disponibles pour les personnes ayant des besoins particuliers ?', 'SPECIAL_NEEDS');
 INSERT INTO shc_portal.shc_chatbot_item (id, code, lang, label, parent_code) VALUES (171, 'SEPCIAL_NEEDS_SERVICES_RESPONSE', 'fr','Vous pouvez contacter la Présidence générale de Haramain à ce sujet.','SEPCIAL_NEEDS_SERVICES');
 
+INSERT INTO shc_portal.shc_chatbot_item (id, code, lang, label) VALUES (172, 'HAJJ_RITUAL', 'ms','Mengenai Haji');
+INSERT INTO shc_portal.shc_chatbot_item (id, code, lang, label) VALUES (173, 'LOCATIONS', 'ms','Lokasi Penting');
+INSERT INTO shc_portal.shc_chatbot_item (id, code, lang, label) VALUES (174, 'CONTACTS', 'ms','Nombor Perhubungan Penting');
+INSERT INTO shc_portal.shc_chatbot_item (id, code, lang, label) VALUES (175, 'SMART_CARD', 'ms','Kad Pintar');
+INSERT INTO shc_portal.shc_chatbot_item (id, code, lang, label) VALUES (176, 'SPECIAL_NEEDS', 'ms','Keperluan Khas');
+
+INSERT INTO shc_portal.shc_chatbot_item (id, code, lang, label, parent_code) VALUES (177, 'SLAUGHTER_PROCESS', 'ms', 'Bilakah penyembelihan disahkan? Jika orang yang memohon ibadah tersebut merupakan jemaah haji, adakah pelaksanaan ibadahnya itu dikaitkan dengan beliau keluar dari keadaan Ihram dalam Haji atau orang yang melakukan korban itu bukan jemaah haji?', 'HAJJ_RITUAL');
+INSERT INTO shc_portal.shc_chatbot_item (id, code, lang, label, parent_code) VALUES (178, 'SLAUGHTER_PROCESS_RESPONSE','ms', 'Selepas pembelian dan sebaik sahaja jumlah ditolak daripada akaun pelanggan dan resit dalam nama akaun Projek disahkan, atau pelanggan memperoleh kupon atau bon ibadah, pelanggan itu dianggap telah mengamanahkan Projek untuk mengerjakan ibadah tersebut bagi pihaknya. Maka beliau dilepaskan daripada mengerjakan ibadah berkenaan, mengambil maklum bahawa jika pembelian dan pembayaran telah dibuat melalui laman web, mesej akan dihantar bagi memaklumkan pelanggan mengenai pelaksanaan permintaannya (selesai penyembelihan). ','SLAUGHTER_PROCESS');
+
+INSERT INTO shc_portal.shc_chatbot_item (id, code, lang, label, parent_code) VALUES (179, 'ELECTRONIC_PATH', 'ms', 'Adakah E-track menyediakan pembelian Hady dan Adahi [dam] (haiwan korban)?', 'HAJJ_RITUAL');
+INSERT INTO shc_portal.shc_chatbot_item (id, code, lang, label, parent_code) VALUES (180, 'ELECTRONIC_PATH_RESPONSE', 'ms','Ya, perkhidmatan ini disediakan.','ELECTRONIC_PATH');
+
+INSERT INTO shc_portal.shc_chatbot_item (id, code, lang, label, parent_code) VALUES (181, 'HAJJ_APPLICATION', 'ms','Bilakah permohonan Musim Haji 1443 Hijrah bermula?', 'HAJJ_RITUAL');
+INSERT INTO shc_portal.shc_chatbot_item (id, code, lang, label, parent_code) VALUES (182, 'HAJJ_APPLICATION_RESPONSE', 'ms','Pengumuman mengenai tarikh pembukaan permohonan bagi Haji 1443 telah bermula melalui laman web Kementerian Haji dan Umrah serta saluran rasminya pada hari Jumaat 11/4/1443 Hijrah.', 'HAJJ_APPLICATION');
+
+INSERT INTO shc_portal.shc_chatbot_item (id, code, lang, label, parent_code) VALUES (183, 'HAJJ_AGE', 'ms','Berapakah umur yang dibenarkan untuk menunaikan Haji?', 'HAJJ_RITUAL');
+INSERT INTO shc_portal.shc_chatbot_item (id, code, lang, label, parent_code) VALUES (184, 'HAJJ_AGE_RESPONSE', 'ms','Tiada halangan untuk kanak-kanak pengiring semasa Haji 1443, dengan syarat mereka sudah divaksin.', 'HAJJ_AGE');
+
+INSERT INTO shc_portal.shc_chatbot_item (id, code, lang, label, parent_code) VALUES (185, 'INTERNAL_HAJJ', 'ms','Bilakah permohonan kempen Haji dalaman bermula dan berakhir?', 'HAJJ_RITUAL');
+INSERT INTO shc_portal.shc_chatbot_item (id, code, lang, label, parent_code) VALUES (186, 'INTERNAL_HAJJ_RESPONSE', 'ms','Permohonan bermula pada 4hb Zulkaedah dan tamat pada 13 Zulkaedah.', 'INTERNAL_HAJJ');
+
+INSERT INTO shc_portal.shc_chatbot_item (id, code, lang, label, parent_code) VALUES (187, 'HAJJ_INQUIRY', 'ms','Apakah mekanisme untuk bertanya mengenai kelayakan Haji?', 'HAJJ_RITUAL');
+INSERT INTO shc_portal.shc_chatbot_item (id, code, lang, label, parent_code) VALUES (188, 'HAJJ_INQUIRY_RESPONSE', 'ms','Untuk bertanya mengenai kelayakan Haji, masuk ke Platform Absher, pilih e-pertanyaan, tanya mengenai kelayakan Haji, kemudian masukkan Nombor ID dan kod visual, dan kelayakan akan dipaparkan.', 'HAJJ_INQUIRY');
+
+INSERT INTO shc_portal.shc_chatbot_item (id, code, lang, label, parent_code) VALUES (189, 'GULF_NATIONALS', 'ms','Warganegara GCC yang berada di Kerajaan Arab Saudi tetapi bukan pemastautin dan ingin menunaikan Haji domestik', 'HAJJ_RITUAL');
+INSERT INTO shc_portal.shc_chatbot_item (id, code, lang, label, parent_code) VALUES (190, 'GULF_NATIONALS_RESPONSE', 'ms','Warganegara GCC yang merupakan pemastautin di Kerajaan Arab Saudi boleh mendaftar di E-track menggunakan nombor kemasukan yang boleh diperolehi daripada Jabatan Pasport GCC ""*. Warganegara GCC yang bukan pemastautin di Kerajaan Arab Saudi tidak boleh mendaftar untuk jemaah haji domestik, dan beliau mesti mendaftar di negaranya menurut peraturan berkenaan.', 'GULF_NATIONALS');
+
+INSERT INTO shc_portal.shc_chatbot_item (id, code, lang, label, parent_code) VALUES (191, 'MADINAH_CARE_CENTERS', 'ms','Pusat Khidmat Madinah','LOCATIONS');
+INSERT INTO shc_portal.shc_chatbot_item (id, code, lang, label, parent_code) VALUES (192, 'MADINAH_CARE_CENTERS_RESPONSE', 'ms','Timur Pusat Masjid An-Nabawi Alamat: King Faisal Road, 1st Ring Road, Al-Haram Waktu bekerja: 7 am - 9 pm Lapangan Terbang Antarabangsa Putera Mohammad bin Abdulaziz Address: Lapangan Terbang Antarabangsa Putera Mohammad bin Abdulaziz Waktu bekerja: 8 am - 10 pm','MADINAH_CARE_CENTERS');
+
+INSERT INTO shc_portal.shc_chatbot_item (id, code, lang, label, parent_code) VALUES (193, 'JEDDAH_CARE_CENTERS', 'ms','Pusat Khidmat Jeddah','LOCATIONS');
+INSERT INTO shc_portal.shc_chatbot_item (id, code, lang, label, parent_code) VALUES (194, 'JEDDAH_CARE_CENTERS_RESPONSE', 'ms','Lapangan Terbang Antarabangsa Raja Abdulaziz di Jeddah Alamat: Lapangan Terbang Antarabangsa Raja Abdulaziz Terminal No. 1','JEDDAH_CARE_CENTERS');
+
+INSERT INTO shc_portal.shc_chatbot_item (id, code, lang, label, parent_code) VALUES (195, 'MAKKAH_CARE_CENTERS', 'ms','Pusat Khidmat Makkah','LOCATIONS');
+INSERT INTO shc_portal.shc_chatbot_item (id, code, lang, label, parent_code) VALUES (196, 'MAKKAH_CARE_CENTERS_RESPONSE', 'ms','Cawangan Al-Hujun: Alamat: Madinah Road, Al Hujun, Makkah. Waktu bekerja: 8 am - 10 pm Pautan lokasi pada Google Maps: https://maps.app.goo.gl/NE1G4t6S6WvNkDVb8 Cawangan Misfalah: Alamat: Ibrahim Al Khalil Street, Misfalah, Makkah. Waktu bekerja: 8 am - 10 pm Pautan lokasi pada Google Maps: https://maps.app.goo.gl/NGCnEg6hCp9JTT238   Cawangan Hotel Dar Al-Tawhid / Makkah Pautan lokasi pada Google Maps: https://maps.app.goo.gl/3c9iDmVRL2Zqk3n57','MAKKAH_CARE_CENTERS');
+
+INSERT INTO shc_portal.shc_chatbot_item (id, code, lang, label, parent_code) VALUES (197, 'HARAM', 'ms','Al-Haram','LOCATIONS');
+INSERT INTO shc_portal.shc_chatbot_item (id, code, lang, label, parent_code) VALUES (198, 'HARAM_RESPONSE', 'ms', 'https://goo.gl/maps/P9L6JX9VCNgcuxR3A','HARAM');
+
+INSERT INTO shc_portal.shc_chatbot_item (id, code, lang, label, parent_code) VALUES (199, 'MERCY_MOUNT', 'ms','Gunung Rahma','LOCATIONS');
+INSERT INTO shc_portal.shc_chatbot_item (id, code, lang, label, parent_code) VALUES (200, 'MERCY_MOUNT_RESPONSE', 'ms', 'https://goo.gl/maps/TjMBJqj754QzJFg88','MERCY_MOUNT');
+
+INSERT INTO shc_portal.shc_chatbot_item (id, code, lang, label, parent_code) VALUES (201, 'ARAFAT_MOUNT', 'ms','Gunung Arafah','LOCATIONS');
+INSERT INTO shc_portal.shc_chatbot_item (id, code, lang, label, parent_code) VALUES (202, 'ARAFAT_MOUNT_RESPONSE', 'ms', 'https://goo.gl/maps/hGcK5D7uY2jcr6gP7','ARAFAT_MOUNT');
+
+INSERT INTO shc_portal.shc_chatbot_item (id, code, lang, label, parent_code) VALUES (203, 'MASJID_NABAWI', 'ms','Masjid An-Nabawi','LOCATIONS');
+INSERT INTO shc_portal.shc_chatbot_item (id, code, lang, label, parent_code) VALUES (204, 'MASJID_NABAWI_RESPONSE', 'ms', 'https://goo.gl/maps/SseRYc5NoZXXHxsh8','MASJID_NABAWI');
+
+INSERT INTO shc_portal.shc_chatbot_item (id, code, lang, label, parent_code) VALUES (205, 'FATWA_NUMBERS', 'ms','Nombor Bahagian Fatwa','CONTACTS');
+INSERT INTO shc_portal.shc_chatbot_item (id, code, lang, label, parent_code) VALUES (206, 'FATWA_NUMBERS_RESPONSE', 'ms','Talian 24 jam Bahagian Fatwa Saudi atau Talian bebas tol Fatwa Talian 24 jam bebas tol Bahagian Fatwa : 8002451000 Nombor Bahagian Fatwa Bersatu, Makkah: 8001222100   Nombor Bahagian Fatwa Makkah: 8001222400 Nombor Bahagian Fatwa Holy Quran Radio: 0114052999 Nombor Dar Al-Iftaa Saudi: 0114595555 Nombor Bahagian Fatwa MOHU: 8002451000 Nombor WhatsApp Bahagian Fatwa (1): 0501785536','FATWA_NUMBERS');
+
+INSERT INTO shc_portal.shc_chatbot_item (id, code, lang, label, parent_code) VALUES (207, 'PRESIDENCY_MOSQUES_NUMBERS', 'ms','Presiden Umum Haramain','CONTACTS');
+INSERT INTO shc_portal.shc_chatbot_item (id, code, lang, label, parent_code) VALUES (208, 'PRESIDENCY_MOSQUES_NUMBERS_RESPONSE', 'ms','Hubungi nombor bebas tol 1966','PRESIDENCY_MOSQUES_NUMBERS');
+
+INSERT INTO shc_portal.shc_chatbot_item (id, code, lang, label, parent_code) VALUES (209, 'HAJJ_MINISTRY', 'ms','Kementerian Haji dan Umrah','CONTACTS');
+INSERT INTO shc_portal.shc_chatbot_item (id, code, lang, label, parent_code) VALUES (210, 'HAJJ_MINISTRY_RESPONSE', 'ms','Untuk menghubungi Kementerian Haji dan Umrah, anda boleh menghubungi Pusat Perkhidmatan Pelanggan MOHU di  920002814 atau care@haj.gov.sa, atau melalui akaun rasmi Twitter @MOHU_Care','HAJJ_MINISTRY');
+
+INSERT INTO shc_portal.shc_chatbot_item (id, code, lang, label, parent_code) VALUES (211, 'EMERGENCY_NUMBER', 'ms','Untuk kecemasan dan perkhidmatan keselamatan','CONTACTS');
+INSERT INTO shc_portal.shc_chatbot_item (id, code, lang, label, parent_code) VALUES (212, 'EMERGENCY_NUMBER_RESPONSE', 'ms', '911','EMERGENCY_NUMBER');
+
+INSERT INTO shc_portal.shc_chatbot_item (id, code, lang, label, parent_code) VALUES (213, 'MEDICAL_ADVICES', 'ms','Untuk perundingan perubatan dan pertanyaan','CONTACTS');
+INSERT INTO shc_portal.shc_chatbot_item (id, code, lang, label, parent_code) VALUES (214, 'MEDICAL_ADVICES_RESPONSE', 'ms', '937','MEDICAL_ADVICES');
+
+INSERT INTO shc_portal.shc_chatbot_item (id, code, lang, label, parent_code) VALUES (215, 'EVALUATION', 'ms', 'Penilaian', 'SMART_CARD');
+INSERT INTO shc_portal.shc_chatbot_item (id, code, lang, label, parent_code) VALUES (216, 'EVALUATION_RESPONSE', 'ms','Ulasan harian dan penilaian di akhir perjalanan jemaah haji boleh dibuat dengan memiih daripada senarai Perkhidmatan. Oleh itu, sila berikan perhatian dengan mengisinya agar kami dapat menambah baik perkhidmatan kami.','EVALUATION');
+
+INSERT INTO shc_portal.shc_chatbot_item (id, code, lang, label, parent_code) VALUES (217, 'COMPLAINTS', 'ms', 'Aduan', 'SMART_CARD');
+INSERT INTO shc_portal.shc_chatbot_item (id, code, lang, label, parent_code) VALUES (218, 'COMPLAINTS_RESPONSE', 'ms','Aduan akan didaftarkan untuk penganjur dan selepas tempoh tamat tanpa sebarang penyelesaian, aduan tersebut akan dibangkitkan sebagai laporan.','COMPLAINTS');
+
+INSERT INTO shc_portal.shc_chatbot_item (id, code, lang, label, parent_code) VALUES (219, 'INCIDENTS', 'ms', 'Laporan', 'SMART_CARD');
+INSERT INTO shc_portal.shc_chatbot_item (id, code, lang, label, parent_code) VALUES (220, 'INCIDENTS_RESPONSE', 'ms','Laporan akan didaftarkan untuk penganjur dan dikemukakan sebagai laporan kepada pihak berkuasa rasmi untuk tindakan yang sewajarnya.','INCIDENTS');
+
+INSERT INTO shc_portal.shc_chatbot_item (id, code, lang, label, parent_code) VALUES (221, 'CARD_COLORS', 'ms', 'Warna kad', 'SMART_CARD');
+INSERT INTO shc_portal.shc_chatbot_item (id, code, lang, label, parent_code) VALUES (222, 'CARD_COLORS_RESPONSE', 'ms','Warna kad adalah berdasarkan Tawafa Establishment; badan yang bergabung dalam mengurus Haji, dan terdapat warna tersendiri untuk jemaah haji domestik.','CARD_COLORS');
+
+INSERT INTO shc_portal.shc_chatbot_item (id, code, lang, label, parent_code) VALUES (223, 'WHEELCHAIRS_GATES', 'ms', 'Apakah pintu pagar yang ditetapkan untuk pengguna kerusi roda dalam Al-Haram?', 'SPECIAL_NEEDS');
+INSERT INTO shc_portal.shc_chatbot_item (id, code, lang, label, parent_code) VALUES (224, 'WHEELCHAIRS_GATES_RESPONSE', 'ms','Anda boleh menghubungi Presiden Umum Haramain di 1966 dalam hal ini.','WHEELCHAIRS_GATES');
+
+INSERT INTO shc_portal.shc_chatbot_item (id, code, lang, label, parent_code) VALUES (225, 'HAJJ_CARTS', 'ms', 'Adakah kenderaan tersedia di dalam Al-Haram?', 'SPECIAL_NEEDS');
+INSERT INTO shc_portal.shc_chatbot_item (id, code, lang, label, parent_code) VALUES (226, 'HAJJ_CARTS_RESPONSE', 'ms','Presiden Umum Haramain menyediakan kenderaan elektrik yang boleh disewa melalui Aplikasi Tanaqol untuk mengerjakan Tawaf atau Saie di tingkat khusus di dalam Al-Haram. Sila hubungi Presiden Umum Haramain untuk sebarang perkembangan.','HAJJ_CARTS');
+
+INSERT INTO shc_portal.shc_chatbot_item (id, code, lang, label, parent_code) VALUES (227, 'SEPCIAL_NEEDS_SERVICES', 'ms', 'Apakah perkhidmatan yang tersedia untuk orang yang mempunyai keperluan khas?', 'SPECIAL_NEEDS');
+INSERT INTO shc_portal.shc_chatbot_item (id, code, lang, label, parent_code) VALUES (228, 'SEPCIAL_NEEDS_SERVICES_RESPONSE', 'ms','Anda boleh menghubungi Presiden Umum Haramain dalam hal ini.','SEPCIAL_NEEDS_SERVICES');
+
 SET IDENTITY_INSERT shc_portal.shc_chatbot_item OFF;
 GO
