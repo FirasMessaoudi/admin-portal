@@ -174,7 +174,7 @@ public interface ApplicantRepository extends JpaRepository<JpaApplicant, Long>, 
             "((:applicantName is null OR a.fullNameEn like '%'+:applicantName+'%' OR a.fullNameAr like '%'+:applicantName+'%')) and " +
             "(:uin is null OR di.uin = :uin) and " +
             "((:groupNumber is null OR ap.referenceNumber = :groupNumber) and c.code = :companyFullCode) and" +
-            "(:companyCode is null or a.companyCode = :companyCode) and " +
+            "(:companyCode is '-1' or a.companyCode = :companyCode) and " +
             "(:establishmentRefCode = -1L or a.establishmentRefCode = :establishmentRefCode) and " +
             "(:missionRefCode = -1L or a.missionRefCode = :missionRefCode) and " +
             "((:serviceGroupRefCode = -1L or a.serviceGroupMakkahCode = :serviceGroupRefCode or a.serviceGroupMadinaCode = :serviceGroupRefCode)) ")
@@ -195,7 +195,7 @@ public interface ApplicantRepository extends JpaRepository<JpaApplicant, Long>, 
             "(:gender is null OR a.gender = :gender) and " +
             "((:applicantName is null OR a.fullNameEn like '%'+:applicantName+'%' OR a.fullNameAr like '%'+:applicantName+'%')) and " +
             "(:uin is null OR di.uin = :uin) and " +
-            "(:companyCode is null or a.companyCode = :companyCode) and " +
+            "(:companyCode is '-1' or a.companyCode = :companyCode) and " +
             "(:establishmentRefCode = -1L or a.establishmentRefCode = :establishmentRefCode) and " +
             "(:missionRefCode = -1L or a.missionRefCode = :missionRefCode) and " +
             "((:serviceGroupRefCode = -1L or a.serviceGroupMakkahCode = :serviceGroupRefCode or a.serviceGroupMadinaCode = :serviceGroupRefCode)) ")
@@ -206,7 +206,7 @@ public interface ApplicantRepository extends JpaRepository<JpaApplicant, Long>, 
 
     @Query("select a FROM JpaApplicant a where " +
             "a.deleted = FALSE and a.packageReferenceNumber is not null and "+
-            "(:companyCode is null or a.companyCode = :companyCode) and " +
+            "(:companyCode is -1 or a.companyCode = :companyCode) and " +
             "(:establishmentRefCode = -1L or a.establishmentRefCode = :establishmentRefCode) and " +
             "(:missionRefCode = -1L or a.missionRefCode = :missionRefCode) and " +
             "((:serviceGroupRefCode = -1L or a.serviceGroupMakkahCode = :serviceGroupRefCode or a.serviceGroupMadinaCode = :serviceGroupRefCode)) ")

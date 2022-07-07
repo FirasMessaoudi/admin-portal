@@ -55,7 +55,7 @@ public interface ApplicantComplaintRepository extends JpaRepository<JpaApplicant
             "(:endDate is null OR c.creationDate <= :endDate) and " +
             "((:applicantName is null OR a.fullNameEn like '%'+:applicantName+'%' OR a.fullNameAr like '%'+:applicantName+'%')) and " +
             "(:applicantId is null OR di.uin like '%'+:applicantId+'%') and " +
-            "(:companyCode is null or a.companyCode = :companyCode) and " +
+            "(:companyCode is '-1' or a.companyCode = :companyCode) and " +
             "(:establishmentRefCode = -1L or a.establishmentRefCode = :establishmentRefCode) and " +
             "(:missionRefCode = -1L or a.missionRefCode = :missionRefCode) and " +
             "((:serviceGroupRefCode = -1L or a.serviceGroupMakkahCode = :serviceGroupRefCode or a.serviceGroupMadinaCode = :serviceGroupRefCode)) " +

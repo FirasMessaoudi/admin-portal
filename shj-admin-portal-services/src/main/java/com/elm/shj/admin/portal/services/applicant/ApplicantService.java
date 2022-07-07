@@ -21,6 +21,7 @@ import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
@@ -388,10 +389,14 @@ public class ApplicantService extends GenericService<JpaApplicant, ApplicantDto,
         log.info("Applicant search criteria... {}", applicantSearchCriteriaDto);
         log.info("Group reference number... {}", applicantSearchCriteriaDto.getGroupNumber());
 
+        if(companyTypeCode.equals(EOrganizerTypes.GOVERNMENT_AGENCY.name())){
+            return  new PageImpl<>(Collections.emptyList(), pageable, 0);
+        }
+
         Long establishmentRefCode = -1L;
         Long missionRefCode = -1L;
         Long serviceGroupRefCode = -1L;
-        String companyCode = null;
+        String companyCode = "-1";
 
         if(companyTypeCode.equals(EOrganizerTypes.ESTABLISHMENT.name())){
             establishmentRefCode = companyRefCode;
@@ -400,7 +405,7 @@ public class ApplicantService extends GenericService<JpaApplicant, ApplicantDto,
         } else if(companyTypeCode.equals(EOrganizerTypes.SERVICE_GROUP.name())){
             serviceGroupRefCode = companyRefCode;
         } else if(companyTypeCode.equals(EOrganizerTypes.INTERNAL_HAJ_COMPANY.name()) ||
-                companyTypeCode.equals(EOrganizerTypes.EXTERNAL_HAJ_COMPANY.name()) || companyTypeCode.equals(EOrganizerTypes.GOVERNMENT_AGENCY.name())){
+                companyTypeCode.equals(EOrganizerTypes.EXTERNAL_HAJ_COMPANY.name())){
             companyCode = companyRefCode + "_" + companyTypeCode;
         }
 
@@ -447,7 +452,7 @@ public class ApplicantService extends GenericService<JpaApplicant, ApplicantDto,
         Long establishmentRefCode = -1L;
         Long missionRefCode = -1L;
         Long serviceGroupRefCode = -1L;
-        String companyCode = null;
+        String companyCode = "-1";
 
         if(companyTypeCode.equals(EOrganizerTypes.ESTABLISHMENT.name())){
             establishmentRefCode = companyRefCode;
@@ -456,7 +461,7 @@ public class ApplicantService extends GenericService<JpaApplicant, ApplicantDto,
         } else if(companyTypeCode.equals(EOrganizerTypes.SERVICE_GROUP.name())){
             serviceGroupRefCode = companyRefCode;
         } else if(companyTypeCode.equals(EOrganizerTypes.INTERNAL_HAJ_COMPANY.name()) ||
-                companyTypeCode.equals(EOrganizerTypes.EXTERNAL_HAJ_COMPANY.name()) || companyTypeCode.equals(EOrganizerTypes.GOVERNMENT_AGENCY.name())){
+                companyTypeCode.equals(EOrganizerTypes.EXTERNAL_HAJ_COMPANY.name())){
             companyCode = companyRefCode + "_" + companyTypeCode;
         }
         AtomicInteger cellIndex = new AtomicInteger();
@@ -523,7 +528,7 @@ public class ApplicantService extends GenericService<JpaApplicant, ApplicantDto,
         Long establishmentRefCode = -1L;
         Long missionRefCode = -1L;
         Long serviceGroupRefCode = -1L;
-        String companyCode = null;
+        String companyCode = "-1";
 
         if(companyTypeCode.equals(EOrganizerTypes.ESTABLISHMENT.name())){
             establishmentRefCode = companyRefCode;
@@ -532,7 +537,7 @@ public class ApplicantService extends GenericService<JpaApplicant, ApplicantDto,
         } else if(companyTypeCode.equals(EOrganizerTypes.SERVICE_GROUP.name())){
             serviceGroupRefCode = companyRefCode;
         } else if(companyTypeCode.equals(EOrganizerTypes.INTERNAL_HAJ_COMPANY.name()) ||
-                companyTypeCode.equals(EOrganizerTypes.EXTERNAL_HAJ_COMPANY.name()) || companyTypeCode.equals(EOrganizerTypes.GOVERNMENT_AGENCY.name())){
+                companyTypeCode.equals(EOrganizerTypes.EXTERNAL_HAJ_COMPANY.name())){
             companyCode = companyRefCode + "_" + companyTypeCode;
         }
         AtomicInteger cellIndex = new AtomicInteger();

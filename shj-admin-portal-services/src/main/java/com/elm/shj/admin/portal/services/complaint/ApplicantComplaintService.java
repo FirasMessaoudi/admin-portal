@@ -24,6 +24,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
@@ -35,6 +36,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
+import java.util.Collections;
 import java.util.Date;
 import java.util.Optional;
 
@@ -87,7 +89,11 @@ public class ApplicantComplaintService extends GenericService<JpaApplicantCompla
         Long establishmentRefCode = -1L;
         Long missionRefCode = -1L;
         Long serviceGroupRefCode = -1L;
-        String companyCode = null;
+        String companyCode = "-1";
+
+        if(companyTypeCode.equals(EOrganizerTypes.GOVERNMENT_AGENCY.name())){
+            return  new PageImpl<>(Collections.emptyList(), pageable, 0);
+        }
 
         if(companyTypeCode.equals(EOrganizerTypes.ESTABLISHMENT.name())){
             establishmentRefCode = companyRefCode;
@@ -96,9 +102,10 @@ public class ApplicantComplaintService extends GenericService<JpaApplicantCompla
         } else if(companyTypeCode.equals(EOrganizerTypes.SERVICE_GROUP.name())){
             serviceGroupRefCode = companyRefCode;
         } else if(companyTypeCode.equals(EOrganizerTypes.INTERNAL_HAJ_COMPANY.name()) ||
-                companyTypeCode.equals(EOrganizerTypes.EXTERNAL_HAJ_COMPANY.name()) || companyTypeCode.equals(EOrganizerTypes.GOVERNMENT_AGENCY.name())){
+                companyTypeCode.equals(EOrganizerTypes.EXTERNAL_HAJ_COMPANY.name())){
             companyCode = companyRefCode + "_" + companyTypeCode;
         }
+
         Page<com.elm.shj.admin.portal.orm.entity.ApplicantComplaintVo> applicantComplaintVoPage = applicantComplaintRepository.findApplicantComplaintFilter(criteria.getComplaintNumber(), criteria.getComplaintType(),
                 criteria.getStatus(), criteria.getApplicantName(), atStartOfDay(criteria.getFromDate()), atEndOfDay(criteria.getToDate()),
                 criteria.getApplicantId(), companyCode, establishmentRefCode, missionRefCode, serviceGroupRefCode, pageable);
