@@ -936,8 +936,9 @@ public class IntegrationWsController {
             boolean dateOfBirthMatched;
             SimpleDateFormat sdf = new SimpleDateFormat(ISO8601_DATE_PATTERN);
             // decide which date of birth to use
-            if (staff.get().getDateOfBirthGregorian() != null) {
-                if(validateStaffCmd.getDateOfBirthGregorian() == null){
+
+            if(validateStaffCmd.getDateOfBirthGregorian() != null) {
+                if (staff.get().getDateOfBirthGregorian() == null) {
                     return ResponseEntity.ok(WsResponse.builder().status(WsError.EWsError.INVALID_DATE_OF_BIRTH.getCode())
                             .body(WsError.builder().error(WsError.EWsError.APPLICANT_NOT_MATCHED.getCode()).referenceNumber(validateStaffCmd.getIdentifier()).build()).build());
                 }
@@ -950,14 +951,17 @@ public class IntegrationWsController {
                     return ResponseEntity.ok(WsResponse.builder().status(WsResponse.EWsResponseStatus.FAILURE.getCode())
                             .body(WsError.builder().error(WsError.EWsError.COMPANY_STAFF_NOT_MATCHED.getCode()).referenceNumber(validateStaffCmd.getIdentifier()).build()).build());
                 }
-
-            } else {
-                if(validateStaffCmd.getDateOfBirthHijri() <= 0 ){
+            } else if(validateStaffCmd.getDateOfBirthHijri() > 0 ) {
+                if (staff.get().getDateOfBirthHijri() == null || staff.get().getDateOfBirthHijri() < 0) {
                     return ResponseEntity.ok(WsResponse.builder().status(WsError.EWsError.INVALID_DATE_OF_BIRTH.getCode())
                             .body(WsError.builder().error(WsError.EWsError.APPLICANT_NOT_MATCHED.getCode()).referenceNumber(validateStaffCmd.getIdentifier()).build()).build());
                 }
                 dateOfBirthMatched = validateStaffCmd.getDateOfBirthHijri() == staff.get().getDateOfBirthHijri();
+            } else {
+                return ResponseEntity.ok(WsResponse.builder().status(WsError.EWsError.INVALID_DATE_OF_BIRTH.getCode())
+                        .body(WsError.builder().error(WsError.EWsError.APPLICANT_NOT_MATCHED.getCode()).referenceNumber(validateStaffCmd.getIdentifier()).build()).build());
             }
+
             if (!dateOfBirthMatched) {
                 log.debug("unmatched data for {} suin and {} hijri date of birth and {} gregorian date of birth.",
                         validateStaffCmd.getIdentifier(), validateStaffCmd.getDateOfBirthHijri(), validateStaffCmd.getDateOfBirthGregorian());
