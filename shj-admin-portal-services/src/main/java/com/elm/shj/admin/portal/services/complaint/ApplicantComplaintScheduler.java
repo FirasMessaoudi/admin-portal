@@ -71,7 +71,6 @@ public class ApplicantComplaintScheduler {
         }
 
         log.debug("Generate applicants complaints scheduler started...");
-        LockAssert.assertLocked();
         Date date = new Date(System.currentTimeMillis() - 60 * 1000 * complaintPeriodInMinutes);
         List<ApplicantComplaintVo> complaints = applicantComplaintRepository.findByCreationDateLessThanEqualAndStatusCode(date, EComplaintStatus.UNDER_PROCESSING.name());
 

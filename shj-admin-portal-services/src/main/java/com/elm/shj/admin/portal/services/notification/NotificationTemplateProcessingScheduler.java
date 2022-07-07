@@ -52,7 +52,6 @@ public class NotificationTemplateProcessingScheduler {
             return;
         }
         log.debug("create notification requests scheduler started ...");
-       // LockAssert.assertLocked();
         notificationRequestService.processNotificationTemplates(notificationProcessingBatchSize);
     }
 

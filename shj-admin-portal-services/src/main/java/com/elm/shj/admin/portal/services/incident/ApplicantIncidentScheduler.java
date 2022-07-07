@@ -71,7 +71,6 @@ public class ApplicantIncidentScheduler {
         }
 
         log.debug("Generate applicants incidents scheduler started...");
-        LockAssert.assertLocked();
         List<ApplicantComplaintVo> incidents = applicantIncidentRepository.findAllCrm(EIncidentStatus.UNDER_PROCESSING.name());
 
         incidents.forEach(incident -> {

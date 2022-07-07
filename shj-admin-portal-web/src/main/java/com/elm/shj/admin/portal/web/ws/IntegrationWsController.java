@@ -287,27 +287,30 @@ public class IntegrationWsController {
             applicant = applicantLiteService.findByIdNumber(command.getIdentifier());
         }
 
-
         if (applicant.isPresent()) {
             log.info("Found applicant with {} id.", applicant.get().getId());
             boolean dateOfBirthMatched;
             SimpleDateFormat sdf = new SimpleDateFormat(ISO8601_DATE_PATTERN);
-            // decide which date of birth to use
-            if (applicant.get().getDateOfBirthGregorian() != null) {
-                if(command.getDateOfBirthGregorian() == null){
+
+            if(command.getDateOfBirthGregorian() != null) {
+                if (applicant.get().getDateOfBirthGregorian() == null) {
                     return ResponseEntity.ok(WsResponse.builder().status(WsError.EWsError.INVALID_DATE_OF_BIRTH.getCode())
                             .body(WsError.builder().error(WsError.EWsError.APPLICANT_NOT_MATCHED.getCode()).referenceNumber(command.getIdentifier()).build()).build());
                 }
                 String applicantDateFormatted = sdf.format(applicant.get().getDateOfBirthGregorian());
                 String commandDataOfBirthFormatted = sdf.format(command.getDateOfBirthGregorian());
                 dateOfBirthMatched = commandDataOfBirthFormatted.equals(applicantDateFormatted);
-            } else {
-                if(command.getDateOfBirthHijri() <= 0 ){
+            } else if (command.getDateOfBirthHijri() > 0) {
+                if (applicant.get().getDateOfBirthHijri() == null && applicant.get().getDateOfBirthHijri() <= 0) {
                     return ResponseEntity.ok(WsResponse.builder().status(WsError.EWsError.INVALID_DATE_OF_BIRTH.getCode())
                             .body(WsError.builder().error(WsError.EWsError.APPLICANT_NOT_MATCHED.getCode()).referenceNumber(command.getIdentifier()).build()).build());
                 }
                 dateOfBirthMatched = command.getDateOfBirthHijri() == applicant.get().getDateOfBirthHijri();
+            } else {
+                return ResponseEntity.ok(WsResponse.builder().status(WsError.EWsError.INVALID_DATE_OF_BIRTH.getCode())
+                        .body(WsError.builder().error(WsError.EWsError.APPLICANT_NOT_MATCHED.getCode()).referenceNumber(command.getIdentifier()).build()).build());
             }
+
             if (!dateOfBirthMatched) {
                 log.info("unmatched data for {} uin and {} hijri date of birth and {} gregorian date of birth.",
                         command.getIdentifier(), command.getDateOfBirthHijri(), command.getDateOfBirthGregorian());

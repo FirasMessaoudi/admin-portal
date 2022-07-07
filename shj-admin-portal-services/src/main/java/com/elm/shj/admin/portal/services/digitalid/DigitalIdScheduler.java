@@ -13,8 +13,6 @@ import com.elm.shj.admin.portal.services.dto.EDigitalIdStatus;
 import com.elm.shj.admin.portal.services.ritual.ApplicantRitualService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import net.javacrumbs.shedlock.core.LockAssert;
-import net.javacrumbs.shedlock.spring.annotation.SchedulerLock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -66,7 +64,6 @@ public class DigitalIdScheduler {
             return;
         }
         log.debug("Generate applicants digital ids scheduler started...");
-        LockAssert.assertLocked();
         applicantBasicService.findAllWithoutDigitalId().getContent().forEach(applicantBasicDto -> {
             // generate and save digital id for each applicant
             ApplicantDigitalIdDto applicantDigitalId = digitalIdService.save(ApplicantDigitalIdDto.builder()

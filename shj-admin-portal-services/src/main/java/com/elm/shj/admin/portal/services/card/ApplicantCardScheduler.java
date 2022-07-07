@@ -61,7 +61,6 @@ public class ApplicantCardScheduler {
             return;
         }
         log.debug("Generate applicants cards scheduler started...");
-        LockAssert.assertLocked();
         applicantRitualBasicService.findAllWithoutCards().getContent().forEach(applicantRitualBasic -> {
             // generate and save the card
             ApplicantCardBasicDto savedCard = applicantCardBasicService.save(ApplicantCardBasicDto.builder().applicantRitual(applicantRitualBasic).statusCode(ECardStatus.READY_TO_PRINT.name()).build());
