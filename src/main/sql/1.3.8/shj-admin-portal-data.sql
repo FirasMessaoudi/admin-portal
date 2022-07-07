@@ -266,3 +266,97 @@ INSERT INTO shc_portal.shc_language_lk(id, code, lang , label) values(37, 'MS', 
 
 SET IDENTITY_INSERT shc_portal.shc_language_lk OFF;
 GO
+
+
+DELETE FROM shc_portal.shc_survey_question_lk WHERE id > 0;
+GO
+SET IDENTITY_INSERT shc_portal.shc_survey_question_lk ON;
+INSERT INTO shc_portal.shc_survey_question_lk (id, code, survey_type_code, lang, label, question_index) VALUES (1, 'WELCOME_SATISFACTION_Q_DAILY', 'DAILY', 'ar', N'مدى رضاك عن الترحيب والاستقبال', 1);
+INSERT INTO shc_portal.shc_survey_question_lk (id, code, survey_type_code, lang, label, question_index) VALUES (2, 'WELCOME_SATISFACTION_Q_DAILY', 'DAILY', 'en', 'How satisfied are you with the welcoming and greeting?', 1);
+
+INSERT INTO shc_portal.shc_survey_question_lk (id, code, survey_type_code, lang, label, question_index) VALUES (3, 'TRANS_SATISFACTION_Q_DAILY', 'DAILY', 'ar', N'مدى رضاك عن الحافلات', 2);
+INSERT INTO shc_portal.shc_survey_question_lk (id, code, survey_type_code, lang, label, question_index) VALUES (4, 'TRANS_SATISFACTION_Q_DAILY', 'DAILY', 'en', 'How satisfied are you with the buses?', 2);
+
+INSERT INTO shc_portal.shc_survey_question_lk (id, code, survey_type_code, lang, label, question_index) VALUES (5, 'TRANS_TIME_SATISFACTION_Q_DAILY', 'DAILY', 'ar', N'مدى رضاك عن الالتزام بمواعيد الحافلات', 3);
+INSERT INTO shc_portal.shc_survey_question_lk (id, code, survey_type_code, lang, label, question_index) VALUES (6, 'TRANS_TIME_SATISFACTION_Q_DAILY', 'DAILY', 'en', 'How satisfied are you with the bus timings?', 3);
+
+INSERT INTO shc_portal.shc_survey_question_lk (id, code, survey_type_code, lang, label, question_index) VALUES (7, 'FOOD_SATISFACTION_Q_DAILY', 'DAILY', 'ar', N'مدى رضاك عن جودة الوجبات المقدمة', 4);
+INSERT INTO shc_portal.shc_survey_question_lk (id, code, survey_type_code, lang, label, question_index) VALUES (8, 'FOOD_SATISFACTION_Q_DAILY', 'DAILY', 'en', 'How satisfied are you with the quality of the meals served?', 4);
+
+INSERT INTO shc_portal.shc_survey_question_lk (id, code, survey_type_code, lang, label, question_index) VALUES (9, 'FOOD_TIME_SATISFACTION_Q_DAILY', 'DAILY', 'ar', N'مدى رضاك عن الالتزام بمواعيد تقديم الوجبات', 5);
+INSERT INTO shc_portal.shc_survey_question_lk (id, code, survey_type_code, lang, label, question_index) VALUES (10, 'FOOD_TIME_SATISFACTION_Q_DAILY', 'DAILY', 'en', N'How satisfied are you with serving meals on time?', 5);
+
+INSERT INTO shc_portal.shc_survey_question_lk (id, code, survey_type_code, lang, label, question_index) VALUES (11, 'HOUSING_SATISFACTION_Q_DAILY', 'DAILY', 'ar', N'مدى رضاك عن السكن', 6);
+INSERT INTO shc_portal.shc_survey_question_lk (id, code, survey_type_code, lang, label, question_index) VALUES (12, 'HOUSING_SATISFACTION_Q_DAILY', 'DAILY', 'en', 'How satisfied are you with housing?', 6);
+
+INSERT INTO shc_portal.shc_survey_question_lk (id, code, survey_type_code, lang, label, question_index) VALUES (13, 'UTIL_SATISFACTION_Q_DAILY', 'DAILY', 'ar', N'مدى رضاك عن المرافق العامة', 7);
+INSERT INTO shc_portal.shc_survey_question_lk (id, code, survey_type_code, lang, label, question_index) VALUES (14, 'UTIL_SATISFACTION_Q_DAILY', 'DAILY', 'en', 'How satisfied are you with public utilities?', 7);
+
+INSERT INTO shc_portal.shc_survey_question_lk (id, code, survey_type_code, lang, label, question_index) VALUES (15, 'GUIDE_SATISFACTION_Q_DAILY', 'DAILY', 'ar', N'مدى رضاك عن خدمات الارشاد والتوجيه', 8);
+INSERT INTO shc_portal.shc_survey_question_lk (id, code, survey_type_code, lang, label, question_index) VALUES (16, 'GUIDE_SATISFACTION_Q_DAILY', 'DAILY', 'en', 'How satisfied are you with the counseling and guidance services?', 8);
+
+INSERT INTO shc_portal.shc_survey_question_lk (id, code, survey_type_code, lang, label, question_index) VALUES (17, 'WORKERS_SATISFACTION_Q_DAILY', 'DAILY', 'ar', N'رضاك عن تعامل العاملين في تقديم الخدمات', 9);
+INSERT INTO shc_portal.shc_survey_question_lk (id, code, survey_type_code, lang, label, question_index) VALUES (18, 'WORKERS_SATISFACTION_Q_DAILY', 'DAILY', 'en', 'How satisfied are you with the quality of workers services?', 9);
+
+INSERT INTO shc_portal.shc_survey_question_lk (id, code, survey_type_code, lang, label, question_index) VALUES (19, 'CLEANLINESS_SATISFACTION_Q_DAILY', 'DAILY', 'ar', N'مدى رضاك عن مستوى النظافة', 10);
+INSERT INTO shc_portal.shc_survey_question_lk (id, code, survey_type_code, lang, label, question_index) VALUES (20, 'CLEANLINESS_SATISFACTION_Q_DAILY', 'DAILY', 'en', 'How satisfied are you with the level of cleanliness?', 10);
+
+
+
+
+INSERT INTO shc_portal.shc_survey_question_lk (id, code, survey_type_code, lang, label, question_index) VALUES (21, 'WELCOME_SATISFACTION_Q_DAILY', 'END_OF_RITUAL', 'ar', N'مدى رضاك عن الترحيب والاستقبال', 1);
+INSERT INTO shc_portal.shc_survey_question_lk (id, code, survey_type_code, lang, label, question_index) VALUES (22, 'WELCOME_SATISFACTION_Q_DAILY', 'END_OF_RITUAL', 'en', 'How satisfied are you with the welcoming and greeting?', 1);
+
+INSERT INTO shc_portal.shc_survey_question_lk (id, code, survey_type_code, lang, label, question_index) VALUES (23, 'TRANS_SATISFACTION_Q_DAILY', 'END_OF_RITUAL', 'ar', N'مدى رضاك عن الحافلات', 2);
+INSERT INTO shc_portal.shc_survey_question_lk (id, code, survey_type_code, lang, label, question_index) VALUES (24, 'TRANS_SATISFACTION_Q_DAILY', 'END_OF_RITUAL', 'en', 'How satisfied are you with the buses?', 2);
+
+INSERT INTO shc_portal.shc_survey_question_lk (id, code, survey_type_code, lang, label, question_index) VALUES (25, 'TRANS_TIME_SATISFACTION_Q_DAILY', 'END_OF_RITUAL', 'ar', N'مدى رضاك عن الالتزام بمواعيد الحافلات', 3);
+INSERT INTO shc_portal.shc_survey_question_lk (id, code, survey_type_code, lang, label, question_index) VALUES (26, 'TRANS_TIME_SATISFACTION_Q_DAILY', 'END_OF_RITUAL', 'en', 'How satisfied are you with the bus timings?', 3);
+
+INSERT INTO shc_portal.shc_survey_question_lk (id, code, survey_type_code, lang, label, question_index) VALUES (27, 'FOOD_SATISFACTION_Q_DAILY', 'END_OF_RITUAL', 'ar', N'مدى رضاك عن جودة الوجبات المقدمة', 4);
+INSERT INTO shc_portal.shc_survey_question_lk (id, code, survey_type_code, lang, label, question_index) VALUES (28, 'FOOD_SATISFACTION_Q_DAILY', 'END_OF_RITUAL', 'en', 'How satisfied are you with the quality of the meals served?', 4);
+
+INSERT INTO shc_portal.shc_survey_question_lk (id, code, survey_type_code, lang, label, question_index) VALUES (29, 'FOOD_TIME_SATISFACTION_Q_DAILY', 'END_OF_RITUAL', 'ar', N'مدى رضاك عن الالتزام بمواعيد تقديم الوجبات', 5);
+INSERT INTO shc_portal.shc_survey_question_lk (id, code, survey_type_code, lang, label, question_index) VALUES (30, 'FOOD_TIME_SATISFACTION_Q_DAILY', 'END_OF_RITUAL', 'en', N'How satisfied are you with serving meals on time?', 5);
+
+INSERT INTO shc_portal.shc_survey_question_lk (id, code, survey_type_code, lang, label, question_index) VALUES (31, 'HOUSING_SATISFACTION_Q_DAILY', 'END_OF_RITUAL', 'ar', N'مدى رضاك عن السكن', 6);
+INSERT INTO shc_portal.shc_survey_question_lk (id, code, survey_type_code, lang, label, question_index) VALUES (32, 'HOUSING_SATISFACTION_Q_DAILY', 'END_OF_RITUAL', 'en', 'How satisfied are you with housing?', 6);
+
+INSERT INTO shc_portal.shc_survey_question_lk (id, code, survey_type_code, lang, label, question_index) VALUES (33, 'UTIL_SATISFACTION_Q_DAILY', 'END_OF_RITUAL', 'ar', N'مدى رضاك عن المرافق العامة', 7);
+INSERT INTO shc_portal.shc_survey_question_lk (id, code, survey_type_code, lang, label, question_index) VALUES (34, 'UTIL_SATISFACTION_Q_DAILY', 'END_OF_RITUAL', 'en', 'How satisfied are you with public utilities?', 7);
+
+INSERT INTO shc_portal.shc_survey_question_lk (id, code, survey_type_code, lang, label, question_index) VALUES (35, 'GUIDE_SATISFACTION_Q_DAILY', 'END_OF_RITUAL', 'ar', N'مدى رضاك عن خدمات الارشاد والتوجيه', 8);
+INSERT INTO shc_portal.shc_survey_question_lk (id, code, survey_type_code, lang, label, question_index) VALUES (36, 'GUIDE_SATISFACTION_Q_DAILY', 'END_OF_RITUAL', 'en', 'How satisfied are you with the counseling and guidance services?', 8);
+
+INSERT INTO shc_portal.shc_survey_question_lk (id, code, survey_type_code, lang, label, question_index) VALUES (37, 'WORKERS_SATISFACTION_Q_DAILY', 'END_OF_RITUAL', 'ar', N'رضاك عن تعامل العاملين في تقديم الخدمات', 9);
+INSERT INTO shc_portal.shc_survey_question_lk (id, code, survey_type_code, lang, label, question_index) VALUES (38, 'WORKERS_SATISFACTION_Q_DAILY', 'END_OF_RITUAL', 'en', 'How satisfied are you with the quality of workers services?', 9);
+
+INSERT INTO shc_portal.shc_survey_question_lk (id, code, survey_type_code, lang, label, question_index) VALUES (39, 'CLEANLINESS_SATISFACTION_Q_DAILY', 'END_OF_RITUAL', 'ar', N'مدى رضاك عن مستوى النظافة', 10);
+INSERT INTO shc_portal.shc_survey_question_lk (id, code, survey_type_code, lang, label, question_index) VALUES (40, 'CLEANLINESS_SATISFACTION_Q_DAILY', 'END_OF_RITUAL', 'en', 'How satisfied are you with the level of cleanliness?', 10);
+
+
+
+INSERT INTO shc_portal.shc_survey_question_lk (id, code, survey_type_code, lang, label, question_index) VALUES (41, 'WELCOME_SATISFACTION_Q_DAILY', 'DAILY', 'ms', 'Sejauh manakah anda berpuas hati dengan sambutan dan sapaan?', 1);
+INSERT INTO shc_portal.shc_survey_question_lk (id, code, survey_type_code, lang, label, question_index) VALUES (42, 'TRANS_SATISFACTION_Q_DAILY', 'DAILY', 'ms', 'Sejauh manakah anda berpuas hati dengan bas?', 2);
+INSERT INTO shc_portal.shc_survey_question_lk (id, code, survey_type_code, lang, label, question_index) VALUES (43, 'TRANS_TIME_SATISFACTION_Q_DAILY', 'DAILY', 'ms', 'Sejauh manakah anda berpuas hati dengan masa bas?', 3);
+INSERT INTO shc_portal.shc_survey_question_lk (id, code, survey_type_code, lang, label, question_index) VALUES (44, 'FOOD_SATISFACTION_Q_DAILY', 'DAILY', 'ms', 'Sejauh manakah anda berpuas hati dengan kualiti makanan yang dihidangkan?', 4);
+INSERT INTO shc_portal.shc_survey_question_lk (id, code, survey_type_code, lang, label, question_index) VALUES (45, 'FOOD_TIME_SATISFACTION_Q_DAILY', 'DAILY', 'ms', N'Sejauh manakah anda berpuas hati dengan kualiti makanan yang dihidangkan?', 5);
+INSERT INTO shc_portal.shc_survey_question_lk (id, code, survey_type_code, lang, label, question_index) VALUES (46, 'HOUSING_SATISFACTION_Q_DAILY', 'DAILY', 'ms', 'Sejauh manakah anda berpuas hati dengan kediaman?', 6);
+INSERT INTO shc_portal.shc_survey_question_lk (id, code, survey_type_code, lang, label, question_index) VALUES (47, 'UTIL_SATISFACTION_Q_DAILY', 'DAILY', 'ms', 'Sejauh manakah anda berpuas hati dengan kemudahan awam?', 7);
+INSERT INTO shc_portal.shc_survey_question_lk (id, code, survey_type_code, lang, label, question_index) VALUES (48, 'GUIDE_SATISFACTION_Q_DAILY', 'DAILY', 'ms', 'Sejauh manakah anda berpuas hati dengan perkhidmatan kaunseling dan bimbingan?', 8);
+INSERT INTO shc_portal.shc_survey_question_lk (id, code, survey_type_code, lang, label, question_index) VALUES (49, 'WORKERS_SATISFACTION_Q_DAILY', 'DAILY', 'ms', 'Kepuasan anda terhadap layanan pekerja dalam menyediakan perkhidmatan?', 9);
+INSERT INTO shc_portal.shc_survey_question_lk (id, code, survey_type_code, lang, label, question_index) VALUES (50, 'CLEANLINESS_SATISFACTION_Q_DAILY', 'DAILY', 'ms', 'Sejauh manakah anda berpuas hati dengan tahap kebersihan?', 10);
+
+
+INSERT INTO shc_portal.shc_survey_question_lk (id, code, survey_type_code, lang, label, question_index) VALUES (51, 'WELCOME_SATISFACTION_Q_DAILY', 'END_OF_RITUAL', 'ms', 'Sejauh manakah anda berpuas hati dengan sambutan dan sapaan?', 1);
+INSERT INTO shc_portal.shc_survey_question_lk (id, code, survey_type_code, lang, label, question_index) VALUES (52, 'TRANS_SATISFACTION_Q_DAILY', 'END_OF_RITUAL', 'ms', 'Sejauh manakah anda berpuas hati dengan bas?', 2);
+INSERT INTO shc_portal.shc_survey_question_lk (id, code, survey_type_code, lang, label, question_index) VALUES (53, 'TRANS_TIME_SATISFACTION_Q_DAILY', 'END_OF_RITUAL', 'ms', 'Sejauh manakah anda berpuas hati dengan masa bas?', 3);
+INSERT INTO shc_portal.shc_survey_question_lk (id, code, survey_type_code, lang, label, question_index) VALUES (54, 'FOOD_SATISFACTION_Q_DAILY', 'END_OF_RITUAL', 'ms', 'Sejauh manakah anda berpuas hati dengan kualiti makanan yang dihidangkan?', 4);
+INSERT INTO shc_portal.shc_survey_question_lk (id, code, survey_type_code, lang, label, question_index) VALUES (55, 'FOOD_TIME_SATISFACTION_Q_DAILY', 'END_OF_RITUAL', 'ms', N'Sejauh manakah anda berpuas hati dengan kualiti makanan yang dihidangkan?', 5);
+INSERT INTO shc_portal.shc_survey_question_lk (id, code, survey_type_code, lang, label, question_index) VALUES (56, 'HOUSING_SATISFACTION_Q_DAILY', 'END_OF_RITUAL', 'ms', 'Sejauh manakah anda berpuas hati dengan kediaman?', 6);
+INSERT INTO shc_portal.shc_survey_question_lk (id, code, survey_type_code, lang, label, question_index) VALUES (57, 'UTIL_SATISFACTION_Q_DAILY', 'END_OF_RITUAL', 'ms', 'Sejauh manakah anda berpuas hati dengan kemudahan awam?', 7);
+INSERT INTO shc_portal.shc_survey_question_lk (id, code, survey_type_code, lang, label, question_index) VALUES (58, 'GUIDE_SATISFACTION_Q_DAILY', 'END_OF_RITUAL', 'ms', 'Sejauh manakah anda berpuas hati dengan perkhidmatan kaunseling dan bimbingan?', 8);
+INSERT INTO shc_portal.shc_survey_question_lk (id, code, survey_type_code, lang, label, question_index) VALUES (59, 'WORKERS_SATISFACTION_Q_DAILY', 'END_OF_RITUAL', 'ms', 'Kepuasan anda terhadap layanan pekerja dalam menyediakan perkhidmatan?', 9);
+INSERT INTO shc_portal.shc_survey_question_lk (id, code, survey_type_code, lang, label, question_index) VALUES (60, 'CLEANLINESS_SATISFACTION_Q_DAILY', 'END_OF_RITUAL', 'ms', 'Sejauh manakah anda berpuas hati dengan tahap kebersihan?', 10);
+SET IDENTITY_INSERT shc_portal.shc_survey_question_lk OFF;
+GO
