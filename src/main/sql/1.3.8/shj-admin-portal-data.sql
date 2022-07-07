@@ -257,3 +257,12 @@ INSERT INTO shc_portal.shc_chatbot_item (id, code, lang, label, parent_code) VAL
 
 SET IDENTITY_INSERT shc_portal.shc_chatbot_item OFF;
 GO
+
+
+
+SET IDENTITY_INSERT shc_portal.shc_language_lk ON;
+
+INSERT INTO shc_portal.shc_language_lk(id, code, lang , label) values(37, 'MS', 'ms', 'Malay')
+
+SET IDENTITY_INSERT shc_portal.shc_language_lk OFF;
+GO
