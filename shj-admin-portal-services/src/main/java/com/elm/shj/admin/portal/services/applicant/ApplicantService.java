@@ -375,9 +375,9 @@ public class ApplicantService extends GenericService<JpaApplicant, ApplicantDto,
         return applicantDtoList;
     }
 
-    public List<ApplicantDto> findApplicantByCompanyCode(String companyCode) {
+    public List<ApplicantDto> findOrganizerApplicants(String companyCode, Long establishmentRefCode, Long missionRefCode) {
         log.info("Start findApplicantByCompanyCode with companyCode: {}", companyCode);
-        List<ApplicantDto> applicantDtoList = mapList(applicantRepository.findApplicantByCompanyCode(companyCode));
+        List<ApplicantDto> applicantDtoList = mapList(applicantRepository.findOrganizerApplicants(companyCode,establishmentRefCode,missionRefCode));
         log.info("Finish findApplicantByCompanyCode with companyCode: {}", companyCode);
         return applicantDtoList;
     }

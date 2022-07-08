@@ -160,13 +160,27 @@ public class NotificationRequestService extends GenericService<JpaNotificationRe
         if(categorizing != null){
             log.info("notification categorization found");
             if(categorizing.getNotificationCategory() == NotificationScope.ALL){
-                String companyCode = notificationTemplate.getCompanyCode();
-                if(companyCode == null) {
+
+                if(notificationTemplate.getCompanyCode() == null) {
                     log.info("retrieve all aplicants for all registered and have active ritual");
                     applicants = applicantService.findAllRegisteredAndHavingActiveRitual();
                 } else {
-                    log.info("retrieve all aplicants for company with companyCode: {}", companyCode);
-                    applicants = applicantService.findApplicantByCompanyCode(companyCode);
+                    String[] companyCodeArray = notificationTemplate.getCompanyCode().split("_", 2);
+                    String companyTypeCode = companyCodeArray[1];
+                    long establishmentRefCode = -1L;
+                    long missionRefCode = -1L;
+                    String companyCode = null;
+
+                    if (companyTypeCode.equals(EOrganizerTypes.ESTABLISHMENT.name())) {
+                        establishmentRefCode = Long.parseLong(companyCodeArray[0]);
+                    } else if (companyTypeCode.equals(EOrganizerTypes.MISSION.name())) {
+                        missionRefCode = Long.parseLong(companyCodeArray[0]);
+                    } else if (companyTypeCode.equals(EOrganizerTypes.INTERNAL_HAJ_COMPANY.name()) ||
+                            companyTypeCode.equals(EOrganizerTypes.EXTERNAL_HAJ_COMPANY.name())) {
+                        companyCode = notificationTemplate.getCompanyCode();
+                    }
+                    log.info("Retrieve all applicants for company with companyCode: {}", companyCode);
+                    applicants = applicantService.findOrganizerApplicants(companyCode, establishmentRefCode, missionRefCode);
                 }
                 log.info("send notification to applicants", applicants);
                 sendNotificationTemplateToApplicants(savedNotificationTemplate, applicants);
@@ -184,19 +198,17 @@ public class NotificationRequestService extends GenericService<JpaNotificationRe
             }
             else if(categorizing.getNotificationCategory() == NotificationScope.SELECTED_APPLICANT){
 
-                if (categorizing.getSelectedApplicants() != null) {
+                if (categorizing.getSelectedApplicants() != null ) {
                     List<Long> applicantIds = Arrays.stream(categorizing.getSelectedApplicants().split(",")).map(Long::parseLong).collect(Collectors.toList());
                     log.info("applicantIds for send notificiation to applicants : {}", applicantIds);
                     applicants = applicantService.findAllByIds(applicantIds);
                     sendNotificationTemplateToApplicants(savedNotificationTemplate, applicants);
                 }
             }
-            else if(categorizing.getNotificationCategory()==5){
-                //companyStaff = companyStaffService.findAllByCriteria(notificationTemplate.getNotificationTemplateCategorizing(), null);
-                //sendNotificationTemplateToCompanyStaff(savedNotificationTemplate, companyStaff);
+            else if(categorizing.getNotificationCategory() == 5 ){
                 if (categorizing.getSelectedStaff() != null) {
                     List<Long> staffIds = Arrays.stream(categorizing.getSelectedApplicants().split(",")).map(Long::parseLong).collect(Collectors.toList());
-                    log.info("staffIds for send notificiation to staff : {}", staffIds);
+                    log.info("staffIds for send notification to staff : {}", staffIds);
                     companyStaff = companyStaffService.findAllByIds(staffIds);
                     sendNotificationTemplateToCompanyStaff(savedNotificationTemplate, companyStaff);
                 }

@@ -53,8 +53,6 @@ public interface ApplicantRepository extends JpaRepository<JpaApplicant, Long>, 
 
     @Query("SELECT a FROM JpaApplicant a LEFT JOIN a.rituals ar JOIN ar.applicantPackage ap WHERE (:today >= ap.startDate AND :today <= ap.endDate AND a.registered = TRUE)")
     List<JpaApplicant> findAllApplicantsRegisteredAndHavingActiveRitual(@Param("today") Date today);
-    @Query("SELECT ap.applicantRitual.applicant from JpaApplicantPackage ap WHERE ap.applicantRitual.applicantPackage.ritualPackage.companyRitualSeason.company.code=:companyCode")
-    List<JpaApplicant> findApplicantByCompanyCode(@Param("companyCode") String companyCode);
 
     @Query("SELECT COUNT(a) FROM JpaApplicant a LEFT JOIN a.rituals ar JOIN ar.applicantPackage ap WHERE (:today >= ap.startDate AND :today <= ap.endDate AND a.registered = TRUE)")
     long countHavingActiveRitual(@Param("today") Date today);
@@ -187,6 +185,15 @@ public interface ApplicantRepository extends JpaRepository<JpaApplicant, Long>, 
     @Query("SELECT a FROM JpaApplicant a JOIN a.digitalIds di JOIN JpaGroupApplicantList ga On di.uin=ga.applicantUin WHERE ga.applicantGroup.id=:groupId")
     List<JpaApplicant> findAllApplicantByGroupId(@Param("groupId") Long groupId);
 
+    @Query("SELECT a  " +
+            "FROM JpaApplicant a JOIN a.digitalIds di WHERE " +
+            "a.deleted = FALSE AND a.packageReferenceNumber IS NOT NULL AND " +
+            "(:companyCode IS NULL OR a.companyCode = :companyCode) AND " +
+            "(:establishmentRefCode = -1L OR a.establishmentRefCode = :establishmentRefCode) AND " +
+            "(:missionRefCode = -1L OR a.missionRefCode = :missionRefCode)")
+    List<JpaApplicant> findOrganizerApplicants(@Param("companyCode") String companyCode,
+                                               @Param("establishmentRefCode") Long establishmentRefCode,
+                                               @Param("missionRefCode") Long missionRefCode);
     @Query("select a  " +
             "FROM JpaApplicant a JOIN a.digitalIds di where " +
             "a.deleted = FALSE and a.packageReferenceNumber is not null and "+
