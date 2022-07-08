@@ -449,3 +449,346 @@ INSERT INTO shc_portal.shc_user_notification_status_lk (id, code, lang, label) V
 SET IDENTITY_INSERT shc_portal.shc_user_notification_status_lk OFF;
 GO
 
+/////////////////////////////////////////////////// shc_applicant_digital_id_status_lk //////////////////////////////////////////////////////////////////
+
+SET IDENTITY_INSERT shc_portal.shc_applicant_digital_id_status_lk ON;
+
+INSERT INTO shc_portal.shc_portal.shc_applicant_digital_id_status_lk (id, code, lang, label) VALUES (5, 'VALID', 'fr', 'Active');
+INSERT INTO shc_portal.shc_portal.shc_applicant_digital_id_status_lk (id, code, lang, label) VALUES (6, 'INVALID', 'fr', 'Invalid');
+
+INSERT INTO shc_portal.shc_portal.shc_applicant_digital_id_status_lk (id, code, lang, label) VALUES (7, 'VALID', 'tr', 'Active');
+INSERT INTO shc_portal.shc_portal.shc_applicant_digital_id_status_lk (id, code, lang, label) VALUES (8, 'INVALID', 'tr', 'Invalid');
+
+INSERT INTO shc_portal.shc_portal.shc_applicant_digital_id_status_lk (id, code, lang, label) VALUES (9, 'VALID', 'fa', 'Active');
+INSERT INTO shc_portal.shc_portal.shc_applicant_digital_id_status_lk (id, code, lang, label) VALUES (10, 'INVALID', 'fa', 'Invalid');
+
+INSERT INTO shc_portal.shc_portal.shc_applicant_digital_id_status_lk (id, code, lang, label) VALUES (11, 'VALID', 'ms', 'Active');
+INSERT INTO shc_portal.shc_portal.shc_applicant_digital_id_status_lk (id, code, lang, label) VALUES (12, 'INVALID', 'ms', 'Invalid');
+SET IDENTITY_INSERT shc_portal.shc_applicant_digital_id_status_lk OFF;
+
+/////////////////////////////////////////////////// shc_area_layers_lk //////////////////////////////////////////////////////////////////
+SET IDENTITY_INSERT shc_portal.shc_area_layers_lk ON;
+
+INSERT INTO shc_portal.shc_area_layers_lk (id, code, lang, label) VALUES (19, 'MAKKAH', 'fr', 'Makkah');
+INSERT INTO shc_portal.shc_area_layers_lk (id, code, lang, label) VALUES (20, 'MADINA', 'fr', 'Madina');
+INSERT INTO shc_portal.shc_area_layers_lk (id, code, lang, label) VALUES (21, 'MAKKAH_HOLY_MOSQUE', 'fr', 'Holy Mosque in Mecca');
+INSERT INTO shc_portal.shc_area_layers_lk (id, code, lang, label) VALUES (22, 'MADINA_HOLY_MOSQUE', 'fr', 'Holy Mosque in Madina');
+INSERT INTO shc_portal.shc_area_layers_lk (id, code, lang, label) VALUES (23, 'MENA', 'fr', N'Mena');
+INSERT INTO shc_portal.shc_area_layers_lk (id, code, lang, label) VALUES (24, 'GAMARAT', 'fr', N'Gamarat');
+INSERT INTO shc_portal.shc_area_layers_lk (id, code, lang, label) VALUES (25, 'MUZDALIFA', 'fr', N'Muzdalifah');
+INSERT INTO shc_portal.shc_area_layers_lk (id, code, lang, label) VALUES (26, 'ARAFAT', 'fr', N'Arafat');
+INSERT INTO shc_portal.shc_area_layers_lk (id, code, lang, label) VALUES (27, 'JABAL_ALRAHMA', 'fr', N'Alrahma Mountain');
+
+INSERT INTO shc_portal.shc_area_layers_lk (id, code, lang, label) VALUES (28, 'MAKKAH', 'tr', 'Makkah');
+INSERT INTO shc_portal.shc_area_layers_lk (id, code, lang, label) VALUES (29, 'MADINA', 'tr', 'Madina');
+INSERT INTO shc_portal.shc_area_layers_lk (id, code, lang, label) VALUES (30, 'MAKKAH_HOLY_MOSQUE', 'tr', 'Holy Mosque in Mecca');
+INSERT INTO shc_portal.shc_area_layers_lk (id, code, lang, label) VALUES (31, 'MADINA_HOLY_MOSQUE', 'tr', 'Holy Mosque in Madina');
+INSERT INTO shc_portal.shc_area_layers_lk (id, code, lang, label) VALUES (32, 'MENA', 'tr', N'Mena');
+INSERT INTO shc_portal.shc_area_layers_lk (id, code, lang, label) VALUES (33, 'GAMARAT', 'tr', N'Gamarat');
+INSERT INTO shc_portal.shc_area_layers_lk (id, code, lang, label) VALUES (34, 'MUZDALIFA', 'tr', N'Muzdalifah');
+INSERT INTO shc_portal.shc_area_layers_lk (id, code, lang, label) VALUES (35, 'ARAFAT', 'tr', N'Arafat');
+INSERT INTO shc_portal.shc_area_layers_lk (id, code, lang, label) VALUES (36, 'JABAL_ALRAHMA', 'tr', N'Alrahma Mountain');
+
+INSERT INTO shc_portal.shc_area_layers_lk (id, code, lang, label) VALUES (37, 'MAKKAH', 'fa', 'Makkah');
+INSERT INTO shc_portal.shc_area_layers_lk (id, code, lang, label) VALUES (38, 'MADINA', 'fa', 'Madina');
+INSERT INTO shc_portal.shc_area_layers_lk (id, code, lang, label) VALUES (39, 'MAKKAH_HOLY_MOSQUE', 'fa', 'Holy Mosque in Mecca');
+INSERT INTO shc_portal.shc_area_layers_lk (id, code, lang, label) VALUES (40, 'MADINA_HOLY_MOSQUE', 'fa', 'Holy Mosque in Madina');
+INSERT INTO shc_portal.shc_area_layers_lk (id, code, lang, label) VALUES (41, 'MENA', 'fa', N'Mena');
+INSERT INTO shc_portal.shc_area_layers_lk (id, code, lang, label) VALUES (42, 'GAMARAT', 'fa', N'Gamarat');
+INSERT INTO shc_portal.shc_area_layers_lk (id, code, lang, label) VALUES (43, 'MUZDALIFA', 'fa', N'Muzdalifah');
+INSERT INTO shc_portal.shc_area_layers_lk (id, code, lang, label) VALUES (44, 'ARAFAT', 'fa', N'Arafat');
+INSERT INTO shc_portal.shc_area_layers_lk (id, code, lang, label) VALUES (45, 'JABAL_ALRAHMA', 'fa', N'Alrahma Mountain');
+
+INSERT INTO shc_portal.shc_area_layers_lk (id, code, lang, label) VALUES (46, 'MAKKAH', 'ms', 'Makkah');
+INSERT INTO shc_portal.shc_area_layers_lk (id, code, lang, label) VALUES (47, 'MADINA', 'ms', 'Madina');
+INSERT INTO shc_portal.shc_area_layers_lk (id, code, lang, label) VALUES (48, 'MAKKAH_HOLY_MOSQUE', 'ms', 'Holy Mosque in Mecca');
+INSERT INTO shc_portal.shc_area_layers_lk (id, code, lang, label) VALUES (49, 'MADINA_HOLY_MOSQUE', 'ms', 'Holy Mosque in Madina');
+INSERT INTO shc_portal.shc_area_layers_lk (id, code, lang, label) VALUES (50, 'MENA', 'ms', N'Mena');
+INSERT INTO shc_portal.shc_area_layers_lk (id, code, lang, label) VALUES (51, 'GAMARAT', 'ms', N'Gamarat');
+INSERT INTO shc_portal.shc_area_layers_lk (id, code, lang, label) VALUES (52, 'MUZDALIFA', 'ms', N'Muzdalifah');
+INSERT INTO shc_portal.shc_area_layers_lk (id, code, lang, label) VALUES (53, 'ARAFAT', 'ms', N'Arafat');
+INSERT INTO shc_portal.shc_area_layers_lk (id, code, lang, label) VALUES (54, 'JABAL_ALRAHMA', 'ms', N'Alrahma Mountain');
+SET IDENTITY_INSERT shc_portal.shc_area_layers_lk OFF;
+
+/////////////////////////////////////////////////// shc_card_status_lk //////////////////////////////////////////////////////////////////
+SET IDENTITY_INSERT shc_portal.shc_card_status_lk ON;
+
+INSERT INTO shc_portal.shc_card_status_lk (id, code, lang, label) VALUES (21, 'READY_TO_PRINT', 'fr', 'Ready to Print');
+INSERT INTO shc_portal.shc_card_status_lk (id, code, lang, label) VALUES (22, 'SENT_FOR_PRINT', 'fr', 'Sent for Print');
+INSERT INTO shc_portal.shc_card_status_lk (id, code, lang, label) VALUES (23, 'PRINTED', 'fr', 'Printed');
+INSERT INTO shc_portal.shc_card_status_lk (id, code, lang, label) VALUES (24, 'DISTRIBUTED', 'fr', 'Distributed');
+INSERT INTO shc_portal.shc_card_status_lk (id, code, lang, label) VALUES (25, 'ACTIVE', 'fr', 'Active');
+INSERT INTO shc_portal.shc_card_status_lk (id, code, lang, label) VALUES (26, 'SUSPENDED', 'fr', 'Suspended');
+INSERT INTO shc_portal.shc_card_status_lk (id, code, lang, label) VALUES (27, 'CANCELLED', 'fr', 'Cancelled');
+INSERT INTO shc_portal.shc_card_status_lk (id, code, lang, label) VALUES (28, 'WAITING_TO_SEND', 'fr', 'Waiting to Send');
+INSERT INTO shc_portal.shc_portal.shc_card_status_lk (id, code, lang, label) VALUES (29, 'EXPIRED', 'fr', 'Expired');
+INSERT INTO shc_portal.shc_portal.shc_card_status_lk (id, code, lang, label) VALUES (30, 'REISSUED', 'fr', 'Reissued');
+
+INSERT INTO shc_portal.shc_card_status_lk (id, code, lang, label) VALUES (31, 'READY_TO_PRINT', 'tr', 'Ready to Print');
+INSERT INTO shc_portal.shc_card_status_lk (id, code, lang, label) VALUES (32, 'SENT_FOR_PRINT', 'tr', 'Sent for Print');
+INSERT INTO shc_portal.shc_card_status_lk (id, code, lang, label) VALUES (33, 'PRINTED', 'tr', 'Printed');
+INSERT INTO shc_portal.shc_card_status_lk (id, code, lang, label) VALUES (34, 'DISTRIBUTED', 'tr', 'Distributed');
+INSERT INTO shc_portal.shc_card_status_lk (id, code, lang, label) VALUES (35, 'ACTIVE', 'tr', 'Active');
+INSERT INTO shc_portal.shc_card_status_lk (id, code, lang, label) VALUES (36, 'SUSPENDED', 'tr', 'Suspended');
+INSERT INTO shc_portal.shc_card_status_lk (id, code, lang, label) VALUES (37, 'CANCELLED', 'tr', 'Cancelled');
+INSERT INTO shc_portal.shc_card_status_lk (id, code, lang, label) VALUES (38, 'WAITING_TO_SEND', 'tr', 'Waiting to Send');
+INSERT INTO shc_portal.shc_portal.shc_card_status_lk (id, code, lang, label) VALUES (39, 'EXPIRED', 'tr', 'Expired');
+INSERT INTO shc_portal.shc_portal.shc_card_status_lk (id, code, lang, label) VALUES (40, 'REISSUED', 'tr', 'Reissued');
+
+INSERT INTO shc_portal.shc_card_status_lk (id, code, lang, label) VALUES (41, 'READY_TO_PRINT', 'fa', 'Ready to Print');
+INSERT INTO shc_portal.shc_card_status_lk (id, code, lang, label) VALUES (42, 'SENT_FOR_PRINT', 'fa', 'Sent for Print');
+INSERT INTO shc_portal.shc_card_status_lk (id, code, lang, label) VALUES (43, 'PRINTED', 'fa', 'Printed');
+INSERT INTO shc_portal.shc_card_status_lk (id, code, lang, label) VALUES (44, 'DISTRIBUTED', 'fa', 'Distributed');
+INSERT INTO shc_portal.shc_card_status_lk (id, code, lang, label) VALUES (45, 'ACTIVE', 'fa', 'Active');
+INSERT INTO shc_portal.shc_card_status_lk (id, code, lang, label) VALUES (46, 'SUSPENDED', 'fa', 'Suspended');
+INSERT INTO shc_portal.shc_card_status_lk (id, code, lang, label) VALUES (47, 'CANCELLED', 'fa', 'Cancelled');
+INSERT INTO shc_portal.shc_card_status_lk (id, code, lang, label) VALUES (48, 'WAITING_TO_SEND', 'fa', 'Waiting to Send');
+INSERT INTO shc_portal.shc_card_status_lk (id, code, lang, label) VALUES (49, 'EXPIRED', 'fa', 'Expired');
+INSERT INTO shc_portal.shc_card_status_lk (id, code, lang, label) VALUES (50, 'REISSUED', 'fa', 'Reissued');
+
+INSERT INTO shc_portal.shc_card_status_lk (id, code, lang, label) VALUES (51, 'READY_TO_PRINT', 'ms', 'Ready to Print');
+INSERT INTO shc_portal.shc_card_status_lk (id, code, lang, label) VALUES (52, 'SENT_FOR_PRINT', 'ms', 'Sent for Print');
+INSERT INTO shc_portal.shc_card_status_lk (id, code, lang, label) VALUES (53, 'PRINTED', 'ms', 'Printed');
+INSERT INTO shc_portal.shc_card_status_lk (id, code, lang, label) VALUES (54, 'DISTRIBUTED', 'ms', 'Distributed');
+INSERT INTO shc_portal.shc_card_status_lk (id, code, lang, label) VALUES (55, 'ACTIVE', 'ms', 'Active');
+INSERT INTO shc_portal.shc_card_status_lk (id, code, lang, label) VALUES (56, 'SUSPENDED', 'ms', 'Suspended');
+INSERT INTO shc_portal.shc_card_status_lk (id, code, lang, label) VALUES (57, 'CANCELLED', 'ms', 'Cancelled');
+INSERT INTO shc_portal.shc_card_status_lk (id, code, lang, label) VALUES (58, 'WAITING_TO_SEND', 'ms', 'Waiting to Send');
+INSERT INTO shc_portal.shc_card_status_lk (id, code, lang, label) VALUES (59, 'EXPIRED', 'ms', 'Expired');
+INSERT INTO shc_portal.shc_card_status_lk (id, code, lang, label) VALUES (60, 'REISSUED', 'ms', 'Reissued');
+SET IDENTITY_INSERT shc_portal.shc_card_status_lk OFF;
+
+/////////////////////////////////////////////////// shc_collection_status_lk //////////////////////////////////////////////////////////////////
+SET IDENTITY_INSERT shc_portal.shc_collection_status_lk ON;
+
+INSERT INTO shc_portal.shc_collection_status_lk (id, code, lang, label) VALUES (9, 'NEW', 'fr', 'NEW');
+INSERT INTO shc_portal.shc_collection_status_lk (id, code, lang, label) VALUES (10, 'GENERATING', 'fr', 'Generating Cards ');
+INSERT INTO shc_portal.shc_collection_status_lk (id, code, lang, label) VALUES (11, 'FAILED', 'fr', 'Fail to generate');
+INSERT INTO shc_portal.shc_collection_status_lk (id, code, lang, label) VALUES (12, 'READY', 'fr', 'Ready');
+
+INSERT INTO shc_portal.shc_collection_status_lk (id, code, lang, label) VALUES (13, 'NEW', 'tr', 'NEW');
+INSERT INTO shc_portal.shc_collection_status_lk (id, code, lang, label) VALUES (14, 'GENERATING', 'tr', 'Generating Cards ');
+INSERT INTO shc_portal.shc_collection_status_lk (id, code, lang, label) VALUES (15, 'FAILED', 'tr', 'Fail to generate');
+INSERT INTO shc_portal.shc_collection_status_lk (id, code, lang, label) VALUES (16, 'READY', 'tr', 'Ready');
+
+INSERT INTO shc_portal.shc_collection_status_lk (id, code, lang, label) VALUES (17, 'NEW', 'fa', 'NEW');
+INSERT INTO shc_portal.shc_collection_status_lk (id, code, lang, label) VALUES (18, 'GENERATING', 'fa', 'Generating Cards ');
+INSERT INTO shc_portal.shc_collection_status_lk (id, code, lang, label) VALUES (19, 'FAILED', 'fa', 'Fail to generate');
+INSERT INTO shc_portal.shc_collection_status_lk (id, code, lang, label) VALUES (20, 'READY', 'fa', 'Ready');
+
+INSERT INTO shc_portal.shc_collection_status_lk (id, code, lang, label) VALUES (21, 'NEW', 'ms', 'NEW');
+INSERT INTO shc_portal.shc_collection_status_lk (id, code, lang, label) VALUES (22, 'GENERATING', 'ms', 'Generating Cards ');
+INSERT INTO shc_portal.shc_collection_status_lk (id, code, lang, label) VALUES (23, 'FAILED', 'ms', 'Fail to generate');
+INSERT INTO shc_portal.shc_collection_status_lk (id, code, lang, label) VALUES (24, 'READY', 'ms', 'Ready');
+SET IDENTITY_INSERT shc_portal.shc_collection_status_lk OFF;
+
+/////////////////////////////////////////////////// shc_company_ritual_step_lk //////////////////////////////////////////////////////////////////
+SET IDENTITY_INSERT shc_portal.shc_company_ritual_step_lk ON;
+
+INSERT INTO shc_portal.shc_company_ritual_step_lk (id, code, lang, label, step_index, location_lat, location_lng) VALUES (21, 'TAWAF_AL_QUDOM', 'fr', 'Tawaf AlQudom', 1, 21.423617600219412, 39.82591208333528);
+INSERT INTO shc_portal.shc_company_ritual_step_lk (id, code, lang, label, step_index, location_lat, location_lng) VALUES (22, 'STAY_IN_MINA', 'fr', 'Stay In Mina', 2, 21.414274989677875, 39.88756806782604);
+INSERT INTO shc_portal.shc_company_ritual_step_lk (id, code, lang, label, step_index, location_lat, location_lng) VALUES (23, 'ARAFAT', 'fr', 'Arafat', 3, 21.35497495980284, 39.983982909305766);
+INSERT INTO shc_portal.shc_company_ritual_step_lk (id, code, lang, label, step_index, location_lat, location_lng) VALUES (24, 'STAY_IN_MUZDALIFA', 'fr', 'Stay in Muzdalifa', 4, 21.38988147228351, 39.90458872373766);
+INSERT INTO shc_portal.shc_company_ritual_step_lk (id, code, lang, label, step_index, location_lat, location_lng) VALUES (25, 'THROUGH_GAMARAT_STONES_10', 'fr', 'Through Gamarat Stones 10', 5, 21.42208621108833, 39.87105874249593);
+INSERT INTO shc_portal.shc_company_ritual_step_lk (id, code, lang, label, step_index, location_lat, location_lng) VALUES (26, 'TAWAF_ELFADAH', 'fr', 'Tawaf Elfadah', 6, 21.423617600219412, 39.82591208333528);
+INSERT INTO shc_portal.shc_company_ritual_step_lk (id, code, lang, label, step_index, location_lat, location_lng) VALUES (27, 'THROUGH_GAMARAT_STONES_11', 'fr', 'Through Gamarat Stones 11', 7, 21.42208621108833, 39.87105874249593);
+INSERT INTO shc_portal.shc_company_ritual_step_lk (id, code, lang, label, step_index, location_lat, location_lng) VALUES (28, 'THROUGH_GAMARAT_STONES_12', 'fr', 'Through Gamarat Stones 12', 8, 21.42208621108833, 39.87105874249593);
+INSERT INTO shc_portal.shc_company_ritual_step_lk (id, code, lang, label, step_index, location_lat, location_lng) VALUES (29, 'THROUGH_GAMARAT_STONES_13', 'fr', 'Through Gamarat Stones 13', 9, 21.42208621108833, 39.87105874249593);
+INSERT INTO shc_portal.shc_company_ritual_step_lk (id, code, lang, label, step_index, location_lat, location_lng) VALUES (30, 'TAWAF_AL_WADAA', 'fr', 'Tawaf Alwadaa', 10, 21.423617600219412, 39.82591208333528);
+
+INSERT INTO shc_portal.shc_company_ritual_step_lk (id, code, lang, label, step_index, location_lat, location_lng) VALUES (31, 'TAWAF_AL_QUDOM', 'tr', 'Tawaf AlQudom', 1, 21.423617600219412, 39.82591208333528);
+INSERT INTO shc_portal.shc_company_ritual_step_lk (id, code, lang, label, step_index, location_lat, location_lng) VALUES (32, 'STAY_IN_MINA', 'tr', 'Stay In Mina', 2, 21.414274989677875, 39.88756806782604);
+INSERT INTO shc_portal.shc_company_ritual_step_lk (id, code, lang, label, step_index, location_lat, location_lng) VALUES (33, 'ARAFAT', 'tr', 'Arafat', 3, 21.35497495980284, 39.983982909305766);
+INSERT INTO shc_portal.shc_company_ritual_step_lk (id, code, lang, label, step_index, location_lat, location_lng) VALUES (34, 'STAY_IN_MUZDALIFA', 'tr', 'Stay in Muzdalifa', 4, 21.38988147228351, 39.90458872373766);
+INSERT INTO shc_portal.shc_company_ritual_step_lk (id, code, lang, label, step_index, location_lat, location_lng) VALUES (35, 'THROUGH_GAMARAT_STONES_10', 'tr', 'Through Gamarat Stones 10', 5, 21.42208621108833, 39.87105874249593);
+INSERT INTO shc_portal.shc_company_ritual_step_lk (id, code, lang, label, step_index, location_lat, location_lng) VALUES (36, 'TAWAF_ELFADAH', 'tr', 'Tawaf Elfadah', 6, 21.423617600219412, 39.82591208333528);
+INSERT INTO shc_portal.shc_company_ritual_step_lk (id, code, lang, label, step_index, location_lat, location_lng) VALUES (37, 'THROUGH_GAMARAT_STONES_11', 'tr', 'Through Gamarat Stones 11', 7, 21.42208621108833, 39.87105874249593);
+INSERT INTO shc_portal.shc_company_ritual_step_lk (id, code, lang, label, step_index, location_lat, location_lng) VALUES (38, 'THROUGH_GAMARAT_STONES_12', 'tr', 'Through Gamarat Stones 12', 8, 21.42208621108833, 39.87105874249593);
+INSERT INTO shc_portal.shc_company_ritual_step_lk (id, code, lang, label, step_index, location_lat, location_lng) VALUES (39, 'THROUGH_GAMARAT_STONES_13', 'tr', 'Through Gamarat Stones 13', 9, 21.42208621108833, 39.87105874249593);
+INSERT INTO shc_portal.shc_company_ritual_step_lk (id, code, lang, label, step_index, location_lat, location_lng) VALUES (49, 'TAWAF_AL_WADAA', 'tr', 'Tawaf Alwadaa', 10, 21.423617600219412, 39.82591208333528);
+
+INSERT INTO shc_portal.shc_company_ritual_step_lk (id, code, lang, label, step_index, location_lat, location_lng) VALUES (41, 'TAWAF_AL_QUDOM', 'fa', 'Tawaf AlQudom', 1, 21.423617600219412, 39.82591208333528);
+INSERT INTO shc_portal.shc_company_ritual_step_lk (id, code, lang, label, step_index, location_lat, location_lng) VALUES (42, 'STAY_IN_MINA', 'fa', 'Stay In Mina', 2, 21.414274989677875, 39.88756806782604);
+INSERT INTO shc_portal.shc_company_ritual_step_lk (id, code, lang, label, step_index, location_lat, location_lng) VALUES (43, 'ARAFAT', 'fa', 'Arafat', 3, 21.35497495980284, 39.983982909305766);
+INSERT INTO shc_portal.shc_company_ritual_step_lk (id, code, lang, label, step_index, location_lat, location_lng) VALUES (44, 'STAY_IN_MUZDALIFA', 'fa', 'Stay in Muzdalifa', 4, 21.38988147228351, 39.90458872373766);
+INSERT INTO shc_portal.shc_company_ritual_step_lk (id, code, lang, label, step_index, location_lat, location_lng) VALUES (45, 'THROUGH_GAMARAT_STONES_10', 'fa', 'Through Gamarat Stones 10', 5, 21.42208621108833, 39.87105874249593);
+INSERT INTO shc_portal.shc_company_ritual_step_lk (id, code, lang, label, step_index, location_lat, location_lng) VALUES (46, 'TAWAF_ELFADAH', 'fa', 'Tawaf Elfadah', 6, 21.423617600219412, 39.82591208333528);
+INSERT INTO shc_portal.shc_company_ritual_step_lk (id, code, lang, label, step_index, location_lat, location_lng) VALUES (47, 'THROUGH_GAMARAT_STONES_11', 'fa', 'Through Gamarat Stones 11', 7, 21.42208621108833, 39.87105874249593);
+INSERT INTO shc_portal.shc_company_ritual_step_lk (id, code, lang, label, step_index, location_lat, location_lng) VALUES (48, 'THROUGH_GAMARAT_STONES_12', 'fa', 'Through Gamarat Stones 12', 8, 21.42208621108833, 39.87105874249593);
+INSERT INTO shc_portal.shc_company_ritual_step_lk (id, code, lang, label, step_index, location_lat, location_lng) VALUES (49, 'THROUGH_GAMARAT_STONES_13', 'fa', 'Through Gamarat Stones 13', 9, 21.42208621108833, 39.87105874249593);
+INSERT INTO shc_portal.shc_company_ritual_step_lk (id, code, lang, label, step_index, location_lat, location_lng) VALUES (50, 'TAWAF_AL_WADAA', 'fa', 'Tawaf Alwadaa', 10, 21.423617600219412, 39.82591208333528);
+
+
+INSERT INTO shc_portal.shc_company_ritual_step_lk (id, code, lang, label, step_index, location_lat, location_lng) VALUES (51, 'TAWAF_AL_QUDOM', 'ms', 'Tawaf AlQudom', 1, 21.423617600219412, 39.82591208333528);
+INSERT INTO shc_portal.shc_company_ritual_step_lk (id, code, lang, label, step_index, location_lat, location_lng) VALUES (52, 'STAY_IN_MINA', 'ms', 'Stay In Mina', 2, 21.414274989677875, 39.88756806782604);
+INSERT INTO shc_portal.shc_company_ritual_step_lk (id, code, lang, label, step_index, location_lat, location_lng) VALUES (53, 'ARAFAT', 'ms', 'Arafat', 3, 21.35497495980284, 39.983982909305766);
+INSERT INTO shc_portal.shc_company_ritual_step_lk (id, code, lang, label, step_index, location_lat, location_lng) VALUES (54, 'STAY_IN_MUZDALIFA', 'ms', 'Stay in Muzdalifa', 4, 21.38988147228351, 39.90458872373766);
+INSERT INTO shc_portal.shc_company_ritual_step_lk (id, code, lang, label, step_index, location_lat, location_lng) VALUES (55, 'THROUGH_GAMARAT_STONES_10', 'ms', 'Through Gamarat Stones 10', 5, 21.42208621108833, 39.87105874249593);
+INSERT INTO shc_portal.shc_company_ritual_step_lk (id, code, lang, label, step_index, location_lat, location_lng) VALUES (56, 'TAWAF_ELFADAH', 'ms', 'Tawaf Elfadah', 6, 21.423617600219412, 39.82591208333528);
+INSERT INTO shc_portal.shc_company_ritual_step_lk (id, code, lang, label, step_index, location_lat, location_lng) VALUES (57, 'THROUGH_GAMARAT_STONES_11', 'ms', 'Through Gamarat Stones 11', 7, 21.42208621108833, 39.87105874249593);
+INSERT INTO shc_portal.shc_company_ritual_step_lk (id, code, lang, label, step_index, location_lat, location_lng) VALUES (58, 'THROUGH_GAMARAT_STONES_12', 'ms', 'Through Gamarat Stones 12', 8, 21.42208621108833, 39.87105874249593);
+INSERT INTO shc_portal.shc_company_ritual_step_lk (id, code, lang, label, step_index, location_lat, location_lng) VALUES (59, 'THROUGH_GAMARAT_STONES_13', 'ms', 'Through Gamarat Stones 13', 9, 21.42208621108833, 39.87105874249593);
+INSERT INTO shc_portal.shc_company_ritual_step_lk (id, code, lang, label, step_index, location_lat, location_lng) VALUES (60, 'TAWAF_AL_WADAA', 'ms', 'Tawaf Alwadaa', 10, 21.423617600219412, 39.82591208333528);
+SET IDENTITY_INSERT shc_portal.shc_company_ritual_step_lk OFF;
+
+/////////////////////////////////////////////////// shc_company_staff_title_lk //////////////////////////////////////////////////////////////////
+
+SET IDENTITY_INSERT shc_portal.shc_company_staff_title_lk ON;
+
+INSERT INTO shc_portal.shc_company_staff_title_lk (id, code, lang, label) VALUES (7, 'GROUP_LEADER', 'fr', 'Group Leader ');
+INSERT INTO shc_portal.shc_company_staff_title_lk (id, code, lang, label) VALUES (8, 'INSPECTOR', 'fr', 'Inspector');
+INSERT INTO shc_portal.shc_company_staff_title_lk (id, code, lang, label) VALUES (9, 'OTHERS', 'fr', 'Others');
+
+INSERT INTO shc_portal.shc_company_staff_title_lk (id, code, lang, label) VALUES (10, 'GROUP_LEADER', 'tr', 'Group Leader ');
+INSERT INTO shc_portal.shc_company_staff_title_lk (id, code, lang, label) VALUES (11, 'INSPECTOR', 'tr', 'Inspector');
+INSERT INTO shc_portal.shc_company_staff_title_lk (id, code, lang, label) VALUES (12, 'OTHERS', 'tr', 'Others');
+
+INSERT INTO shc_portal.shc_company_staff_title_lk (id, code, lang, label) VALUES (13, 'GROUP_LEADER', 'fa', 'Group Leader ');
+INSERT INTO shc_portal.shc_company_staff_title_lk (id, code, lang, label) VALUES (14, 'INSPECTOR', 'fa', 'Inspector');
+INSERT INTO shc_portal.shc_company_staff_title_lk (id, code, lang, label) VALUES (15, 'OTHERS', 'fa', 'Others');
+
+INSERT INTO shc_portal.shc_company_staff_title_lk (id, code, lang, label) VALUES (16, 'GROUP_LEADER', 'ms', 'Group Leader ');
+INSERT INTO shc_portal.shc_company_staff_title_lk (id, code, lang, label) VALUES (17, 'INSPECTOR', 'ms', 'Inspector');
+INSERT INTO shc_portal.shc_company_staff_title_lk (id, code, lang, label) VALUES (18, 'OTHERS', 'ms', 'Others');
+
+SET IDENTITY_INSERT shc_portal.shc_company_staff_title_lk OFF;
+GO
+
+/////////////////////////////////////////////////// shc_company_type_lk //////////////////////////////////////////////////////////////////
+
+SET IDENTITY_INSERT shc_portal.shc_company_type_lk ON;
+
+INSERT INTO shc_portal.shc_company_type_lk(id, code, lang, label) VALUES (13, 'ESTABLISHMENT', 'fr', 'Establishment');
+INSERT INTO shc_portal.shc_company_type_lk (id, code, lang, label)VALUES (14, 'MISSION', 'fr', 'Mission');
+INSERT INTO shc_portal.shc_company_type_lk (id, code, lang, label) VALUES (15, 'INTERNAL_HAJ_COMPANY', 'fr', 'Internal Haj Company  ');
+INSERT INTO shc_portal.shc_company_type_lk (id, code, lang, label) VALUES (16, 'EXTERNAL_HAJ_COMPANY', 'fr', 'External  Haj  Company ');
+INSERT INTO shc_portal.shc_company_type_lk (id, code, lang, label) VALUES (17, 'SERVICE_GROUP', 'fr', 'Service Group');
+INSERT INTO shc_portal.shc_company_type_lk (id, code, lang, label) VALUES (18, 'GOVERNMENT_AGENCY', 'fr', 'Emirate or ministry or other government agency');
+
+INSERT INTO shc_portal.shc_company_type_lk(id, code, lang, label) VALUES (19, 'ESTABLISHMENT', 'tr', 'Establishment');
+INSERT INTO shc_portal.shc_company_type_lk (id, code, lang, label)VALUES (20, 'MISSION', 'tr', 'Mission');
+INSERT INTO shc_portal.shc_company_type_lk (id, code, lang, label) VALUES (21, 'INTERNAL_HAJ_COMPANY', 'tr', 'Internal Haj Company  ');
+INSERT INTO shc_portal.shc_company_type_lk (id, code, lang, label) VALUES (22, 'EXTERNAL_HAJ_COMPANY', 'tr', 'External  Haj  Company ');
+INSERT INTO shc_portal.shc_company_type_lk (id, code, lang, label) VALUES (23, 'SERVICE_GROUP', 'tr', 'Service Group');
+INSERT INTO shc_portal.shc_company_type_lk (id, code, lang, label) VALUES (24, 'GOVERNMENT_AGENCY', 'tr', 'Emirate or ministry or other government agency');
+
+INSERT INTO shc_portal.shc_company_type_lk(id, code, lang, label) VALUES (25, 'ESTABLISHMENT', 'fa', 'Establishment');
+INSERT INTO shc_portal.shc_company_type_lk (id, code, lang, label)VALUES (26, 'MISSION', 'fa', 'Mission');
+INSERT INTO shc_portal.shc_company_type_lk (id, code, lang, label) VALUES (27, 'INTERNAL_HAJ_COMPANY', 'fa', 'Internal Haj Company  ');
+INSERT INTO shc_portal.shc_company_type_lk (id, code, lang, label) VALUES (28, 'EXTERNAL_HAJ_COMPANY', 'fa', 'External  Haj  Company ');
+INSERT INTO shc_portal.shc_company_type_lk (id, code, lang, label) VALUES (29, 'SERVICE_GROUP', 'fa', 'Service Group');
+INSERT INTO shc_portal.shc_company_type_lk (id, code, lang, label) VALUES (30, 'GOVERNMENT_AGENCY', 'fa', 'Emirate or ministry or other government agency');
+
+INSERT INTO shc_portal.shc_company_type_lk(id, code, lang, label) VALUES (31, 'ESTABLISHMENT', 'ms', 'Establishment');
+INSERT INTO shc_portal.shc_company_type_lk (id, code, lang, label)VALUES (32, 'MISSION', 'ms', 'Mission');
+INSERT INTO shc_portal.shc_company_type_lk (id, code, lang, label) VALUES (33, 'INTERNAL_HAJ_COMPANY', 'ms', 'Internal Haj Company  ');
+INSERT INTO shc_portal.shc_company_type_lk (id, code, lang, label) VALUES (34, 'EXTERNAL_HAJ_COMPANY', 'ms', 'External  Haj  Company ');
+INSERT INTO shc_portal.shc_company_type_lk (id, code, lang, label) VALUES (35, 'SERVICE_GROUP', 'ms', 'Service Group');
+INSERT INTO shc_portal.shc_company_type_lk (id, code, lang, label) VALUES (36, 'GOVERNMENT_AGENCY', 'ms', 'Emirate or ministry or other government agency');
+
+SET IDENTITY_INSERT shc_portal.shc_company_type_lk OFF;
+GO
+
+/////////////////////////////////////////////////// shc_city_lk //////////////////////////////////////////////////////////////////
+
+SET IDENTITY_INSERT shc_portal.shc_city_lk ON;
+
+INSERT INTO shc_portal.shc_city_lk (id, code, lang, label) VALUES (11, 'MAKKAH', 'fr', 'Makkah');
+INSERT INTO shc_portal.shc_city_lk (id, code, lang, label) VALUES (12, 'HOLY_SITES', 'fr', 'Holy Sites(Mena- Muzdalifa – Arafat )');
+INSERT INTO shc_portal.shc_city_lk (id, code, lang, label) VALUES (13, 'MADINAH', 'fr', 'Madinah');
+INSERT INTO shc_portal.shc_city_lk (id, code, lang, label) VALUES (14, 'JEDDAH', 'fr', 'Jeddah');
+INSERT INTO shc_portal.shc_city_lk (id, code, lang, label) VALUES (15, 'OTHERS', 'fr', 'Others');
+
+INSERT INTO shc_portal.shc_city_lk (id, code, lang, label) VALUES (16, 'MAKKAH', 'tr', 'Makkah');
+INSERT INTO shc_portal.shc_city_lk (id, code, lang, label) VALUES (17, 'HOLY_SITES', 'tr', 'Holy Sites(Mena- Muzdalifa – Arafat )');
+INSERT INTO shc_portal.shc_city_lk (id, code, lang, label) VALUES (18, 'MADINAH', 'tr', 'Madinah');
+INSERT INTO shc_portal.shc_city_lk (id, code, lang, label) VALUES (19, 'JEDDAH', 'tr', 'Jeddah');
+INSERT INTO shc_portal.shc_city_lk (id, code, lang, label) VALUES (20, 'OTHERS', 'tr', 'Others');
+
+INSERT INTO shc_portal.shc_city_lk (id, code, lang, label) VALUES (21, 'MAKKAH', 'fa', 'Makkah');
+INSERT INTO shc_portal.shc_city_lk (id, code, lang, label) VALUES (22, 'HOLY_SITES', 'fa', 'Holy Sites(Mena- Muzdalifa – Arafat )');
+INSERT INTO shc_portal.shc_city_lk (id, code, lang, label) VALUES (23, 'MADINAH', 'fa', 'Madinah');
+INSERT INTO shc_portal.shc_city_lk (id, code, lang, label) VALUES (24, 'JEDDAH', 'fa', 'Jeddah');
+INSERT INTO shc_portal.shc_city_lk (id, code, lang, label) VALUES (25, 'OTHERS', 'fa', 'Others');
+
+INSERT INTO shc_portal.shc_city_lk (id, code, lang, label) VALUES (26, 'MAKKAH', 'ms', 'Makkah');
+INSERT INTO shc_portal.shc_city_lk (id, code, lang, label) VALUES (27, 'HOLY_SITES', 'ms', 'Holy Sites(Mena- Muzdalifa – Arafat )');
+INSERT INTO shc_portal.shc_city_lk (id, code, lang, label) VALUES (28, 'MADINAH', 'ms', 'Madinah');
+INSERT INTO shc_portal.shc_city_lk (id, code, lang, label) VALUES (29, 'JEDDAH', 'ms', 'Jeddah');
+INSERT INTO shc_portal.shc_city_lk (id, code, lang, label) VALUES (30, 'OTHERS', 'ms', 'Others');
+
+SET IDENTITY_INSERT shc_portal.shc_city_lk OFF;
+
+/////////////////////////////////////////////////// shc_complaint_status_lk //////////////////////////////////////////////////////////////////
+SET IDENTITY_INSERT shc_portal.shc_complaint_status_lk ON;
+
+INSERT INTO shc_portal.shc_complaint_status_lk (id, code, lang, label) VALUES (7, 'UNDER_PROCESSING', 'fr', 'Under Processing');
+INSERT INTO shc_portal.shc_complaint_status_lk (id, code, lang, label) VALUES (8, 'RESOLVED', 'fr', 'Resolved');
+INSERT INTO shc_portal.shc_complaint_status_lk (id, code, lang, label) VALUES (9, 'CLOSED', 'fr', 'Closed');
+
+INSERT INTO shc_portal.shc_complaint_status_lk (id, code, lang, label) VALUES (10, 'UNDER_PROCESSING', 'tr', 'Under Processing');
+INSERT INTO shc_portal.shc_complaint_status_lk (id, code, lang, label) VALUES (11, 'RESOLVED', 'tr', 'Resolved');
+INSERT INTO shc_portal.shc_complaint_status_lk (id, code, lang, label) VALUES (12, 'CLOSED', 'tr', 'Closed');
+
+INSERT INTO shc_portal.shc_complaint_status_lk (id, code, lang, label) VALUES (13, 'UNDER_PROCESSING', 'fa', 'Under Processing');
+INSERT INTO shc_portal.shc_complaint_status_lk (id, code, lang, label) VALUES (14, 'RESOLVED', 'fa', 'Resolved');
+INSERT INTO shc_portal.shc_complaint_status_lk (id, code, lang, label) VALUES (15, 'CLOSED', 'fa', 'Closed');
+
+INSERT INTO shc_portal.shc_complaint_status_lk (id, code, lang, label) VALUES (16, 'UNDER_PROCESSING', 'ms', 'Under Processing');
+INSERT INTO shc_portal.shc_complaint_status_lk (id, code, lang, label) VALUES (17, 'RESOLVED', 'ms', 'Resolved');
+INSERT INTO shc_portal.shc_complaint_status_lk (id, code, lang, label) VALUES (18, 'CLOSED', 'ms', 'Closed');
+
+SET IDENTITY_INSERT shc_portal.shc_complaint_status_lk OFF;
+
+
+/////////////////////////////////////////////////// shc_complaint_type_lk //////////////////////////////////////////////////////////////////
+
+SET IDENTITY_INSERT shc_portal.shc_complaint_type_lk ON;
+
+INSERT INTO shc_portal.shc_complaint_type_lk (id, code, lang, label) VALUES (9, 'FOOD', 'fr', 'Food Complaint');
+INSERT INTO shc_portal.shc_complaint_type_lk (id, code, lang, label) VALUES (10, 'TRANSPORTATION', 'fr', 'Transportation Complaint');
+INSERT INTO shc_portal.shc_complaint_type_lk (id, code, lang, label) VALUES (11, 'HOUSING', 'fr', 'Housing Complaint');
+INSERT INTO shc_portal.shc_complaint_type_lk (id, code, lang, label) VALUES (12, 'GENERAL', 'fr', 'General Complaint');
+
+INSERT INTO shc_portal.shc_complaint_type_lk (id, code, lang, label) VALUES (13, 'FOOD', 'tr', 'Food Complaint');
+INSERT INTO shc_portal.shc_complaint_type_lk (id, code, lang, label) VALUES (14, 'TRANSPORTATION', 'tr', 'Transportation Complaint');
+INSERT INTO shc_portal.shc_complaint_type_lk (id, code, lang, label) VALUES (15, 'HOUSING', 'tr', 'Housing Complaint');
+INSERT INTO shc_portal.shc_complaint_type_lk (id, code, lang, label) VALUES (16, 'GENERAL', 'tr', 'General Complaint');
+
+INSERT INTO shc_portal.shc_complaint_type_lk (id, code, lang, label) VALUES (17, 'FOOD', 'fa', 'Food Complaint');
+INSERT INTO shc_portal.shc_complaint_type_lk (id, code, lang, label) VALUES (18, 'TRANSPORTATION', 'fa', 'Transportation Complaint');
+INSERT INTO shc_portal.shc_complaint_type_lk (id, code, lang, label) VALUES (19, 'HOUSING', 'fa', 'Housing Complaint');
+INSERT INTO shc_portal.shc_complaint_type_lk (id, code, lang, label) VALUES (20, 'GENERAL', 'fa', 'General Complaint');
+
+INSERT INTO shc_portal.shc_complaint_type_lk (id, code, lang, label) VALUES (21, 'FOOD', 'ms', 'Food Complaint');
+INSERT INTO shc_portal.shc_complaint_type_lk (id, code, lang, label) VALUES (22, 'TRANSPORTATION', 'ms', 'Transportation Complaint');
+INSERT INTO shc_portal.shc_complaint_type_lk (id, code, lang, label) VALUES (23, 'HOUSING', 'ms', 'Housing Complaint');
+INSERT INTO shc_portal.shc_complaint_type_lk (id, code, lang, label) VALUES (24, 'GENERAL', 'ms', 'General Complaint');
+
+SET IDENTITY_INSERT shc_portal.shc_complaint_type_lk OFF;
+
+/////////////////////////////////////////////////// shc_camp_site_lk //////////////////////////////////////////////////////////////////
+SET IDENTITY_INSERT shc_portal.shc_camp_site_lk ON;
+
+INSERT INTO [shc_portal].[shc_camp_site_lk](id, code, lang, label) VALUES(4, 'Mena', 'en', 'Mena');
+INSERT INTO [shc_portal].[shc_camp_site_lk](id, code, lang, label) VALUES(5, 'Arafat', 'en', 'Arafat');
+INSERT INTO [shc_portal].[shc_camp_site_lk](id, code, lang, label) VALUES(6, 'Mouzdalifa', 'en', 'Muzdalifa');
+
+INSERT INTO [shc_portal].[shc_camp_site_lk](id, code, lang, label) VALUES(7, 'Mena', 'fr', 'Mena');
+INSERT INTO [shc_portal].[shc_camp_site_lk](id, code, lang, label) VALUES(8, 'Arafat', 'fr', 'Arafat');
+INSERT INTO [shc_portal].[shc_camp_site_lk](id, code, lang, label) VALUES(9, 'Mouzdalifa', 'fr', 'Muzdalifa');
+
+INSERT INTO [shc_portal].[shc_camp_site_lk](id, code, lang, label) VALUES(10, 'Mena', 'tr', 'Mena');
+INSERT INTO [shc_portal].[shc_camp_site_lk](id, code, lang, label) VALUES(11, 'Arafat', 'tr', 'Arafat');
+INSERT INTO [shc_portal].[shc_camp_site_lk](id, code, lang, label) VALUES(12, 'Mouzdalifa', 'tr', 'Muzdalifa');
+
+INSERT INTO [shc_portal].[shc_camp_site_lk](id, code, lang, label) VALUES(13, 'Mena', 'fa', 'Mena');
+INSERT INTO [shc_portal].[shc_camp_site_lk](id, code, lang, label) VALUES(14, 'Arafat', 'fa', 'Arafat');
+INSERT INTO [shc_portal].[shc_camp_site_lk](id, code, lang, label) VALUES(15, 'Mouzdalifa', 'fa', 'Muzdalifa');
+
+INSERT INTO [shc_portal].[shc_camp_site_lk](id, code, lang, label) VALUES(16, 'Mena', 'ms', 'Mena');
+INSERT INTO [shc_portal].[shc_camp_site_lk](id, code, lang, label) VALUES(17, 'Arafat', 'ms', 'Arafat');
+INSERT INTO [shc_portal].[shc_camp_site_lk](id, code, lang, label) VALUES(18, 'Mouzdalifa', 'ms', 'Muzdalifa');
+
+SET IDENTITY_INSERT shc_portal.shc_camp_site_lk OFF;
+GO
