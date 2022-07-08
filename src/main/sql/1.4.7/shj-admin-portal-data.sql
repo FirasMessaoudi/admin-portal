@@ -3912,3 +3912,33 @@ INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefi
 SET IDENTITY_INSERT shc_portal.shc_nationality_lk OFF;
 GO
 
+
+SET IDENTITY_INSERT shc_portal.shc_notification_category_lk ON;
+
+INSERT INTO shc_portal.shc_notification_category_lk(id,code,lang,label,sample,mandatory) VALUES(11,N'GENERAL',N'fr',N'General',N'Make sure to carry your Hajj card when performing the rituals',0);
+INSERT INTO shc_portal.shc_notification_category_lk(id,code,lang,label,sample,mandatory) VALUES(12,N'GENERAL',N'tr',N'General',N'Make sure to carry your Hajj card when performing the rituals',0);
+INSERT INTO shc_portal.shc_notification_category_lk(id,code,lang,label,sample,mandatory) VALUES(13,N'GENERAL',N'ms',N'General',N'Make sure to carry your Hajj card when performing the rituals',0);
+INSERT INTO shc_portal.shc_notification_category_lk(id,code,lang,label,sample,mandatory) VALUES(14,N'GENERAL',N'fa',N'General',N'Make sure to carry your Hajj card when performing the rituals',0);
+
+INSERT INTO shc_portal.shc_notification_category_lk(id,code,lang,label,sample,mandatory) VALUES(15,N'HEALTH',N'fr',N'Health',N'If your temperature rises above 38 degrees, go to the nearest health point directly',1);
+INSERT INTO shc_portal.shc_notification_category_lk(id,code,lang,label,sample,mandatory) VALUES(16,N'HEALTH',N'tr',N'Health',N'If your temperature rises above 38 degrees, go to the nearest health point directly',1);
+INSERT INTO shc_portal.shc_notification_category_lk(id,code,lang,label,sample,mandatory) VALUES(17,N'HEALTH',N'ms',N'Health',N'If your temperature rises above 38 degrees, go to the nearest health point directly',1);
+INSERT INTO shc_portal.shc_notification_category_lk(id,code,lang,label,sample,mandatory) VALUES(18,N'HEALTH',N'fa',N'Health',N'If your temperature rises above 38 degrees, go to the nearest health point directly',1);
+
+INSERT INTO shc_portal.shc_notification_category_lk(id,code,lang,label,sample,mandatory) VALUES(19,N'RELIGIOUS',N'fr',N'Religious',N'Our Lord, accept from us, You are the Hearer, the Knower',0);
+INSERT INTO shc_portal.shc_notification_category_lk(id,code,lang,label,sample,mandatory) VALUES(20,N'RELIGIOUS',N'tr',N'Religious',N'Our Lord, accept from us, You are the Hearer, the Knower',0);
+INSERT INTO shc_portal.shc_notification_category_lk(id,code,lang,label,sample,mandatory) VALUES(21,N'RELIGIOUS',N'ms',N'Religious',N'Our Lord, accept from us, You are the Hearer, the Knower',0);
+INSERT INTO shc_portal.shc_notification_category_lk(id,code,lang,label,sample,mandatory) VALUES(22,N'RELIGIOUS',N'fa',N'Religious',N'Our Lord, accept from us, You are the Hearer, the Knower',0);
+
+INSERT INTO shc_portal.shc_notification_category_lk(id,code,lang,label,sample,mandatory) VALUES(23,N'RITUAL',N'fr',N'Ritual',N'Tawaf al-Ifadah is one of the pillars of Hajj that can only be done by performing it. And the evidence for that is the Almighty’s saying: (And let them circumambulate the Ancient House)',1);
+INSERT INTO shc_portal.shc_notification_category_lk(id,code,lang,label,sample,mandatory) VALUES(24,N'RITUAL',N'tr',N'Ritual',N'Tawaf al-Ifadah is one of the pillars of Hajj that can only be done by performing it. And the evidence for that is the Almighty’s saying: (And let them circumambulate the Ancient House)',1);
+INSERT INTO shc_portal.shc_notification_category_lk(id,code,lang,label,sample,mandatory) VALUES(25,N'RITUAL',N'ms',N'Ritual',N'Tawaf al-Ifadah is one of the pillars of Hajj that can only be done by performing it. And the evidence for that is the Almighty’s saying: (And let them circumambulate the Ancient House)',1);
+INSERT INTO shc_portal.shc_notification_category_lk(id,code,lang,label,sample,mandatory) VALUES(26,N'RITUAL',N'fa',N'Ritual',N'Tawaf al-Ifadah is one of the pillars of Hajj that can only be done by performing it. And the evidence for that is the Almighty’s saying: (And let them circumambulate the Ancient House)',1);
+
+INSERT INTO shc_portal.shc_notification_category_lk(id,code,lang,label,sample,mandatory) VALUES(27,N'GENERAL_AWARENESS',N'fr',N'General Awareness',N'Avoid climbing mountains and high places and avoid crowding, docking and sleeping on the roads',0);
+INSERT INTO shc_portal.shc_notification_category_lk(id,code,lang,label,sample,mandatory) VALUES(28,N'GENERAL_AWARENESS',N'tr',N'General Awareness',N'Avoid climbing mountains and high places and avoid crowding, docking and sleeping on the roads',0);
+INSERT INTO shc_portal.shc_notification_category_lk(id,code,lang,label,sample,mandatory) VALUES(29,N'GENERAL_AWARENESS',N'ms',N'General Awareness',N'Avoid climbing mountains and high places and avoid crowding, docking and sleeping on the roads',0);
+INSERT INTO shc_portal.shc_notification_category_lk(id,code,lang,label,sample,mandatory) VALUES(30,N'GENERAL_AWARENESS',N'fa',N'General Awareness',N'Avoid climbing mountains and high places and avoid crowding, docking and sleeping on the roads',0);
+
+SET IDENTITY_INSERT shc_portal.shc_notification_category_lk OFF;
+GO
