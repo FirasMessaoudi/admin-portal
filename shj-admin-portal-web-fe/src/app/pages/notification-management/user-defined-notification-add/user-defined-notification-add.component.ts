@@ -18,7 +18,9 @@ import {Subscription} from 'rxjs';
 import {ApplicantService} from '@core/services/applicant/applicant.service';
 import {DateType} from '@shared/modules/hijri-gregorian-datepicker/consts';
 import {DateFormatterService} from '@shared/modules/hijri-gregorian-datepicker/date-formatter.service';
-import {HijriGregorianDatetimepickerComponent} from '@shared/modules/hijri-gregorian-datepicker/datetimepicker/hijri-gregorian-datetimepicker.component';
+import {
+  HijriGregorianDatetimepickerComponent
+} from '@shared/modules/hijri-gregorian-datepicker/datetimepicker/hijri-gregorian-datetimepicker.component';
 import {ageRangeValidator, validateIsRequired,} from '@pages/notification-management/notification-custom-validator';
 import {NotificationTemplateCategorizing} from '@model/notification-template-categorizing.model';
 import {CompanyStaffTitleLookup} from '@model/company-staff-title-lookup';
@@ -301,11 +303,20 @@ export class UserDefinedNotificationAddComponent implements OnInit {
         }
         return;
       }
-      if (this.checkedCriteria === 4 && this.addedApplicants.length === 0) {
-        return;
-      }
-      if (this.checkedCriteria === 5 && this.addedStaff.length === 0) {
-        return;
+      if (this.checkedCriteria === 4 || this.checkedCriteria === 5) {
+        notificationTemplate.statusCode = this.DRAFT;
+        this.confirmDialogService
+          .confirm(
+            this.translate.instant(
+              'notification-management.save_changes_confirmation_text'
+            ),
+            this.translate.instant('general.dialog_confirmation_title')
+          )
+          .then((confirm) => {
+            if (confirm) {
+              this.proceedSaving(notificationTemplate);
+            }
+          });
       }
     } else if (this.CONFIRMED === statusCode) {
       notificationTemplate.statusCode = this.CONFIRMED;
