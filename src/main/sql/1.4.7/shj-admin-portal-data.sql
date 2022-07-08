@@ -1998,3 +1998,32 @@ INSERT INTO shc_portal.shc_country_lk(id,code,lang,label) VALUES(1482,N'9998',N'
 SET IDENTITY_INSERT shc_portal.shc_country_lk OFF;
 GO
 
+SET IDENTITY_INSERT shc_portal.shc_health_immunization_lk ON;
+
+INSERT INTO shc_portal.shc_health_immunization_lk(id,code,lang,label) VALUES(11,N'COVID-19',N'fr',N'Covid-19');
+INSERT INTO shc_portal.shc_health_immunization_lk(id,code,lang,label) VALUES(12,N'COVID-19',N'tr',N'Covid-19');
+INSERT INTO shc_portal.shc_health_immunization_lk(id,code,lang,label) VALUES(13,N'COVID-19',N'ms',N'Covid-19');
+INSERT INTO shc_portal.shc_health_immunization_lk(id,code,lang,label) VALUES(14,N'COVID-19',N'fa',N'Covid-19');
+
+INSERT INTO shc_portal.shc_health_immunization_lk(id,code,lang,label) VALUES(15,N'YELLOW_FEVER',N'fr',N'Yellow Fever');
+INSERT INTO shc_portal.shc_health_immunization_lk(id,code,lang,label) VALUES(16,N'YELLOW_FEVER',N'tr',N'Yellow Fever');
+INSERT INTO shc_portal.shc_health_immunization_lk(id,code,lang,label) VALUES(17,N'YELLOW_FEVER',N'ms',N'Yellow Fever');
+INSERT INTO shc_portal.shc_health_immunization_lk(id,code,lang,label) VALUES(18,N'YELLOW_FEVER',N'fa',N'Yellow Fever');
+
+INSERT INTO shc_portal.shc_health_immunization_lk(id,code,lang,label) VALUES(19,N'NEISSERIA_MENINGITIS',N'fr',N'Neisseria Meningitis');
+INSERT INTO shc_portal.shc_health_immunization_lk(id,code,lang,label) VALUES(20,N'NEISSERIA_MENINGITIS',N'tr',N'Neisseria Meningitis');
+INSERT INTO shc_portal.shc_health_immunization_lk(id,code,lang,label) VALUES(21,N'NEISSERIA_MENINGITIS',N'ms',N'Neisseria Meningitis');
+INSERT INTO shc_portal.shc_health_immunization_lk(id,code,lang,label) VALUES(22,N'NEISSERIA_MENINGITIS',N'fa',N'Neisseria Meningitis');
+
+INSERT INTO shc_portal.shc_health_immunization_lk(id,code,lang,label) VALUES(23,N'POLIOMYELITIS',N'fr',N'Poliomyelitis');
+INSERT INTO shc_portal.shc_health_immunization_lk(id,code,lang,label) VALUES(24,N'POLIOMYELITIS',N'tr',N'Poliomyelitis');
+INSERT INTO shc_portal.shc_health_immunization_lk(id,code,lang,label) VALUES(25,N'POLIOMYELITIS',N'ms',N'Poliomyelitis');
+INSERT INTO shc_portal.shc_health_immunization_lk(id,code,lang,label) VALUES(26,N'POLIOMYELITIS',N'fa',N'Poliomyelitis');
+
+INSERT INTO shc_portal.shc_health_immunization_lk(id,code,lang,label) VALUES(27,N'SEASONAL_FLU',N'fr',N'Seasonal Flu');
+INSERT INTO shc_portal.shc_health_immunization_lk(id,code,lang,label) VALUES(28,N'SEASONAL_FLU',N'tr',N'Seasonal Flu');
+INSERT INTO shc_portal.shc_health_immunization_lk(id,code,lang,label) VALUES(29,N'SEASONAL_FLU',N'ms',N'Seasonal Flu');
+INSERT INTO shc_portal.shc_health_immunization_lk(id,code,lang,label) VALUES(30,N'SEASONAL_FLU',N'fa',N'Seasonal Flu');
+
+SET IDENTITY_INSERT shc_portal.shc_health_immunization_lk OFF;
+GO
