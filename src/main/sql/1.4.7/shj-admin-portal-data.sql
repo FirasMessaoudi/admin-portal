@@ -2027,3 +2027,1888 @@ INSERT INTO shc_portal.shc_health_immunization_lk(id,code,lang,label) VALUES(30,
 
 SET IDENTITY_INSERT shc_portal.shc_health_immunization_lk OFF;
 GO
+
+SET IDENTITY_INSERT shc_portal.shc_health_special_needs_type_lk ON;
+
+INSERT INTO shc_portal.shc_health_special_needs_type_lk(id,code,lang,label) VALUES(7,N'WHEELCHAIR',N'fr',N'Wheelchair');
+INSERT INTO shc_portal.shc_health_special_needs_type_lk(id,code,lang,label) VALUES(8,N'WHEELCHAIR',N'tr',N'Wheelchair');
+INSERT INTO shc_portal.shc_health_special_needs_type_lk(id,code,lang,label) VALUES(9,N'WHEELCHAIR',N'ms',N'Wheelchair');
+INSERT INTO shc_portal.shc_health_special_needs_type_lk(id,code,lang,label) VALUES(10,N'WHEELCHAIR',N'fa',N'Wheelchair');
+
+INSERT INTO shc_portal.shc_health_special_needs_type_lk(id,code,lang,label) VALUES(11,N'GOLF_CAR',N'fr',N'Golf Car');
+INSERT INTO shc_portal.shc_health_special_needs_type_lk(id,code,lang,label) VALUES(12,N'GOLF_CAR',N'tr',N'Golf Car');
+INSERT INTO shc_portal.shc_health_special_needs_type_lk(id,code,lang,label) VALUES(13,N'GOLF_CAR',N'ms',N'Golf Car');
+INSERT INTO shc_portal.shc_health_special_needs_type_lk(id,code,lang,label) VALUES(14,N'GOLF_CAR',N'fa',N'Golf Car');
+
+INSERT INTO shc_portal.shc_health_special_needs_type_lk(id,code,lang,label) VALUES(15,N'DEAF_DUMB',N'fr',N'Deaf and Dumb');
+INSERT INTO shc_portal.shc_health_special_needs_type_lk(id,code,lang,label) VALUES(16,N'DEAF_DUMB',N'tr',N'Deaf and Dumb');
+INSERT INTO shc_portal.shc_health_special_needs_type_lk(id,code,lang,label) VALUES(17,N'DEAF_DUMB',N'ms',N'Deaf and Dumb');
+INSERT INTO shc_portal.shc_health_special_needs_type_lk(id,code,lang,label) VALUES(18,N'DEAF_DUMB',N'fa',N'Deaf and Dumb');
+
+SET IDENTITY_INSERT shc_portal.shc_health_special_needs_type_lk OFF;
+GO
+
+SET IDENTITY_INSERT shc_portal.shc_housing_category_lk ON;
+
+INSERT INTO shc_portal.shc_housing_category_lk(id,code,lang,label) VALUES(9,N'A',N'fr',N'A');
+INSERT INTO shc_portal.shc_housing_category_lk(id,code,lang,label) VALUES(10,N'A',N'tr',N'A');
+INSERT INTO shc_portal.shc_housing_category_lk(id,code,lang,label) VALUES(11,N'A',N'ms',N'A');
+INSERT INTO shc_portal.shc_housing_category_lk(id,code,lang,label) VALUES(12,N'A',N'fa',N'A');
+
+INSERT INTO shc_portal.shc_housing_category_lk(id,code,lang,label) VALUES(13,N'B',N'fr',N'B');
+INSERT INTO shc_portal.shc_housing_category_lk(id,code,lang,label) VALUES(14,N'B',N'tr',N'B');
+INSERT INTO shc_portal.shc_housing_category_lk(id,code,lang,label) VALUES(15,N'B',N'ms',N'B');
+INSERT INTO shc_portal.shc_housing_category_lk(id,code,lang,label) VALUES(16,N'B',N'fa',N'B');
+
+INSERT INTO shc_portal.shc_housing_category_lk(id,code,lang,label) VALUES(17,N'C',N'fr',N'C');
+INSERT INTO shc_portal.shc_housing_category_lk(id,code,lang,label) VALUES(18,N'C',N'tr',N'C');
+INSERT INTO shc_portal.shc_housing_category_lk(id,code,lang,label) VALUES(19,N'C',N'ms',N'C');
+INSERT INTO shc_portal.shc_housing_category_lk(id,code,lang,label) VALUES(20,N'C',N'fa',N'C');
+
+INSERT INTO shc_portal.shc_housing_category_lk(id,code,lang,label) VALUES(21,N'D',N'fr',N'D');
+INSERT INTO shc_portal.shc_housing_category_lk(id,code,lang,label) VALUES(22,N'D',N'tr',N'D');
+INSERT INTO shc_portal.shc_housing_category_lk(id,code,lang,label) VALUES(23,N'D',N'ms',N'D');
+INSERT INTO shc_portal.shc_housing_category_lk(id,code,lang,label) VALUES(24,N'D',N'fa',N'D');
+
+SET IDENTITY_INSERT shc_portal.shc_housing_category_lk OFF;
+GO
+
+SET IDENTITY_INSERT shc_portal.shc_housing_site_lk ON;
+
+INSERT INTO shc_portal.shc_housing_site_lk(id,code,lang,label) VALUES(19,N'MAKKAH',N'fr',N'Makkah');
+INSERT INTO shc_portal.shc_housing_site_lk(id,code,lang,label) VALUES(20,N'MAKKAH',N'tr',N'Makkah');
+INSERT INTO shc_portal.shc_housing_site_lk(id,code,lang,label) VALUES(21,N'MAKKAH',N'ms',N'Makkah');
+INSERT INTO shc_portal.shc_housing_site_lk(id,code,lang,label) VALUES(22,N'MAKKAH',N'fa',N'Makkah');
+
+INSERT INTO shc_portal.shc_housing_site_lk(id,code,lang,label) VALUES(23,N'MADINA',N'fr',N'Madina');
+INSERT INTO shc_portal.shc_housing_site_lk(id,code,lang,label) VALUES(24,N'MADINA',N'tr',N'Madina');
+INSERT INTO shc_portal.shc_housing_site_lk(id,code,lang,label) VALUES(25,N'MADINA',N'ms',N'Madina');
+INSERT INTO shc_portal.shc_housing_site_lk(id,code,lang,label) VALUES(26,N'MADINA',N'fa',N'Madina');
+
+INSERT INTO shc_portal.shc_housing_site_lk(id,code,lang,label) VALUES(27,N'MAKKAH_HOLY_MOSQUE',N'fr',N'Holy Mosque in Mecca');
+INSERT INTO shc_portal.shc_housing_site_lk(id,code,lang,label) VALUES(28,N'MAKKAH_HOLY_MOSQUE',N'tr',N'Holy Mosque in Mecca');
+INSERT INTO shc_portal.shc_housing_site_lk(id,code,lang,label) VALUES(29,N'MAKKAH_HOLY_MOSQUE',N'ms',N'Holy Mosque in Mecca');
+INSERT INTO shc_portal.shc_housing_site_lk(id,code,lang,label) VALUES(30,N'MAKKAH_HOLY_MOSQUE',N'fa',N'Holy Mosque in Mecca');
+
+INSERT INTO shc_portal.shc_housing_site_lk(id,code,lang,label) VALUES(31,N'MADINA_HOLY_MOSQUE',N'fr',N'Holy Mosque in Madina');
+INSERT INTO shc_portal.shc_housing_site_lk(id,code,lang,label) VALUES(32,N'MADINA_HOLY_MOSQUE',N'tr',N'Holy Mosque in Madina');
+INSERT INTO shc_portal.shc_housing_site_lk(id,code,lang,label) VALUES(33,N'MADINA_HOLY_MOSQUE',N'ms',N'Holy Mosque in Madina');
+INSERT INTO shc_portal.shc_housing_site_lk(id,code,lang,label) VALUES(34,N'MADINA_HOLY_MOSQUE',N'fa',N'Holy Mosque in Madina');
+
+INSERT INTO shc_portal.shc_housing_site_lk(id,code,lang,label) VALUES(35,N'MENA',N'fr',N'Mena');
+INSERT INTO shc_portal.shc_housing_site_lk(id,code,lang,label) VALUES(36,N'MENA',N'tr',N'Mena');
+INSERT INTO shc_portal.shc_housing_site_lk(id,code,lang,label) VALUES(37,N'MENA',N'ms',N'Mena');
+INSERT INTO shc_portal.shc_housing_site_lk(id,code,lang,label) VALUES(38,N'MENA',N'fa',N'Mena');
+
+INSERT INTO shc_portal.shc_housing_site_lk(id,code,lang,label) VALUES(39,N'GAMARAT',N'fr',N'Gamarat');
+INSERT INTO shc_portal.shc_housing_site_lk(id,code,lang,label) VALUES(40,N'GAMARAT',N'tr',N'Gamarat');
+INSERT INTO shc_portal.shc_housing_site_lk(id,code,lang,label) VALUES(41,N'GAMARAT',N'ms',N'Gamarat');
+INSERT INTO shc_portal.shc_housing_site_lk(id,code,lang,label) VALUES(42,N'GAMARAT',N'fa',N'Gamarat');
+
+INSERT INTO shc_portal.shc_housing_site_lk(id,code,lang,label) VALUES(43,N'MUZDALIFA',N'fr',N'Muzdalifah');
+INSERT INTO shc_portal.shc_housing_site_lk(id,code,lang,label) VALUES(44,N'MUZDALIFA',N'tr',N'Muzdalifah');
+INSERT INTO shc_portal.shc_housing_site_lk(id,code,lang,label) VALUES(45,N'MUZDALIFA',N'ms',N'Muzdalifah');
+INSERT INTO shc_portal.shc_housing_site_lk(id,code,lang,label) VALUES(46,N'MUZDALIFA',N'fa',N'Muzdalifah');
+
+INSERT INTO shc_portal.shc_housing_site_lk(id,code,lang,label) VALUES(47,N'ARAFAT',N'fr',N'Arafat');
+INSERT INTO shc_portal.shc_housing_site_lk(id,code,lang,label) VALUES(48,N'ARAFAT',N'tr',N'Arafat');
+INSERT INTO shc_portal.shc_housing_site_lk(id,code,lang,label) VALUES(49,N'ARAFAT',N'ms',N'Arafat');
+INSERT INTO shc_portal.shc_housing_site_lk(id,code,lang,label) VALUES(50,N'ARAFAT',N'fa',N'Arafat');
+
+INSERT INTO shc_portal.shc_housing_site_lk(id,code,lang,label) VALUES(51,N'JABAL_ALRAHMA',N'fr',N'Alrahma Mountain');
+INSERT INTO shc_portal.shc_housing_site_lk(id,code,lang,label) VALUES(52,N'JABAL_ALRAHMA',N'tr',N'Alrahma Mountain');
+INSERT INTO shc_portal.shc_housing_site_lk(id,code,lang,label) VALUES(53,N'JABAL_ALRAHMA',N'ms',N'Alrahma Mountain');
+INSERT INTO shc_portal.shc_housing_site_lk(id,code,lang,label) VALUES(54,N'JABAL_ALRAHMA',N'fa',N'Alrahma Mountain');
+
+SET IDENTITY_INSERT shc_portal.shc_housing_site_lk OFF;
+GO
+
+SET IDENTITY_INSERT shc_portal.shc_housing_type_lk ON;
+
+INSERT INTO shc_portal.shc_housing_type_lk(id,code,lang,label) VALUES(9,N'CAMP',N'fr',N'Camp');
+INSERT INTO shc_portal.shc_housing_type_lk(id,code,lang,label) VALUES(10,N'CAMP',N'tr',N'Camp');
+INSERT INTO shc_portal.shc_housing_type_lk(id,code,lang,label) VALUES(11,N'CAMP',N'ms',N'Camp');
+INSERT INTO shc_portal.shc_housing_type_lk(id,code,lang,label) VALUES(12,N'CAMP',N'fa',N'Camp');
+
+INSERT INTO shc_portal.shc_housing_type_lk(id,code,lang,label) VALUES(13,N'HOTEL',N'fr',N'Hotel');
+INSERT INTO shc_portal.shc_housing_type_lk(id,code,lang,label) VALUES(14,N'HOTEL',N'tr',N'Hotel');
+INSERT INTO shc_portal.shc_housing_type_lk(id,code,lang,label) VALUES(15,N'HOTEL',N'ms',N'Hotel');
+INSERT INTO shc_portal.shc_housing_type_lk(id,code,lang,label) VALUES(16,N'HOTEL',N'fa',N'Hotel');
+
+INSERT INTO shc_portal.shc_housing_type_lk(id,code,lang,label) VALUES(17,N'BUILDING',N'fr',N'Building');
+INSERT INTO shc_portal.shc_housing_type_lk(id,code,lang,label) VALUES(18,N'BUILDING',N'tr',N'Building');
+INSERT INTO shc_portal.shc_housing_type_lk(id,code,lang,label) VALUES(19,N'BUILDING',N'ms',N'Building');
+INSERT INTO shc_portal.shc_housing_type_lk(id,code,lang,label) VALUES(20,N'BUILDING',N'fa',N'Building');
+
+INSERT INTO shc_portal.shc_housing_type_lk(id,code,lang,label) VALUES(21,N'APARTMENT',N'fr',N'Apartment');
+INSERT INTO shc_portal.shc_housing_type_lk(id,code,lang,label) VALUES(22,N'APARTMENT',N'tr',N'Apartment');
+INSERT INTO shc_portal.shc_housing_type_lk(id,code,lang,label) VALUES(23,N'APARTMENT',N'ms',N'Apartment');
+INSERT INTO shc_portal.shc_housing_type_lk(id,code,lang,label) VALUES(24,N'APARTMENT',N'fa',N'Apartment');
+
+SET IDENTITY_INSERT shc_portal.shc_housing_type_lk OFF;
+GO
+
+SET IDENTITY_INSERT shc_portal.shc_incident_status_lk ON;
+
+INSERT INTO shc_portal.shc_incident_status_lk(id,code,lang,label) VALUES(7,N'UNDER_PROCESSING',N'fr',N'Under Processing');
+INSERT INTO shc_portal.shc_incident_status_lk(id,code,lang,label) VALUES(8,N'UNDER_PROCESSING',N'tr',N'Under Processing');
+INSERT INTO shc_portal.shc_incident_status_lk(id,code,lang,label) VALUES(9,N'UNDER_PROCESSING',N'ms',N'Under Processing');
+INSERT INTO shc_portal.shc_incident_status_lk(id,code,lang,label) VALUES(10,N'UNDER_PROCESSING',N'fa',N'Under Processing');
+
+INSERT INTO shc_portal.shc_incident_status_lk(id,code,lang,label) VALUES(11,N'RESOLVED',N'fr',N'Resolved');
+INSERT INTO shc_portal.shc_incident_status_lk(id,code,lang,label) VALUES(12,N'RESOLVED',N'tr',N'Resolved');
+INSERT INTO shc_portal.shc_incident_status_lk(id,code,lang,label) VALUES(13,N'RESOLVED',N'ms',N'Resolved');
+INSERT INTO shc_portal.shc_incident_status_lk(id,code,lang,label) VALUES(14,N'RESOLVED',N'fa',N'Resolved');
+
+INSERT INTO shc_portal.shc_incident_status_lk(id,code,lang,label) VALUES(15,N'CLOSED',N'fr',N'Closed');
+INSERT INTO shc_portal.shc_incident_status_lk(id,code,lang,label) VALUES(16,N'CLOSED',N'tr',N'Closed');
+INSERT INTO shc_portal.shc_incident_status_lk(id,code,lang,label) VALUES(17,N'CLOSED',N'ms',N'Closed');
+INSERT INTO shc_portal.shc_incident_status_lk(id,code,lang,label) VALUES(18,N'CLOSED',N'fa',N'Closed');
+
+SET IDENTITY_INSERT shc_portal.shc_incident_status_lk OFF;
+GO
+
+SET IDENTITY_INSERT shc_portal.shc_incident_type_lk ON;
+
+INSERT INTO shc_portal.shc_incident_type_lk(id,code,lang,label) VALUES(9,N'FOOD',N'fr',N'Food Complaint');
+INSERT INTO shc_portal.shc_incident_type_lk(id,code,lang,label) VALUES(10,N'FOOD',N'tr',N'Food Complaint');
+INSERT INTO shc_portal.shc_incident_type_lk(id,code,lang,label) VALUES(11,N'FOOD',N'ms',N'Food Complaint');
+INSERT INTO shc_portal.shc_incident_type_lk(id,code,lang,label) VALUES(12,N'FOOD',N'fa',N'Food Complaint');
+
+INSERT INTO shc_portal.shc_incident_type_lk(id,code,lang,label) VALUES(13,N'TRANSPORTATION',N'fr',N'Transportation Complaint');
+INSERT INTO shc_portal.shc_incident_type_lk(id,code,lang,label) VALUES(14,N'TRANSPORTATION',N'tr',N'Transportation Complaint');
+INSERT INTO shc_portal.shc_incident_type_lk(id,code,lang,label) VALUES(15,N'TRANSPORTATION',N'ms',N'Transportation Complaint');
+INSERT INTO shc_portal.shc_incident_type_lk(id,code,lang,label) VALUES(16,N'TRANSPORTATION',N'fa',N'Transportation Complaint');
+
+INSERT INTO shc_portal.shc_incident_type_lk(id,code,lang,label) VALUES(17,N'HOUSING',N'fr',N'Housing Complaint');
+INSERT INTO shc_portal.shc_incident_type_lk(id,code,lang,label) VALUES(18,N'HOUSING',N'tr',N'Housing Complaint');
+INSERT INTO shc_portal.shc_incident_type_lk(id,code,lang,label) VALUES(19,N'HOUSING',N'ms',N'Housing Complaint');
+INSERT INTO shc_portal.shc_incident_type_lk(id,code,lang,label) VALUES(20,N'HOUSING',N'fa',N'Housing Complaint');
+
+INSERT INTO shc_portal.shc_incident_type_lk(id,code,lang,label) VALUES(21,N'GENERAL',N'fr',N'General Complaint');
+INSERT INTO shc_portal.shc_incident_type_lk(id,code,lang,label) VALUES(22,N'GENERAL',N'tr',N'General Complaint');
+INSERT INTO shc_portal.shc_incident_type_lk(id,code,lang,label) VALUES(23,N'GENERAL',N'ms',N'General Complaint');
+INSERT INTO shc_portal.shc_incident_type_lk(id,code,lang,label) VALUES(24,N'GENERAL',N'fa',N'General Complaint');
+
+SET IDENTITY_INSERT shc_portal.shc_incident_type_lk OFF;
+GO
+
+
+
+SET IDENTITY_INSERT shc_portal.shc_marital_status_lk ON;
+
+INSERT INTO shc_portal.shc_marital_status_lk(id,code,lang,label) VALUES(9,N'SINGLE',N'fr',N'Single');
+INSERT INTO shc_portal.shc_marital_status_lk(id,code,lang,label) VALUES(10,N'SINGLE',N'tr',N'Single');
+INSERT INTO shc_portal.shc_marital_status_lk(id,code,lang,label) VALUES(11,N'SINGLE',N'ms',N'Single');
+INSERT INTO shc_portal.shc_marital_status_lk(id,code,lang,label) VALUES(12,N'SINGLE',N'fa',N'Single');
+
+INSERT INTO shc_portal.shc_marital_status_lk(id,code,lang,label) VALUES(13,N'MARRIED',N'fr',N'Married');
+INSERT INTO shc_portal.shc_marital_status_lk(id,code,lang,label) VALUES(14,N'MARRIED',N'tr',N'Married');
+INSERT INTO shc_portal.shc_marital_status_lk(id,code,lang,label) VALUES(15,N'MARRIED',N'ms',N'Married');
+INSERT INTO shc_portal.shc_marital_status_lk(id,code,lang,label) VALUES(16,N'MARRIED',N'fa',N'Married');
+
+INSERT INTO shc_portal.shc_marital_status_lk(id,code,lang,label) VALUES(17,N'WIDOWED',N'fr',N'Widowed');
+INSERT INTO shc_portal.shc_marital_status_lk(id,code,lang,label) VALUES(18,N'WIDOWED',N'tr',N'Widowed');
+INSERT INTO shc_portal.shc_marital_status_lk(id,code,lang,label) VALUES(19,N'WIDOWED',N'ms',N'Widowed');
+INSERT INTO shc_portal.shc_marital_status_lk(id,code,lang,label) VALUES(20,N'WIDOWED',N'fa',N'Widowed');
+
+INSERT INTO shc_portal.shc_marital_status_lk(id,code,lang,label) VALUES(21,N'DIVORCED',N'fr',N'Divorced');
+INSERT INTO shc_portal.shc_marital_status_lk(id,code,lang,label) VALUES(22,N'DIVORCED',N'tr',N'Divorced');
+INSERT INTO shc_portal.shc_marital_status_lk(id,code,lang,label) VALUES(23,N'DIVORCED',N'ms',N'Divorced');
+INSERT INTO shc_portal.shc_marital_status_lk(id,code,lang,label) VALUES(24,N'DIVORCED',N'fa',N'Divorced');
+
+SET IDENTITY_INSERT shc_portal.shc_marital_status_lk OFF;
+GO
+
+SET IDENTITY_INSERT shc_portal.shc_meal_time_type_lk ON;
+
+INSERT INTO shc_portal.shc_meal_time_type_lk(id,code,lang,label) VALUES(9,N'BREAKFAST',N'fr',N'Breakfast');
+INSERT INTO shc_portal.shc_meal_time_type_lk(id,code,lang,label) VALUES(10,N'BREAKFAST',N'tr',N'Breakfast');
+INSERT INTO shc_portal.shc_meal_time_type_lk(id,code,lang,label) VALUES(11,N'BREAKFAST',N'ms',N'Breakfast');
+INSERT INTO shc_portal.shc_meal_time_type_lk(id,code,lang,label) VALUES(12,N'BREAKFAST',N'fa',N'Breakfast');
+
+INSERT INTO shc_portal.shc_meal_time_type_lk(id,code,lang,label) VALUES(13,N'LUNCH',N'fr',N'Lunch');
+INSERT INTO shc_portal.shc_meal_time_type_lk(id,code,lang,label) VALUES(14,N'LUNCH',N'tr',N'Lunch');
+INSERT INTO shc_portal.shc_meal_time_type_lk(id,code,lang,label) VALUES(15,N'LUNCH',N'ms',N'Lunch');
+INSERT INTO shc_portal.shc_meal_time_type_lk(id,code,lang,label) VALUES(16,N'LUNCH',N'fa',N'Lunch');
+
+INSERT INTO shc_portal.shc_meal_time_type_lk(id,code,lang,label) VALUES(17,N'DINNER',N'fr',N'Dinner');
+INSERT INTO shc_portal.shc_meal_time_type_lk(id,code,lang,label) VALUES(18,N'DINNER',N'tr',N'Dinner');
+INSERT INTO shc_portal.shc_meal_time_type_lk(id,code,lang,label) VALUES(19,N'DINNER',N'ms',N'Dinner');
+INSERT INTO shc_portal.shc_meal_time_type_lk(id,code,lang,label) VALUES(20,N'DINNER',N'fa',N'Dinner');
+
+INSERT INTO shc_portal.shc_meal_time_type_lk(id,code,lang,label) VALUES(21,N'OTHERS',N'fr',N'Others');
+INSERT INTO shc_portal.shc_meal_time_type_lk(id,code,lang,label) VALUES(22,N'OTHERS',N'tr',N'Others');
+INSERT INTO shc_portal.shc_meal_time_type_lk(id,code,lang,label) VALUES(23,N'OTHERS',N'ms',N'Others');
+INSERT INTO shc_portal.shc_meal_time_type_lk(id,code,lang,label) VALUES(24,N'OTHERS',N'fa',N'Others');
+
+SET IDENTITY_INSERT shc_portal.shc_meal_time_type_lk OFF;
+GO
+
+SET IDENTITY_INSERT shc_portal.shc_meal_type_lk ON;
+
+INSERT INTO shc_portal.shc_meal_type_lk(id,code,lang,label) VALUES(11,N'FULL_BOARD',N'fr',N'Breakfast, lunch, and dinner buffets');
+INSERT INTO shc_portal.shc_meal_type_lk(id,code,lang,label) VALUES(12,N'FULL_BOARD',N'tr',N'Breakfast, lunch, and dinner buffets');
+INSERT INTO shc_portal.shc_meal_type_lk(id,code,lang,label) VALUES(13,N'FULL_BOARD',N'ms',N'Breakfast, lunch, and dinner buffets');
+INSERT INTO shc_portal.shc_meal_type_lk(id,code,lang,label) VALUES(14,N'FULL_BOARD',N'fa',N'Breakfast, lunch, and dinner buffets');
+
+INSERT INTO shc_portal.shc_meal_type_lk(id,code,lang,label) VALUES(15,N'BREAKFAST_DINNER',N'fr',N'Breakfast, and dinner buffets');
+INSERT INTO shc_portal.shc_meal_type_lk(id,code,lang,label) VALUES(16,N'BREAKFAST_DINNER',N'tr',N'Breakfast, and dinner buffets');
+INSERT INTO shc_portal.shc_meal_type_lk(id,code,lang,label) VALUES(17,N'BREAKFAST_DINNER',N'ms',N'Breakfast, and dinner buffets');
+INSERT INTO shc_portal.shc_meal_type_lk(id,code,lang,label) VALUES(18,N'BREAKFAST_DINNER',N'fa',N'Breakfast, and dinner buffets');
+
+INSERT INTO shc_portal.shc_meal_type_lk(id,code,lang,label) VALUES(19,N'BREAKFAST_LUNCH',N'fr',N'Breakfast, and lunch');
+INSERT INTO shc_portal.shc_meal_type_lk(id,code,lang,label) VALUES(20,N'BREAKFAST_LUNCH',N'tr',N'Breakfast, and lunch');
+INSERT INTO shc_portal.shc_meal_type_lk(id,code,lang,label) VALUES(21,N'BREAKFAST_LUNCH',N'ms',N'Breakfast, and lunch');
+INSERT INTO shc_portal.shc_meal_type_lk(id,code,lang,label) VALUES(22,N'BREAKFAST_LUNCH',N'fa',N'Breakfast, and lunch');
+
+INSERT INTO shc_portal.shc_meal_type_lk(id,code,lang,label) VALUES(23,N'ONLY_BREAKFAST',N'fr',N'Only Breakfast');
+INSERT INTO shc_portal.shc_meal_type_lk(id,code,lang,label) VALUES(24,N'ONLY_BREAKFAST',N'tr',N'Only Breakfast');
+INSERT INTO shc_portal.shc_meal_type_lk(id,code,lang,label) VALUES(25,N'ONLY_BREAKFAST',N'ms',N'Only Breakfast');
+INSERT INTO shc_portal.shc_meal_type_lk(id,code,lang,label) VALUES(26,N'ONLY_BREAKFAST',N'fa',N'Only Breakfast');
+
+INSERT INTO shc_portal.shc_meal_type_lk(id,code,lang,label) VALUES(27,N'OTHERS',N'fr',N'Others');
+INSERT INTO shc_portal.shc_meal_type_lk(id,code,lang,label) VALUES(28,N'OTHERS',N'tr',N'Others');
+INSERT INTO shc_portal.shc_meal_type_lk(id,code,lang,label) VALUES(29,N'OTHERS',N'ms',N'Others');
+INSERT INTO shc_portal.shc_meal_type_lk(id,code,lang,label) VALUES(30,N'OTHERS',N'fa',N'Others');
+
+SET IDENTITY_INSERT shc_portal.shc_meal_type_lk OFF;
+GO
+
+
+
+SET IDENTITY_INSERT shc_portal.shc_nationality_lk ON;
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(653,N'101',N'fr',N'Emirati',N'971',N'AE');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(654,N'101',N'tr',N'Emirati',N'971',N'AE');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(655,N'101',N'ms',N'Emirati',N'971',N'Emirati');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(656,N'101',N'fa',N'Emirati',N'971',N'AE');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(657,N'102',N'fr',N'Jordanian',N'962',N'JO');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(658,N'102',N'tr',N'Jordanian',N'962',N'JO');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(659,N'102',N'ms',N'Jordanian',N'962',N'Jordanian');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(660,N'102',N'fa',N'Jordanian',N'962',N'JO');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(661,N'103',N'fr',N'Bahraini',N'973',N'BH');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(662,N'103',N'tr',N'Bahraini',N'973',N'BH');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(663,N'103',N'ms',N'Bahraini',N'973',N'Bahraini');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(664,N'103',N'fa',N'Bahraini',N'973',N'BH');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(665,N'104',N'fr',N'Syrian',N'963',N'SY');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(666,N'104',N'tr',N'Syrian',N'963',N'SY');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(667,N'104',N'ms',N'Syrian',N'963',N'Syrian');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(668,N'104',N'fa',N'Syrian',N'963',N'SY');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(669,N'105',N'fr',N'Iraqi',N'964',N'IQ');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(670,N'105',N'tr',N'Iraqi',N'964',N'IQ');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(671,N'105',N'ms',N'Iraqi',N'964',N'Iraqi');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(672,N'105',N'fa',N'Iraqi',N'964',N'IQ');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(673,N'106',N'fr',N'Omani',N'968',N'OM');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(674,N'106',N'tr',N'Omani',N'968',N'OM');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(675,N'106',N'ms',N'Omani',N'968',N'Omani');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(676,N'106',N'fa',N'Omani',N'968',N'OM');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(677,N'107',N'fr',N'Palestinian',N'970',N'PS');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(678,N'107',N'tr',N'Palestinian',N'970',N'PS');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(679,N'107',N'ms',N'Palestinian',N'970',N'Palestinian');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(680,N'107',N'fa',N'Palestinian',N'970',N'PS');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(681,N'108',N'fr',N'Qatari',N'974',N'QA');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(682,N'108',N'tr',N'Qatari',N'974',N'QA');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(683,N'108',N'ms',N'Qatari',N'974',N'Qatari');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(684,N'108',N'fa',N'Qatari',N'974',N'QA');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(685,N'109',N'fr',N'Kuwaiti',N'965',N'KW');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(686,N'109',N'tr',N'Kuwaiti',N'965',N'KW');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(687,N'109',N'ms',N'Kuwaiti',N'965',N'Kuwaiti');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(688,N'109',N'fa',N'Kuwaiti',N'965',N'KW');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(689,N'110',N'fr',N'Lebanese',N'961',N'LB');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(690,N'110',N'tr',N'Lebanese',N'961',N'LB');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(691,N'110',N'ms',N'Lebanese',N'961',N'Lebanese');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(692,N'110',N'fa',N'Lebanese',N'961',N'LB');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(693,N'111',N'fr',N'Yemen',N'967',N'YE');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(694,N'111',N'tr',N'Yemen',N'967',N'YE');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(695,N'111',N'ms',N'Yemen',N'967',N'Yemen');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(696,N'111',N'fa',N'Yemen',N'967',N'YE');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(697,N'113',N'fr',N'Saudi',N'966',N'SA');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(698,N'113',N'tr',N'Saudi',N'966',N'SA');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(699,N'113',N'ms',N'Saudi',N'966',N'Saudi');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(700,N'113',N'fa',N'Saudi',N'966',N'SA');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(701,N'201',N'fr',N'Tunisian',N'216',N'TN');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(702,N'201',N'tr',N'Tunisian',N'216',N'TN');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(703,N'201',N'ms',N'Tunisian',N'216',N'Tunisian');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(704,N'201',N'fa',N'Tunisian',N'216',N'TN');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(705,N'202',N'fr',N'Algerian',N'213',N'DZ');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(706,N'202',N'tr',N'Algerian',N'213',N'DZ');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(707,N'202',N'ms',N'Algerian',N'213',N'Algerian');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(708,N'202',N'fa',N'Algerian',N'213',N'DZ');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(709,N'203',N'fr',N'Djiboutian',N'253',N'DJ');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(710,N'203',N'tr',N'Djiboutian',N'253',N'DJ');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(711,N'203',N'ms',N'Djiboutian',N'253',N'Djiboutian');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(712,N'203',N'fa',N'Djiboutian',N'253',N'DJ');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(713,N'204',N'fr',N'Sudanese',N'249',N'SD');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(714,N'204',N'tr',N'Sudanese',N'249',N'SD');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(715,N'204',N'ms',N'Sudanese',N'249',N'Sudanese');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(716,N'204',N'fa',N'Sudanese',N'249',N'SD');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(717,N'205',N'fr',N'Somalian ',N'252',N'SO');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(718,N'205',N'tr',N'Somalian ',N'252',N'SO');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(719,N'205',N'ms',N'Somalian ',N'252',N'Somalian ');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(720,N'205',N'fa',N'Somalian ',N'252',N'SO');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(721,N'206',N'fr',N'Libyan',N'218',N'LY');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(722,N'206',N'tr',N'Libyan',N'218',N'LY');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(723,N'206',N'ms',N'Libyan',N'218',N'Libyan');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(724,N'206',N'fa',N'Libyan',N'218',N'LY');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(725,N'207',N'fr',N'Egyptian',N'20',N'EG');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(726,N'207',N'tr',N'Egyptian',N'20',N'EG');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(727,N'207',N'ms',N'Egyptian',N'20',N'Egyptian');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(728,N'207',N'fa',N'Egyptian',N'20',N'EG');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(729,N'208',N'fr',N'Moroccan',N'212',N'MA');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(730,N'208',N'tr',N'Moroccan',N'212',N'MA');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(731,N'208',N'ms',N'Moroccan',N'212',N'Moroccan');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(732,N'208',N'fa',N'Moroccan',N'212',N'MA');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(733,N'209',N'fr',N'Mauritanian',N'222',N'MR');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(734,N'209',N'tr',N'Mauritanian',N'222',N'MR');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(735,N'209',N'ms',N'Mauritanian',N'222',N'Mauritanian');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(736,N'209',N'fa',N'Mauritanian',N'222',N'MR');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(737,N'301',N'fr',N'Afghan',N'93',N'AF');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(738,N'301',N'tr',N'Afghan',N'93',N'AF');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(739,N'301',N'ms',N'Afghan',N'93',N'Afghan');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(740,N'301',N'fa',N'Afghan',N'93',N'AF');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(741,N'302',N'fr',N'Indonesian',N'62',N'ID');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(742,N'302',N'tr',N'Indonesian',N'62',N'ID');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(743,N'302',N'ms',N'Indonesian',N'62',N'Indonesian');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(744,N'302',N'fa',N'Indonesian',N'62',N'ID');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(745,N'303',N'fr',N'Iranian',N'98',N'IR');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(746,N'303',N'tr',N'Iranian',N'98',N'IR');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(747,N'303',N'ms',N'Iranian',N'98',N'Iranian');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(748,N'303',N'fa',N'Iranian',N'98',N'IR');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(749,N'304',N'fr',N'Pakistani',N'92',N'PK');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(750,N'304',N'tr',N'Pakistani',N'92',N'PK');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(751,N'304',N'ms',N'Pakistani',N'92',N'Pakistani');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(752,N'304',N'fa',N'Pakistani',N'92',N'PK');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(753,N'305',N'fr',N'Bangladeshi',N'880',N'BD');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(754,N'305',N'tr',N'Bangladeshi',N'880',N'BD');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(755,N'305',N'ms',N'Bangladeshi',N'880',N'Bangladeshi');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(756,N'305',N'fa',N'Bangladeshi',N'880',N'BD');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(757,N'306',N'fr',N'Brunein',N'673',N'BN');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(758,N'306',N'tr',N'Brunein',N'673',N'BN');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(759,N'306',N'ms',N'Brunein',N'673',N'Brunein');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(760,N'306',N'fa',N'Brunein',N'673',N'BN');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(761,N'307',N'fr',N'Myanmarian',N'95',N'MM');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(762,N'307',N'tr',N'Myanmarian',N'95',N'MM');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(763,N'307',N'ms',N'Myanmarian',N'95',N'Myanmarian');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(764,N'307',N'fa',N'Myanmarian',N'95',N'MM');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(765,N'308',N'fr',N'Thai',N'66',N'TH');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(766,N'308',N'tr',N'Thai',N'66',N'TH');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(767,N'308',N'ms',N'Thai',N'66',N'Thai');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(768,N'308',N'fa',N'Thai',N'66',N'TH');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(769,N'309',N'fr',N'Turkish',N'90',N'TR');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(770,N'309',N'tr',N'Turkish',N'90',N'TR');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(771,N'309',N'ms',N'Turkish',N'90',N'Turkish');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(772,N'309',N'fa',N'Turkish',N'90',N'TR');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(773,N'310',N'fr',N'Maldivian',N'960',N'MV');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(774,N'310',N'tr',N'Maldivian',N'960',N'MV');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(775,N'310',N'ms',N'Maldivian',N'960',N'Maldivian');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(776,N'310',N'fa',N'Maldivian',N'960',N'MV');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(777,N'311',N'fr',N'Russian',N'7',N'RU');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(778,N'311',N'tr',N'Russian',N'7',N'RU');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(779,N'311',N'ms',N'Russian',N'7',N'Russian');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(780,N'311',N'fa',N'Russian',N'7',N'RU');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(781,N'312',N'fr',N'Singaporean',N'65',N'SG');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(782,N'312',N'tr',N'Singaporean',N'65',N'SG');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(783,N'312',N'ms',N'Singaporean',N'65',N'Singaporean');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(784,N'312',N'fa',N'Singaporean',N'65',N'SG');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(785,N'313',N'fr',N'Srilankan',N'94',N'LK');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(786,N'313',N'tr',N'Srilankan',N'94',N'LK');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(787,N'313',N'ms',N'Srilankan',N'94',N'Srilankan');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(788,N'313',N'fa',N'Srilankan',N'94',N'LK');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(789,N'315',N'fr',N'Philippino',N'63',N'PH');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(790,N'315',N'tr',N'Philippino',N'63',N'PH');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(791,N'315',N'ms',N'Philippino',N'63',N'Philippino');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(792,N'315',N'fa',N'Philippino',N'63',N'PH');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(793,N'316',N'fr',N'Vietnamese',N'84',N'VN');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(794,N'316',N'tr',N'Vietnamese',N'84',N'VN');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(795,N'316',N'ms',N'Vietnamese',N'84',N'Vietnamese');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(796,N'316',N'fa',N'Vietnamese',N'84',N'VN');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(797,N'317',N'fr',N'Cambodian',N'855',N'KH');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(798,N'317',N'tr',N'Cambodian',N'855',N'KH');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(799,N'317',N'ms',N'Cambodian',N'855',N'Cambodian');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(800,N'317',N'fa',N'Cambodian',N'855',N'KH');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(801,N'318',N'fr',N'Korean',N'82',N'KR');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(802,N'318',N'tr',N'Korean',N'82',N'KR');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(803,N'318',N'ms',N'Korean',N'82',N'Korean');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(804,N'318',N'fa',N'Korean',N'82',N'KR');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(805,N'319',N'fr',N'Malaysian',N'60',N'MY');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(806,N'319',N'tr',N'Malaysian',N'60',N'MY');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(807,N'319',N'ms',N'Malaysian',N'60',N'Malaysian');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(808,N'319',N'fa',N'Malaysian',N'60',N'MY');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(809,N'320',N'fr',N'Nepalese',N'977',N'NP');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(810,N'320',N'tr',N'Nepalese',N'977',N'NP');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(811,N'320',N'ms',N'Nepalese',N'977',N'Nepalese');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(812,N'320',N'fa',N'Nepalese',N'977',N'NP');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(813,N'321',N'fr',N'Indian',N'91',N'IN');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(814,N'321',N'tr',N'Indian',N'91',N'IN');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(815,N'321',N'ms',N'Indian',N'91',N'Indian');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(816,N'321',N'fa',N'Indian',N'91',N'IN');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(817,N'322',N'fr',N'Hong Konger',N'852',N'HK');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(818,N'322',N'tr',N'Hong Konger',N'852',N'HK');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(819,N'322',N'ms',N'Hong Konger',N'852',N'Hong Konger');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(820,N'322',N'fa',N'Hong Konger',N'852',N'HK');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(821,N'323',N'fr',N'Japanese',N'81',N'JP');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(822,N'323',N'tr',N'Japanese',N'81',N'JP');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(823,N'323',N'ms',N'Japanese',N'81',N'Japanese');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(824,N'323',N'fa',N'Japanese',N'81',N'JP');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(825,N'324',N'fr',N'Bhutanese',N'975',N'BT');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(826,N'324',N'tr',N'Bhutanese',N'975',N'BT');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(827,N'324',N'ms',N'Bhutanese',N'975',N'Bhutanese');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(828,N'324',N'fa',N'Bhutanese',N'975',N'BT');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(829,N'325',N'fr',N'Chinese',N'86',N'CN');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(830,N'325',N'tr',N'Chinese',N'86',N'CN');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(831,N'325',N'ms',N'Chinese',N'86',N'Chinese');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(832,N'325',N'fa',N'Chinese',N'86',N'CN');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(833,N'326',N'fr',N'Cypriote',N'357',N'CY');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(834,N'326',N'tr',N'Cypriote',N'357',N'CY');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(835,N'326',N'ms',N'Cypriote',N'357',N'Cypriote');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(836,N'326',N'fa',N'Cypriote',N'357',N'CY');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(837,N'328',N'fr',N'Korean N.',N'850',N'KP');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(838,N'328',N'tr',N'Korean N.',N'850',N'KP');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(839,N'328',N'ms',N'Korean N.',N'850',N'Korean N.');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(840,N'328',N'fa',N'Korean N.',N'850',N'KP');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(841,N'329',N'fr',N'Laosian',N'856',N'LA');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(842,N'329',N'tr',N'Laosian',N'856',N'LA');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(843,N'329',N'ms',N'Laosian',N'856',N'Laosian');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(844,N'329',N'fa',N'Laosian',N'856',N'LA');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(845,N'330',N'fr',N'Mongolian',N'976',N'MN');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(846,N'330',N'tr',N'Mongolian',N'976',N'MN');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(847,N'330',N'ms',N'Mongolian',N'976',N'Mongolian');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(848,N'330',N'fa',N'Mongolian',N'976',N'MN');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(849,N'331',N'fr',N'Macauese',N'853',N'MO');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(850,N'331',N'tr',N'Macauese',N'853',N'MO');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(851,N'331',N'ms',N'Macauese',N'853',N'Macauese');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(852,N'331',N'fa',N'Macauese',N'853',N'MO');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(853,N'332',N'fr',N'Turkistani',N'72533',N'KZ-YUZ');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(854,N'332',N'tr',N'Turkistani',N'72533',N'KZ-YUZ');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(855,N'332',N'ms',N'Turkistani',N'72533',N'Turkistani');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(856,N'332',N'fa',N'Turkistani',N'72533',N'KZ-YUZ');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(857,N'336',N'fr',N'Kazakh',N'7',N'KZ');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(858,N'336',N'tr',N'Kazakh',N'7',N'KZ');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(859,N'336',N'ms',N'Kazakh',N'7',N'Kazakh');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(860,N'336',N'fa',N'Kazakh',N'7',N'KZ');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(861,N'337',N'fr',N'Uzbek',N'998',N'UZ');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(862,N'337',N'tr',N'Uzbek',N'998',N'UZ');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(863,N'337',N'ms',N'Uzbek',N'998',N'Uzbek');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(864,N'337',N'fa',N'Uzbek',N'998',N'UZ');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(865,N'338',N'fr',N'Turkmenenian',N'993',N'TM');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(866,N'338',N'tr',N'Turkmenenian',N'993',N'TM');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(867,N'338',N'ms',N'Turkmenenian',N'993',N'Turkmenenian');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(868,N'338',N'fa',N'Turkmenenian',N'993',N'TM');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(869,N'339',N'fr',N'Tajik',N'992',N'TJ');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(870,N'339',N'tr',N'Tajik',N'992',N'TJ');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(871,N'339',N'ms',N'Tajik',N'992',N'Tajik');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(872,N'339',N'fa',N'Tajik',N'992',N'TJ');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(873,N'340',N'fr',N'Kyrgyzian',N'996',N'KG');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(874,N'340',N'tr',N'Kyrgyzian',N'996',N'KG');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(875,N'340',N'ms',N'Kyrgyzian',N'996',N'Kyrgyzian');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(876,N'340',N'fa',N'Kyrgyzian',N'996',N'KG');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(877,N'343',N'fr',N'Azerbaijani',N'994',N'AZ');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(878,N'343',N'tr',N'Azerbaijani',N'994',N'AZ');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(879,N'343',N'ms',N'Azerbaijani',N'994',N'Azerbaijani');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(880,N'343',N'fa',N'Azerbaijani',N'994',N'AZ');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(881,N'344',N'fr',N'Chechenian',N'7871',N'RU-CE');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(882,N'344',N'tr',N'Chechenian',N'7871',N'RU-CE');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(883,N'344',N'ms',N'Chechenian',N'7871',N'Chechenian');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(884,N'344',N'fa',N'Chechenian',N'7871',N'RU-CE');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(885,N'345',N'fr',N'Daghestani',N'7872',N'RU-DA');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(886,N'345',N'tr',N'Daghestani',N'7872',N'RU-DA');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(887,N'345',N'ms',N'Daghestani',N'7872',N'Daghestani');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(888,N'345',N'fa',N'Daghestani',N'7872',N'RU-DA');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(889,N'212',N'fr',N'Tataristani',N'843',N'RU-TA');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(890,N'212',N'tr',N'Tataristani',N'843',N'RU-TA');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(891,N'212',N'ms',N'Tataristani',N'843',N'Tataristani');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(892,N'212',N'fa',N'Tataristani',N'843',N'RU-TA');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(893,N'349',N'fr',N'East Timor',N'670',N'TL');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(894,N'349',N'tr',N'East Timor',N'670',N'TL');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(895,N'349',N'ms',N'East Timor',N'670',N'East Timor');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(896,N'349',N'fa',N'East Timor',N'670',N'TL');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(897,N'401',N'fr',N'Ethiopian',N'251',N'ET');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(898,N'401',N'tr',N'Ethiopian',N'251',N'ET');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(899,N'401',N'ms',N'Ethiopian',N'251',N'Ethiopian');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(900,N'401',N'fa',N'Ethiopian',N'251',N'ET');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(901,N'402',N'fr',N'Ugandan',N'256',N'UG');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(902,N'402',N'tr',N'Ugandan',N'256',N'UG');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(903,N'402',N'ms',N'Ugandan',N'256',N'Ugandan');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(904,N'402',N'fa',N'Ugandan',N'256',N'UG');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(905,N'403',N'fr',N'Botswanian',N'267',N'BW');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(906,N'403',N'tr',N'Botswanian',N'267',N'BW');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(907,N'403',N'ms',N'Botswanian',N'267',N'Botswanian');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(908,N'403',N'fa',N'Botswanian',N'267',N'BW');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(909,N'404',N'fr',N'Burundian',N'257',N'BI');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(910,N'404',N'tr',N'Burundian',N'257',N'BI');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(911,N'404',N'ms',N'Burundian',N'257',N'Burundian');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(912,N'404',N'fa',N'Burundian',N'257',N'BI');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(913,N'405',N'fr',N'Chadian',N'235',N'TD');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(914,N'405',N'tr',N'Chadian',N'235',N'TD');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(915,N'405',N'ms',N'Chadian',N'235',N'Chadian');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(916,N'405',N'fa',N'Chadian',N'235',N'TD');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(917,N'406',N'fr',N'Tanzanian',N'255',N'TZ');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(918,N'406',N'tr',N'Tanzanian',N'255',N'TZ');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(919,N'406',N'ms',N'Tanzanian',N'255',N'Tanzanian');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(920,N'406',N'fa',N'Tanzanian',N'255',N'TZ');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(921,N'407',N'fr',N'Togolese',N'228',N'TG');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(922,N'407',N'tr',N'Togolese',N'228',N'TG');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(923,N'407',N'ms',N'Togolese',N'228',N'Togolese');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(924,N'407',N'fa',N'Togolese',N'228',N'TG');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(925,N'408',N'fr',N'Gabonese',N'241',N'GA');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(926,N'408',N'tr',N'Gabonese',N'241',N'GA');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(927,N'408',N'ms',N'Gabonese',N'241',N'Gabonese');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(928,N'408',N'fa',N'Gabonese',N'241',N'GA');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(929,N'409',N'fr',N'Gambian',N'220',N'GM');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(930,N'409',N'tr',N'Gambian',N'220',N'GM');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(931,N'409',N'ms',N'Gambian',N'220',N'Gambian');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(932,N'409',N'fa',N'Gambian',N'220',N'GM');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(933,N'410',N'fr',N'Comorosian',N'269',N'KM');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(934,N'410',N'tr',N'Comorosian',N'269',N'KM');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(935,N'410',N'ms',N'Comorosian',N'269',N'Comorosian');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(936,N'410',N'fa',N'Comorosian',N'269',N'KM');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(937,N'411',N'fr',N'South African',N'27',N'ZA');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(938,N'411',N'tr',N'South African',N'27',N'ZA');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(939,N'411',N'ms',N'South African',N'27',N'South African');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(940,N'411',N'fa',N'South African',N'27',N'ZA');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(941,N'412',N'fr',N'Namibian',N'264',N'NA');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(942,N'412',N'tr',N'Namibian',N'264',N'NA');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(943,N'412',N'ms',N'Namibian',N'264',N'Namibian');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(944,N'412',N'fa',N'Namibian',N'264',N'NA');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(945,N'413',N'fr',N'Beninese',N'229',N'BJ');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(946,N'413',N'tr',N'Beninese',N'229',N'BJ');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(947,N'413',N'ms',N'Beninese',N'229',N'Beninese');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(948,N'413',N'fa',N'Beninese',N'229',N'BJ');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(949,N'414',N'fr',N'Rwandan',N'250',N'RW');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(950,N'414',N'tr',N'Rwandan',N'250',N'RW');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(951,N'414',N'ms',N'Rwandan',N'250',N'Rwandan');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(952,N'414',N'fa',N'Rwandan',N'250',N'RW');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(953,N'415',N'fr',N'Zimbabwean',N'263',N'ZW');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(954,N'415',N'tr',N'Zimbabwean',N'263',N'ZW');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(955,N'415',N'ms',N'Zimbabwean',N'263',N'Zimbabwean');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(956,N'415',N'fa',N'Zimbabwean',N'263',N'ZW');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(957,N'416',N'fr',N'Zairean',N'243',N'CD');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(958,N'416',N'tr',N'Zairean',N'243',N'CD');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(959,N'416',N'ms',N'Zairean',N'243',N'Zairean');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(960,N'416',N'fa',N'Zairean',N'243',N'CD');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(961,N'417',N'fr',N'Zambian',N'260',N'ZM');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(962,N'417',N'tr',N'Zambian',N'260',N'ZM');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(963,N'417',N'ms',N'Zambian',N'260',N'Zambian');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(964,N'417',N'fa',N'Zambian',N'260',N'ZM');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(965,N'418',N'fr',N'Ivorian',N'225',N'CI');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(966,N'418',N'tr',N'Ivorian',N'225',N'CI');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(967,N'418',N'ms',N'Ivorian',N'225',N'Ivorian');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(968,N'418',N'fa',N'Ivorian',N'225',N'CI');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(969,N'419',N'fr',N'Senegalese',N'221',N'SN');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(970,N'419',N'tr',N'Senegalese',N'221',N'SN');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(971,N'419',N'ms',N'Senegalese',N'221',N'Senegalese');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(972,N'419',N'fa',N'Senegalese',N'221',N'SN');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(973,N'420',N'fr',N'Sierra Leonean',N'232',N'SL');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(974,N'420',N'tr',N'Sierra Leonean',N'232',N'SL');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(975,N'420',N'ms',N'Sierra Leonean',N'232',N'Sierra Leonean');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(976,N'420',N'fa',N'Sierra Leonean',N'232',N'SL');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(977,N'421',N'fr',N'Ghanian',N'233',N'GH');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(978,N'421',N'tr',N'Ghanian',N'233',N'GH');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(979,N'421',N'ms',N'Ghanian',N'233',N'Ghanian');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(980,N'421',N'fa',N'Ghanian',N'233',N'GH');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(981,N'422',N'fr',N'Guinean',N'224',N'GN');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(982,N'422',N'tr',N'Guinean',N'224',N'GN');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(983,N'422',N'ms',N'Guinean',N'224',N'Guinean');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(984,N'422',N'fa',N'Guinean',N'224',N'GN');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(985,N'423',N'fr',N'Guinean Bissau',N'245',N'GW');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(986,N'423',N'tr',N'Guinean Bissau',N'245',N'GW');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(987,N'423',N'ms',N'Guinean Bissau',N'245',N'Guinean Bissau');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(988,N'423',N'fa',N'Guinean Bissau',N'245',N'GW');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(989,N'424',N'fr',N'Burkinian',N'226',N'BF');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(990,N'424',N'tr',N'Burkinian',N'226',N'BF');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(991,N'424',N'ms',N'Burkinian',N'226',N'Burkinian');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(992,N'424',N'fa',N'Burkinian',N'226',N'BF');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(993,N'425',N'fr',N'Cameroonian',N'237',N'CM');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(994,N'425',N'tr',N'Cameroonian',N'237',N'CM');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(995,N'425',N'ms',N'Cameroonian',N'237',N'Cameroonian');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(996,N'425',N'fa',N'Cameroonian',N'237',N'CM');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(997,N'426',N'fr',N'Congolese',N'242',N'CG');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(998,N'426',N'tr',N'Congolese',N'242',N'CG');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(999,N'426',N'ms',N'Congolese',N'242',N'Congolese');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1000,N'426',N'fa',N'Congolese',N'242',N'CG');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1001,N'427',N'fr',N'Kenyan',N'254',N'KE');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1002,N'427',N'tr',N'Kenyan',N'254',N'KE');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1003,N'427',N'ms',N'Kenyan',N'254',N'Kenyan');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1004,N'427',N'fa',N'Kenyan',N'254',N'KE');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1005,N'428',N'fr',N'Lesothian',N'266',N'LS');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1006,N'428',N'tr',N'Lesothian',N'266',N'LS');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1007,N'428',N'ms',N'Lesothian',N'266',N'Lesothian');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1008,N'428',N'fa',N'Lesothian',N'266',N'LS');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1009,N'429',N'fr',N'Liberian',N'231',N'LR');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1010,N'429',N'tr',N'Liberian',N'231',N'LR');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1011,N'429',N'ms',N'Liberian',N'231',N'Liberian');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1012,N'429',N'fa',N'Liberian',N'231',N'LR');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1013,N'430',N'fr',N'Malian',N'223',N'ML');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1014,N'430',N'tr',N'Malian',N'223',N'ML');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1015,N'430',N'ms',N'Malian',N'223',N'Malian');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1016,N'430',N'fa',N'Malian',N'223',N'ML');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1017,N'432',N'fr',N'Malawian',N'265',N'MW');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1018,N'432',N'tr',N'Malawian',N'265',N'MW');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1019,N'432',N'ms',N'Malawian',N'265',N'Malawian');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1020,N'432',N'fa',N'Malawian',N'265',N'MW');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1021,N'433',N'fr',N'Mauritian',N'230',N'MU');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1022,N'433',N'tr',N'Mauritian',N'230',N'MU');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1023,N'433',N'ms',N'Mauritian',N'230',N'Mauritian');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1024,N'433',N'fa',N'Mauritian',N'230',N'MU');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1025,N'434',N'fr',N'Mozambican',N'258',N'MZ');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1026,N'434',N'tr',N'Mozambican',N'258',N'MZ');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1027,N'434',N'ms',N'Mozambican',N'258',N'Mozambican');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1028,N'434',N'fa',N'Mozambican',N'258',N'MZ');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1029,N'435',N'fr',N'Nigeria',N'234',N'NG');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1030,N'435',N'tr',N'Nigeria',N'234',N'NG');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1031,N'435',N'ms',N'Nigeria',N'234',N'Nigeria');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1032,N'435',N'fa',N'Nigeria',N'234',N'NG');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1033,N'436',N'fr',N'Nigerois',N'227',N'NE');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1034,N'436',N'tr',N'Nigerois',N'227',N'NE');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1035,N'436',N'ms',N'Nigerois',N'227',N'Nigerois');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1036,N'436',N'fa',N'Nigerois',N'227',N'NE');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1037,N'437',N'fr',N'Central African',N'236',N'CF');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1038,N'437',N'tr',N'Central African',N'236',N'CF');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1039,N'437',N'ms',N'Central African',N'236',N'Central African');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1040,N'437',N'fa',N'Central African',N'236',N'CF');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1041,N'438',N'fr',N'Angolan',N'244',N'AO');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1042,N'438',N'tr',N'Angolan',N'244',N'AO');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1043,N'438',N'ms',N'Angolan',N'244',N'Angolan');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1044,N'438',N'fa',N'Angolan',N'244',N'AO');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1045,N'439',N'fr',N'Cape Verdean',N'238',N'CV');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1046,N'439',N'tr',N'Cape Verdean',N'238',N'CV');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1047,N'439',N'ms',N'Cape Verdean',N'238',N'Cape Verdean');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1048,N'439',N'fa',N'Cape Verdean',N'238',N'CV');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1049,N'440',N'fr',N'Equatorial Guinea',N'240',N'GQ');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1050,N'440',N'tr',N'Equatorial Guinea',N'240',N'GQ');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1051,N'440',N'ms',N'Equatorial Guinea',N'240',N'Equatorial Guinea');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1052,N'440',N'fa',N'Equatorial Guinea',N'240',N'GQ');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1053,N'441',N'fr',N'Malagasyan',N'261',N'MG');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1054,N'441',N'tr',N'Malagasyan',N'261',N'MG');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1055,N'441',N'ms',N'Malagasyan',N'261',N'Malagasyan');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1056,N'441',N'fa',N'Malagasyan',N'261',N'MG');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1057,N'442',N'fr',N'São Tomé and Príncipe',N'239',N'ST');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1058,N'442',N'tr',N'São Tomé and Príncipe',N'239',N'ST');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1059,N'442',N'ms',N'São Tomé and Príncipe',N'239',N'São Tomé and Príncipe');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1060,N'442',N'fa',N'São Tomé and Príncipe',N'239',N'ST');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1061,N'443',N'fr',N'Seychelian',N'248',N'SC');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1062,N'443',N'tr',N'Seychelian',N'248',N'SC');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1063,N'443',N'ms',N'Seychelian',N'248',N'Seychelian');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1064,N'443',N'fa',N'Seychelian',N'248',N'SC');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1065,N'444',N'fr',N'Swazilander',N'268',N'SZ');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1066,N'444',N'tr',N'Swazilander',N'268',N'SZ');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1067,N'444',N'ms',N'Swazilander',N'268',N'Swazilander');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1068,N'444',N'fa',N'Swazilander',N'268',N'SZ');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1069,N'449',N'fr',N'Eritrean',N'291',N'ER');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1070,N'449',N'tr',N'Eritrean',N'291',N'ER');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1071,N'449',N'ms',N'Eritrean',N'291',N'Eritrean');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1072,N'449',N'fa',N'Eritrean',N'291',N'ER');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1073,N'453',N'fr',N'جمهورية جنوب السودان',N'211',N'SS');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1074,N'453',N'tr',N'جمهورية جنوب السودان',N'211',N'SS');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1075,N'453',N'ms',N'جمهورية جنوب السودان',N'211',N'جمهورية جنوب السودان');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1076,N'453',N'fa',N'جمهورية جنوب السودان',N'211',N'SS');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1077,N'501',N'fr',N'Spanish',N'34',N'ES');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1078,N'501',N'tr',N'Spanish',N'34',N'ES');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1079,N'501',N'ms',N'Spanish',N'34',N'Spanish');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1080,N'501',N'fa',N'Spanish',N'34',N'ES');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1081,N'502',N'fr',N'Albanian',N'355',N'AL');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1082,N'502',N'tr',N'Albanian',N'355',N'AL');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1083,N'502',N'ms',N'Albanian',N'355',N'Albanian');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1084,N'502',N'fa',N'Albanian',N'355',N'AL');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1085,N'503',N'fr',N'German',N'49',N'DE');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1086,N'503',N'tr',N'German',N'49',N'DE');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1087,N'503',N'ms',N'German',N'49',N'German');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1088,N'503',N'fa',N'German',N'49',N'DE');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1089,N'504',N'fr',N'Irish',N'353',N'IE');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1090,N'504',N'tr',N'Irish',N'353',N'IE');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1091,N'504',N'ms',N'Irish',N'353',N'Irish');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1092,N'504',N'fa',N'Irish',N'353',N'IE');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1093,N'505',N'fr',N'Italian',N'39',N'IT');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1094,N'505',N'tr',N'Italian',N'39',N'IT');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1095,N'505',N'ms',N'Italian',N'39',N'Italian');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1096,N'505',N'fa',N'Italian',N'39',N'IT');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1097,N'506',N'fr',N'British',N'44',N'GB');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1098,N'506',N'tr',N'British',N'44',N'GB');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1099,N'506',N'ms',N'British',N'44',N'British');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1100,N'506',N'fa',N'British',N'44',N'GB');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1101,N'507',N'fr',N'Portuguese',N'351',N'PT');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1102,N'507',N'tr',N'Portuguese',N'351',N'PT');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1103,N'507',N'ms',N'Portuguese',N'351',N'Portuguese');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1104,N'507',N'fa',N'Portuguese',N'351',N'PT');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1105,N'508',N'fr',N'Bulgarian',N'359',N'BG');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1106,N'508',N'tr',N'Bulgarian',N'359',N'BG');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1107,N'508',N'ms',N'Bulgarian',N'359',N'Bulgarian');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1108,N'508',N'fa',N'Bulgarian',N'359',N'BG');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1109,N'509',N'fr',N'Belgian',N'32',N'BE');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1110,N'509',N'tr',N'Belgian',N'32',N'BE');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1111,N'509',N'ms',N'Belgian',N'32',N'Belgian');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1112,N'509',N'fa',N'Belgian',N'32',N'BE');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1113,N'510',N'fr',N'Polish',N'48',N'PL');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1114,N'510',N'tr',N'Polish',N'48',N'PL');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1115,N'510',N'ms',N'Polish',N'48',N'Polish');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1116,N'510',N'fa',N'Polish',N'48',N'PL');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1117,N'512',N'fr',N'Danish',N'45',N'DK');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1118,N'512',N'tr',N'Danish',N'45',N'DK');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1119,N'512',N'ms',N'Danish',N'45',N'Danish');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1120,N'512',N'fa',N'Danish',N'45',N'DK');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1121,N'513',N'fr',N'Romanian',N'40',N'RO');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1122,N'513',N'tr',N'Romanian',N'40',N'RO');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1123,N'513',N'ms',N'Romanian',N'40',N'Romanian');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1124,N'513',N'fa',N'Romanian',N'40',N'RO');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1125,N'514',N'fr',N'Swedish',N'46',N'SE');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1126,N'514',N'tr',N'Swedish',N'46',N'SE');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1127,N'514',N'ms',N'Swedish',N'46',N'Swedish');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1128,N'514',N'fa',N'Swedish',N'46',N'SE');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1129,N'515',N'fr',N'Swiss',N'41',N'CH');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1130,N'515',N'tr',N'Swiss',N'41',N'CH');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1131,N'515',N'ms',N'Swiss',N'41',N'Swiss');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1132,N'515',N'fa',N'Swiss',N'41',N'CH');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1133,N'516',N'fr',N'Franch',N'33',N'FR');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1134,N'516',N'tr',N'Franch',N'33',N'FR');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1135,N'516',N'ms',N'Franch',N'33',N'Franch');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1136,N'516',N'fa',N'Franch',N'33',N'FR');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1137,N'517',N'fr',N'Finlander',N'358',N'AX');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1138,N'517',N'tr',N'Finlander',N'358',N'AX');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1139,N'517',N'ms',N'Finlander',N'358',N'Finlander');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1140,N'517',N'fa',N'Finlander',N'358',N'AX');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1141,N'518',N'fr',N'Serbia',N'381',N'RS');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1142,N'518',N'tr',N'Serbia',N'381',N'RS');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1143,N'518',N'ms',N'Serbia',N'381',N'Serbia');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1144,N'518',N'fa',N'Serbia',N'381',N'RS');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1145,N'519',N'fr',N'Dutch',N'31',N'NL');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1146,N'519',N'tr',N'Dutch',N'31',N'NL');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1147,N'519',N'ms',N'Dutch',N'31',N'Dutch');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1148,N'519',N'fa',N'Dutch',N'31',N'NL');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1149,N'521',N'fr',N'GreeK',N'30',N'GR');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1150,N'521',N'tr',N'GreeK',N'30',N'GR');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1151,N'521',N'ms',N'GreeK',N'30',N'GreeK');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1152,N'521',N'fa',N'GreeK',N'30',N'GR');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1153,N'522',N'fr',N'Andorian',N'376',N'AD');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1154,N'522',N'tr',N'Andorian',N'376',N'AD');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1155,N'522',N'ms',N'Andorian',N'376',N'Andorian');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1156,N'522',N'fa',N'Andorian',N'376',N'AD');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1157,N'523',N'fr',N'Austrian',N'43',N'AT');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1158,N'523',N'tr',N'Austrian',N'43',N'AT');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1159,N'523',N'ms',N'Austrian',N'43',N'Austrian');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1160,N'523',N'fa',N'Austrian',N'43',N'AT');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1161,N'524',N'fr',N'Montenegro',N'382',N'ME');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1162,N'524',N'tr',N'Montenegro',N'382',N'ME');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1163,N'524',N'ms',N'Montenegro',N'382',N'Montenegro');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1164,N'524',N'fa',N'Montenegro',N'382',N'ME');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1165,N'525',N'fr',N'Hungarian',N'36',N'HU');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1166,N'525',N'tr',N'Hungarian',N'36',N'HU');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1167,N'525',N'ms',N'Hungarian',N'36',N'Hungarian');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1168,N'525',N'fa',N'Hungarian',N'36',N'HU');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1169,N'526',N'fr',N'Icelander',N'354',N'IS');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1170,N'526',N'tr',N'Icelander',N'354',N'IS');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1171,N'526',N'ms',N'Icelander',N'354',N'Icelander');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1172,N'526',N'fa',N'Icelander',N'354',N'IS');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1173,N'527',N'fr',N'Liechtenstein',N'423',N'LI');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1174,N'527',N'tr',N'Liechtenstein',N'423',N'LI');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1175,N'527',N'ms',N'Liechtenstein',N'423',N'Liechtenstein');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1176,N'527',N'fa',N'Liechtenstein',N'423',N'LI');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1177,N'528',N'fr',N'Luxembourgian',N'352',N'LU');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1178,N'528',N'tr',N'Luxembourgian',N'352',N'LU');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1179,N'528',N'ms',N'Luxembourgian',N'352',N'Luxembourgian');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1180,N'528',N'fa',N'Luxembourgian',N'352',N'LU');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1181,N'529',N'fr',N'Maltese',N'356',N'MT');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1182,N'529',N'tr',N'Maltese',N'356',N'MT');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1183,N'529',N'ms',N'Maltese',N'356',N'Maltese');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1184,N'529',N'fa',N'Maltese',N'356',N'MT');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1185,N'530',N'fr',N'Monacan',N'377',N'MC');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1186,N'530',N'tr',N'Monacan',N'377',N'MC');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1187,N'530',N'ms',N'Monacan',N'377',N'Monacan');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1188,N'530',N'fa',N'Monacan',N'377',N'MC');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1189,N'531',N'fr',N'Norwegian',N'47',N'SJ');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1190,N'531',N'tr',N'Norwegian',N'47',N'SJ');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1191,N'531',N'ms',N'Norwegian',N'47',N'Norwegian');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1192,N'531',N'fa',N'Norwegian',N'47',N'SJ');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1193,N'532',N'fr',N'San Marino',N'378',N'SM');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1194,N'532',N'tr',N'San Marino',N'378',N'SM');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1195,N'532',N'ms',N'San Marino',N'378',N'San Marino');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1196,N'532',N'fa',N'San Marino',N'378',N'SM');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1197,N'533',N'fr',N'Vatican',N'1039',N'VA');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1198,N'533',N'tr',N'Vatican',N'1039',N'VA');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1199,N'533',N'ms',N'Vatican',N'1039',N'Vatican');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1200,N'533',N'fa',N'Vatican',N'1039',N'VA');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1201,N'534',N'fr',N'Gibraltarian',N'350',N'GI');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1202,N'534',N'tr',N'Gibraltarian',N'350',N'GI');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1203,N'534',N'ms',N'Gibraltarian',N'350',N'Gibraltarian');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1204,N'534',N'fa',N'Gibraltarian',N'350',N'GI');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1205,N'536',N'fr',N'Ucranian',N'380',N'UA');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1206,N'536',N'tr',N'Ucranian',N'380',N'UA');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1207,N'536',N'ms',N'Ucranian',N'380',N'Ucranian');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1208,N'536',N'fa',N'Ucranian',N'380',N'UA');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1209,N'537',N'fr',N'Belarussian',N'375',N'BY');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1210,N'537',N'tr',N'Belarussian',N'375',N'BY');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1211,N'537',N'ms',N'Belarussian',N'375',N'Belarussian');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1212,N'537',N'fa',N'Belarussian',N'375',N'BY');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1213,N'539',N'fr',N'Armenian',N'374',N'AM');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1214,N'539',N'tr',N'Armenian',N'374',N'AM');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1215,N'539',N'ms',N'Armenian',N'374',N'Armenian');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1216,N'539',N'fa',N'Armenian',N'374',N'AM');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1217,N'540',N'fr',N'Moldovian',N'373',N'MD');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1218,N'540',N'tr',N'Moldovian',N'373',N'MD');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1219,N'540',N'ms',N'Moldovian',N'373',N'Moldovian');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1220,N'540',N'fa',N'Moldovian',N'373',N'MD');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1221,N'541',N'fr',N'Georgian',N'995',N'GE');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1222,N'541',N'tr',N'Georgian',N'995',N'GE');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1223,N'541',N'ms',N'Georgian',N'995',N'Georgian');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1224,N'541',N'fa',N'Georgian',N'995',N'GE');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1225,N'542',N'fr',N'Lithuanian',N'370',N'LT');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1226,N'542',N'tr',N'Lithuanian',N'370',N'LT');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1227,N'542',N'ms',N'Lithuanian',N'370',N'Lithuanian');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1228,N'542',N'fa',N'Lithuanian',N'370',N'LT');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1229,N'543',N'fr',N'Estonian',N'372',N'EE');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1230,N'543',N'tr',N'Estonian',N'372',N'EE');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1231,N'543',N'ms',N'Estonian',N'372',N'Estonian');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1232,N'543',N'fa',N'Estonian',N'372',N'EE');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1233,N'544',N'fr',N'Latvian',N'371',N'LV');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1234,N'544',N'tr',N'Latvian',N'371',N'LV');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1235,N'544',N'ms',N'Latvian',N'371',N'Latvian');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1236,N'544',N'fa',N'Latvian',N'371',N'LV');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1237,N'545',N'fr',N'Bosnian',N'387',N'BA');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1238,N'545',N'tr',N'Bosnian',N'387',N'BA');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1239,N'545',N'ms',N'Bosnian',N'387',N'Bosnian');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1240,N'545',N'fa',N'Bosnian',N'387',N'BA');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1241,N'546',N'fr',N'Croatian',N'385',N'HR');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1242,N'546',N'tr',N'Croatian',N'385',N'HR');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1243,N'546',N'ms',N'Croatian',N'385',N'Croatian');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1244,N'546',N'fa',N'Croatian',N'385',N'HR');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1245,N'547',N'fr',N'Slovenian',N'386',N'SI');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1246,N'547',N'tr',N'Slovenian',N'386',N'SI');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1247,N'547',N'ms',N'Slovenian',N'386',N'Slovenian');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1248,N'547',N'fa',N'Slovenian',N'386',N'SI');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1249,N'549',N'fr',N'Macedonian',N'389',N'MK');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1250,N'549',N'tr',N'Macedonian',N'389',N'MK');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1251,N'549',N'ms',N'Macedonian',N'389',N'Macedonian');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1252,N'549',N'fa',N'Macedonian',N'389',N'MK');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1253,N'552',N'fr',N'Czechish',N'420',N'CZ');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1254,N'552',N'tr',N'Czechish',N'420',N'CZ');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1255,N'552',N'ms',N'Czechish',N'420',N'Czechish');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1256,N'552',N'fa',N'Czechish',N'420',N'CZ');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1257,N'553',N'fr',N'Slovakian',N'421',N'SK');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1258,N'553',N'tr',N'Slovakian',N'421',N'SK');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1259,N'553',N'ms',N'Slovakian',N'421',N'Slovakian');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1260,N'553',N'fa',N'Slovakian',N'421',N'SK');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1261,N'554',N'fr',N'Faroe Islands',N'298',N'FO');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1262,N'554',N'tr',N'Faroe Islands',N'298',N'FO');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1263,N'554',N'ms',N'Faroe Islands',N'298',N'Faroe Islands');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1264,N'554',N'fa',N'Faroe Islands',N'298',N'FO');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1265,N'601',N'fr',N'American',N'1',N'US');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1266,N'601',N'tr',N'American',N'1',N'US');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1267,N'601',N'ms',N'American',N'1',N'American');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1268,N'601',N'fa',N'American',N'1',N'US');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1269,N'602',N'fr',N'Argentinian',N'54',N'AR');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1270,N'602',N'tr',N'Argentinian',N'54',N'AR');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1271,N'602',N'ms',N'Argentinian',N'54',N'Argentinian');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1272,N'602',N'fa',N'Argentinian',N'54',N'AR');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1273,N'603',N'fr',N'Barbadian',N'1246',N'BB');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1274,N'603',N'tr',N'Barbadian',N'1246',N'BB');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1275,N'603',N'ms',N'Barbadian',N'1246',N'Barbadian');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1276,N'603',N'fa',N'Barbadian',N'1246',N'BB');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1277,N'604',N'fr',N'Brazilian',N'55',N'BR');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1278,N'604',N'tr',N'Brazilian',N'55',N'BR');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1279,N'604',N'ms',N'Brazilian',N'55',N'Brazilian');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1280,N'604',N'fa',N'Brazilian',N'55',N'BR');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1281,N'605',N'fr',N'Panamanian',N'507',N'PA');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1282,N'605',N'tr',N'Panamanian',N'507',N'PA');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1283,N'605',N'ms',N'Panamanian',N'507',N'Panamanian');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1284,N'605',N'fa',N'Panamanian',N'507',N'PA');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1285,N'606',N'fr',N'Trinindad',N'868',N'TT');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1286,N'606',N'tr',N'Trinindad',N'868',N'TT');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1287,N'606',N'ms',N'Trinindad',N'868',N'Trinindad');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1288,N'606',N'fa',N'Trinindad',N'868',N'TT');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1289,N'607',N'fr',N'Jamaican',N'876',N'JM');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1290,N'607',N'tr',N'Jamaican',N'876',N'JM');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1291,N'607',N'ms',N'Jamaican',N'876',N'Jamaican');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1292,N'607',N'fa',N'Jamaican',N'876',N'JM');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1293,N'608',N'fr',N'Guyanese',N'592',N'GY');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1294,N'608',N'tr',N'Guyanese',N'592',N'GY');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1295,N'608',N'ms',N'Guyanese',N'592',N'Guyanese');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1296,N'608',N'fa',N'Guyanese',N'592',N'GY');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1297,N'609',N'fr',N'Venezuelan',N'58',N'VE');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1298,N'609',N'tr',N'Venezuelan',N'58',N'VE');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1299,N'609',N'ms',N'Venezuelan',N'58',N'Venezuelan');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1300,N'609',N'fa',N'Venezuelan',N'58',N'VE');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1301,N'610',N'fr',N'Canadian',N'1',N'CA');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1302,N'610',N'tr',N'Canadian',N'1',N'CA');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1303,N'610',N'ms',N'Canadian',N'1',N'Canadian');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1304,N'610',N'fa',N'Canadian',N'1',N'CA');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1305,N'611',N'fr',N'Colombian',N'57',N'CO');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1306,N'611',N'tr',N'Colombian',N'57',N'CO');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1307,N'611',N'ms',N'Colombian',N'57',N'Colombian');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1308,N'611',N'fa',N'Colombian',N'57',N'CO');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1309,N'612',N'fr',N'Bahamian',N'1242',N'BS');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1310,N'612',N'tr',N'Bahamian',N'1242',N'BS');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1311,N'612',N'ms',N'Bahamian',N'1242',N'Bahamian');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1312,N'612',N'fa',N'Bahamian',N'1242',N'BS');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1313,N'613',N'fr',N'Costa Rican',N'506',N'CR');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1314,N'613',N'tr',N'Costa Rican',N'506',N'CR');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1315,N'613',N'ms',N'Costa Rican',N'506',N'Costa Rican');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1316,N'613',N'fa',N'Costa Rican',N'506',N'CR');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1317,N'614',N'fr',N'Cuban',N'53',N'CU');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1318,N'614',N'tr',N'Cuban',N'53',N'CU');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1319,N'614',N'ms',N'Cuban',N'53',N'Cuban');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1320,N'614',N'fa',N'Cuban',N'53',N'CU');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1321,N'615',N'fr',N'Dominican',N'767',N'DM');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1322,N'615',N'tr',N'Dominican',N'767',N'DM');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1323,N'615',N'ms',N'Dominican',N'767',N'Dominican');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1324,N'615',N'fa',N'Dominican',N'767',N'DM');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1325,N'616',N'fr',N'Republic Dominica',N'809',N'DO');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1326,N'616',N'tr',N'Republic Dominica',N'809',N'DO');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1327,N'616',N'ms',N'Republic Dominica',N'809',N'Republic Dominica');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1328,N'616',N'fa',N'Republic Dominica',N'809',N'DO');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1329,N'617',N'fr',N'Salvadorian',N'503',N'SV');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1330,N'617',N'tr',N'Salvadorian',N'503',N'SV');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1331,N'617',N'ms',N'Salvadorian',N'503',N'Salvadorian');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1332,N'617',N'fa',N'Salvadorian',N'503',N'SV');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1333,N'618',N'fr',N'Grenadian',N'473',N'GD');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1334,N'618',N'tr',N'Grenadian',N'473',N'GD');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1335,N'618',N'ms',N'Grenadian',N'473',N'Grenadian');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1336,N'618',N'fa',N'Grenadian',N'473',N'GD');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1337,N'619',N'fr',N'Guatemalan',N'502',N'GT');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1338,N'619',N'tr',N'Guatemalan',N'502',N'GT');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1339,N'619',N'ms',N'Guatemalan',N'502',N'Guatemalan');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1340,N'619',N'fa',N'Guatemalan',N'502',N'GT');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1341,N'620',N'fr',N'Haitian',N'509',N'HT');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1342,N'620',N'tr',N'Haitian',N'509',N'HT');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1343,N'620',N'ms',N'Haitian',N'509',N'Haitian');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1344,N'620',N'fa',N'Haitian',N'509',N'HT');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1345,N'621',N'fr',N'Honduranian',N'504',N'HN');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1346,N'621',N'tr',N'Honduranian',N'504',N'HN');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1347,N'621',N'ms',N'Honduranian',N'504',N'Honduranian');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1348,N'621',N'fa',N'Honduranian',N'504',N'HN');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1349,N'622',N'fr',N'Mexican',N'52',N'MX');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1350,N'622',N'tr',N'Mexican',N'52',N'MX');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1351,N'622',N'ms',N'Mexican',N'52',N'Mexican');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1352,N'622',N'fa',N'Mexican',N'52',N'MX');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1353,N'623',N'fr',N'Nicaraguan',N'505',N'NI');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1354,N'623',N'tr',N'Nicaraguan',N'505',N'NI');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1355,N'623',N'ms',N'Nicaraguan',N'505',N'Nicaraguan');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1356,N'623',N'fa',N'Nicaraguan',N'505',N'NI');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1357,N'624',N'fr',N'Saint Lucia',N'758',N'LC');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1358,N'624',N'tr',N'Saint Lucia',N'758',N'LC');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1359,N'624',N'ms',N'Saint Lucia',N'758',N'Saint Lucia');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1360,N'624',N'fa',N'Saint Lucia',N'758',N'LC');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1361,N'625',N'fr',N'Saint Vincent',N'784',N'VC');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1362,N'625',N'tr',N'Saint Vincent',N'784',N'VC');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1363,N'625',N'ms',N'Saint Vincent',N'784',N'Saint Vincent');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1364,N'625',N'fa',N'Saint Vincent',N'784',N'VC');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1365,N'626',N'fr',N'Bolivian',N'591',N'BO');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1366,N'626',N'tr',N'Bolivian',N'591',N'BO');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1367,N'626',N'ms',N'Bolivian',N'591',N'Bolivian');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1368,N'626',N'fa',N'Bolivian',N'591',N'BO');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1369,N'627',N'fr',N'Chilean',N'56',N'CL');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1370,N'627',N'tr',N'Chilean',N'56',N'CL');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1371,N'627',N'ms',N'Chilean',N'56',N'Chilean');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1372,N'627',N'fa',N'Chilean',N'56',N'CL');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1373,N'628',N'fr',N'Ecuadorean',N'593',N'EC');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1374,N'628',N'tr',N'Ecuadorean',N'593',N'EC');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1375,N'628',N'ms',N'Ecuadorean',N'593',N'Ecuadorean');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1376,N'628',N'fa',N'Ecuadorean',N'593',N'EC');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1377,N'629',N'fr',N'Paraguayan',N'595',N'PY');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1378,N'629',N'tr',N'Paraguayan',N'595',N'PY');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1379,N'629',N'ms',N'Paraguayan',N'595',N'Paraguayan');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1380,N'629',N'fa',N'Paraguayan',N'595',N'PY');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1381,N'630',N'fr',N'Peruvian',N'51',N'PE');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1382,N'630',N'tr',N'Peruvian',N'51',N'PE');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1383,N'630',N'ms',N'Peruvian',N'51',N'Peruvian');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1384,N'630',N'fa',N'Peruvian',N'51',N'PE');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1385,N'701',N'fr',N'Australian',N'61',N'CC');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1386,N'701',N'tr',N'Australian',N'61',N'CC');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1387,N'701',N'ms',N'Australian',N'61',N'Australian');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1388,N'701',N'fa',N'Australian',N'61',N'CC');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1389,N'702',N'fr',N'N.zelander',N'64',N'NZ');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1390,N'702',N'tr',N'N.zelander',N'64',N'NZ');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1391,N'702',N'ms',N'N.zelander',N'64',N'N.zelander');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1392,N'702',N'fa',N'N.zelander',N'64',N'NZ');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1393,N'112',N'fr',N'يمني جنوبي ',N'967',N'YE');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1394,N'112',N'tr',N'يمني جنوبي ',N'967',N'YE');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1395,N'112',N'ms',N'يمني جنوبي ',N'967',N'يمني جنوبي ');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1396,N'112',N'fa',N'يمني جنوبي ',N'967',N'YE');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1397,N'114',N'fr',N'يمني جنوبيالسلاطين',N'967',N'YE');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1398,N'114',N'tr',N'يمني جنوبيالسلاطين',N'967',N'YE');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1399,N'114',N'ms',N'يمني جنوبيالسلاطين',N'967',N'يمني جنوبيالسلاطين');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1400,N'114',N'fa',N'يمني جنوبيالسلاطين',N'967',N'YE');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1401,N'115',N'fr',N'بني حارث',N'967',N'YE');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1402,N'115',N'tr',N'بني حارث',N'967',N'YE');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1403,N'115',N'ms',N'بني حارث',N'967',N'بني حارث');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1404,N'115',N'fa',N'بني حارث',N'967',N'YE');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1405,N'118',N'fr',N'Bahrain Res.',N'967',N'BH');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1406,N'118',N'tr',N'Bahrain Res.',N'967',N'BH');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1407,N'118',N'ms',N'Bahrain Res.',N'967',N'Bahrain Res.');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1408,N'118',N'fa',N'Bahrain Res.',N'967',N'BH');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1409,N'314',N'fr',N'Taiwanese',N'886',N'TWN');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1410,N'314',N'tr',N'Taiwanese',N'886',N'TWN');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1411,N'314',N'ms',N'Taiwanese',N'886',N'Taiwanese');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1412,N'314',N'fa',N'Taiwanese',N'886',N'TWN');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1413,N'333',N'fr',N'Blushistani',N'81',N'PK');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1414,N'333',N'tr',N'Blushistani',N'81',N'PK');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1415,N'333',N'ms',N'Blushistani',N'81',N'Blushistani');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1416,N'333',N'fa',N'Blushistani',N'81',N'PK');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1417,N'334',N'fr',N'Bukharan',N'',N'');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1418,N'334',N'tr',N'Bukharan',N'',N'');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1419,N'334',N'ms',N'Bukharan',N'',N'Bukharan');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1420,N'334',N'fa',N'Bukharan',N'',N'');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1421,N'335',N'fr',N'القبائل النازحة',N'',N'');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1422,N'335',N'tr',N'القبائل النازحة',N'',N'');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1423,N'335',N'ms',N'القبائل النازحة',N'',N'القبائل النازحة');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1424,N'335',N'fa',N'القبائل النازحة',N'',N'');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1425,N'341',N'fr',N'Sukatra',N'',N'');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1426,N'341',N'tr',N'Sukatra',N'',N'');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1427,N'341',N'ms',N'Sukatra',N'',N'Sukatra');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1428,N'341',N'fa',N'Sukatra',N'',N'');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1429,N'342',N'fr',N'Mahara',N'',N'');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1430,N'342',N'tr',N'Mahara',N'',N'');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1431,N'342',N'ms',N'Mahara',N'',N'Mahara');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1432,N'342',N'fa',N'Mahara',N'',N'');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1433,N'346',N'fr',N'Ingush',N'',N'');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1434,N'346',N'tr',N'Ingush',N'',N'');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1435,N'346',N'ms',N'Ingush',N'',N'Ingush');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1436,N'346',N'fa',N'Ingush',N'',N'');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1437,N'446',N'fr',N'Reunese',N'262',N'REU');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1438,N'446',N'tr',N'Reunese',N'262',N'REU');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1439,N'446',N'ms',N'Reunese',N'262',N'Reunese');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1440,N'446',N'fa',N'Reunese',N'262',N'REU');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1441,N'447',N'fr',N'ترانسكي',N'',N'');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1442,N'447',N'tr',N'ترانسكي',N'',N'');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1443,N'447',N'ms',N'ترانسكي',N'',N'ترانسكي');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1444,N'447',N'fa',N'ترانسكي',N'',N'');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1445,N'448',N'fr',N'فيندي',N'',N'');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1446,N'448',N'tr',N'فيندي',N'',N'');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1447,N'448',N'ms',N'فيندي',N'',N'فيندي');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1448,N'448',N'fa',N'فيندي',N'',N'');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1449,N'511',N'fr',N'Czechlovakian',N'42',N'CSK');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1450,N'511',N'tr',N'Czechlovakian',N'42',N'CSK');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1451,N'511',N'ms',N'Czechlovakian',N'42',N'Czechlovakian');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1452,N'511',N'fa',N'Czechlovakian',N'42',N'CSK');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1453,N'520',N'fr',N'Yugoslavian',N'38',N'SER');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1454,N'520',N'tr',N'Yugoslavian',N'38',N'SER');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1455,N'520',N'ms',N'Yugoslavian',N'38',N'Yugoslavian');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1456,N'520',N'fa',N'Yugoslavian',N'38',N'SER');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1457,N'631',N'fr',N'Suriname',N'597',N'SUR');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1458,N'631',N'tr',N'Suriname',N'597',N'SUR');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1459,N'631',N'ms',N'Suriname',N'597',N'Suriname');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1460,N'631',N'fa',N'Suriname',N'597',N'SUR');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1461,N'632',N'fr',N'Uruguayan',N'598',N'URY');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1462,N'632',N'tr',N'Uruguayan',N'598',N'URY');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1463,N'632',N'ms',N'Uruguayan',N'598',N'Uruguayan');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1464,N'632',N'fa',N'Uruguayan',N'598',N'URY');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1465,N'633',N'fr',N'س بييري وميكويلن',N'',N'');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1466,N'633',N'tr',N'س بييري وميكويلن',N'',N'');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1467,N'633',N'ms',N'س بييري وميكويلن',N'',N'س بييري وميكويلن');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1468,N'633',N'fa',N'س بييري وميكويلن',N'',N'');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1469,N'634',N'fr',N'GreenLander',N'299',N'GRL');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1470,N'634',N'tr',N'GreenLander',N'299',N'GRL');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1471,N'634',N'ms',N'GreenLander',N'299',N'GreenLander');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1472,N'634',N'fa',N'GreenLander',N'299',N'GRL');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1473,N'635',N'fr',N'Belizian',N'501',N'BLZ');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1474,N'635',N'tr',N'Belizian',N'501',N'BLZ');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1475,N'635',N'ms',N'Belizian',N'501',N'Belizian');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1476,N'635',N'fa',N'Belizian',N'501',N'BLZ');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1477,N'636',N'fr',N'بيرمودي',N'',N'');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1478,N'636',N'tr',N'بيرمودي',N'',N'');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1479,N'636',N'ms',N'بيرمودي',N'',N'بيرمودي');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1480,N'636',N'fa',N'بيرمودي',N'',N'');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1481,N'637',N'fr',N'ج الترك والقوقاز ',N'',N'');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1482,N'637',N'tr',N'ج الترك والقوقاز ',N'',N'');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1483,N'637',N'ms',N'ج الترك والقوقاز ',N'',N'ج الترك والقوقاز ');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1484,N'637',N'fa',N'ج الترك والقوقاز ',N'',N'');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1485,N'638',N'fr',N'سان كريستوفرنيفز',N'',N'');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1486,N'638',N'tr',N'سان كريستوفرنيفز',N'',N'');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1487,N'638',N'ms',N'سان كريستوفرنيفز',N'',N'سان كريستوفرنيفز');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1488,N'638',N'fa',N'سان كريستوفرنيفز',N'',N'');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1489,N'641',N'fr',N'Virgin Isaland British',N'1',N'VGB');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1490,N'641',N'tr',N'Virgin Isaland British',N'1',N'VGB');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1491,N'641',N'ms',N'Virgin Isaland British',N'1',N'Virgin Isaland British');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1492,N'641',N'fa',N'Virgin Isaland British',N'1',N'VGB');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1493,N'642',N'fr',N'Caymanian',N'1',N'CYM');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1494,N'642',N'tr',N'Caymanian',N'1',N'CYM');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1495,N'642',N'ms',N'Caymanian',N'1',N'Caymanian');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1496,N'642',N'fa',N'Caymanian',N'1',N'CYM');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1497,N'643',N'fr',N'مونت سيرات',N'1',N'MSR');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1498,N'643',N'tr',N'مونت سيرات',N'1',N'MSR');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1499,N'643',N'ms',N'مونت سيرات',N'1',N'مونت سيرات');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1500,N'643',N'fa',N'مونت سيرات',N'1',N'MSR');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1501,N'644',N'fr',N'Guadeloupean',N'590',N'GLP');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1502,N'644',N'tr',N'Guadeloupean',N'590',N'GLP');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1503,N'644',N'ms',N'Guadeloupean',N'590',N'Guadeloupean');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1504,N'644',N'fa',N'Guadeloupean',N'590',N'GLP');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1505,N'645',N'fr',N'مارتينيكوي',N'596',N'MTQ');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1506,N'645',N'tr',N'مارتينيكوي',N'596',N'MTQ');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1507,N'645',N'ms',N'مارتينيكوي',N'596',N'مارتينيكوي');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1508,N'645',N'fa',N'مارتينيكوي',N'596',N'MTQ');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1509,N'646',N'fr',N'عروبي',N'',N'');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1510,N'646',N'tr',N'عروبي',N'',N'');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1511,N'646',N'ms',N'عروبي',N'',N'عروبي');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1512,N'646',N'fa',N'عروبي',N'',N'');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1513,N'647',N'fr',N'بونيري',N'',N'');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1514,N'647',N'tr',N'بونيري',N'',N'');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1515,N'647',N'ms',N'بونيري',N'',N'بونيري');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1516,N'647',N'fa',N'بونيري',N'',N'');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1517,N'648',N'fr',N'كيوراكو',N'',N'');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1518,N'648',N'tr',N'كيوراكو',N'',N'');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1519,N'648',N'ms',N'كيوراكو',N'',N'كيوراكو');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1520,N'648',N'fa',N'كيوراكو',N'',N'');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1521,N'650',N'fr',N'سابا',N'60-8',N'SBH');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1522,N'650',N'tr',N'سابا',N'60-8',N'SBH');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1523,N'650',N'ms',N'سابا',N'60-8',N'سابا');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1524,N'650',N'fa',N'سابا',N'60-8',N'SBH');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1525,N'652',N'fr',N'Puerto Rican',N'1',N'PRT');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1526,N'652',N'tr',N'Puerto Rican',N'1',N'PRT');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1527,N'652',N'ms',N'Puerto Rican',N'1',N'Puerto Rican');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1528,N'652',N'fa',N'Puerto Rican',N'1',N'PRT');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1529,N'653',N'fr',N'Virgin Isaland US',N'1',N'VIR');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1530,N'653',N'tr',N'Virgin Isaland US',N'1',N'VIR');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1531,N'653',N'ms',N'Virgin Isaland US',N'1',N'Virgin Isaland US');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1532,N'653',N'fa',N'Virgin Isaland US',N'1',N'VIR');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1533,N'654',N'fr',N'Falklander',N'500',N'FLK');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1534,N'654',N'tr',N'Falklander',N'500',N'FLK');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1535,N'654',N'ms',N'Falklander',N'500',N'Falklander');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1536,N'654',N'fa',N'Falklander',N'500',N'FLK');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1537,N'655',N'fr',N'Guinean',N'',N'');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1538,N'655',N'tr',N'Guinean',N'',N'');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1539,N'655',N'ms',N'Guinean',N'',N'Guinean');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1540,N'655',N'fa',N'Guinean',N'',N'');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1541,N'656',N'fr',N'United Nations',N'',N'');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1542,N'656',N'tr',N'United Nations',N'',N'');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1543,N'656',N'ms',N'United Nations',N'',N'United Nations');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1544,N'656',N'fa',N'United Nations',N'',N'');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1545,N'703',N'fr',N'بابوا نيوغينا',N'',N'');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1546,N'703',N'tr',N'بابوا نيوغينا',N'',N'');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1547,N'703',N'ms',N'بابوا نيوغينا',N'',N'بابوا نيوغينا');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1548,N'703',N'fa',N'بابوا نيوغينا',N'',N'');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1549,N'801',N'fr',N'Fijian',N'',N'');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1550,N'801',N'tr',N'Fijian',N'',N'');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1551,N'801',N'ms',N'Fijian',N'',N'Fijian');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1552,N'801',N'fa',N'Fijian',N'',N'');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1553,N'803',N'fr',N'Nauru',N'',N'NRU');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1554,N'803',N'tr',N'Nauru',N'',N'NRU');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1555,N'803',N'ms',N'Nauru',N'',N'Nauru');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1556,N'803',N'fa',N'Nauru',N'',N'NRU');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1557,N'804',N'fr',N'Solomon Island',N'',N'SLB');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1558,N'804',N'tr',N'Solomon Island',N'',N'SLB');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1559,N'804',N'ms',N'Solomon Island',N'',N'Solomon Island');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1560,N'804',N'fa',N'Solomon Island',N'',N'SLB');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1561,N'805',N'fr',N'Tongan',N'',N'TON');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1562,N'805',N'tr',N'Tongan',N'',N'TON');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1563,N'805',N'ms',N'Tongan',N'',N'Tongan');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1564,N'805',N'fa',N'Tongan',N'',N'TON');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1565,N'806',N'fr',N'Tuvalu',N'',N'TUV');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1566,N'806',N'tr',N'Tuvalu',N'',N'TUV');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1567,N'806',N'ms',N'Tuvalu',N'',N'Tuvalu');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1568,N'806',N'fa',N'Tuvalu',N'',N'TUV');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1569,N'807',N'fr',N'فانيوتو',N'',N'');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1570,N'807',N'tr',N'فانيوتو',N'',N'');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1571,N'807',N'ms',N'فانيوتو',N'',N'فانيوتو');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1572,N'807',N'fa',N'فانيوتو',N'',N'');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1573,N'808',N'fr',N'Samoan W.',N'',N'');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1574,N'808',N'tr',N'Samoan W.',N'',N'');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1575,N'808',N'ms',N'Samoan W.',N'',N'Samoan W.');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1576,N'808',N'fa',N'Samoan W.',N'',N'');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1577,N'810',N'fr',N'جوام',N'',N'');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1578,N'810',N'tr',N'جوام',N'',N'');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1579,N'810',N'ms',N'جوام',N'',N'جوام');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1580,N'810',N'fa',N'جوام',N'',N'');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1581,N'811',N'fr',N'جزر ماريانا',N'',N'');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1582,N'811',N'tr',N'جزر ماريانا',N'',N'');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1583,N'811',N'ms',N'جزر ماريانا',N'',N'جزر ماريانا');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1584,N'811',N'fa',N'جزر ماريانا',N'',N'');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1585,N'812',N'fr',N'Micronesia',N'691',N'FSM');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1586,N'812',N'tr',N'Micronesia',N'691',N'FSM');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1587,N'812',N'ms',N'Micronesia',N'691',N'Micronesia');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1588,N'812',N'fa',N'Micronesia',N'691',N'FSM');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1589,N'813',N'fr',N'Marshall Island',N'692',N'MHL');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1590,N'813',N'tr',N'Marshall Island',N'692',N'MHL');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1591,N'813',N'ms',N'Marshall Island',N'692',N'Marshall Island');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1592,N'813',N'fa',N'Marshall Island',N'692',N'MHL');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1593,N'814',N'fr',N'بيلو',N'',N'');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1594,N'814',N'tr',N'بيلو',N'',N'');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1595,N'814',N'ms',N'بيلو',N'',N'بيلو');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1596,N'814',N'fa',N'بيلو',N'',N'');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1597,N'548',N'fr',N'Serbian',N'381',N'SRB');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1598,N'548',N'tr',N'Serbian',N'381',N'SRB');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1599,N'548',N'ms',N'Serbian',N'381',N'Serbian');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1600,N'548',N'fa',N'Serbian',N'381',N'SRB');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1601,N'550',N'fr',N'Kosovar',N'',N'');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1602,N'550',N'tr',N'Kosovar',N'',N'');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1603,N'550',N'ms',N'Kosovar',N'',N'Kosovar');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1604,N'550',N'fa',N'Kosovar',N'',N'');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1605,N'815',N'fr',N'بولينيسياالفرنسية',N'',N'');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1606,N'815',N'tr',N'بولينيسياالفرنسية',N'',N'');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1607,N'815',N'ms',N'بولينيسياالفرنسية',N'',N'بولينيسياالفرنسية');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1608,N'815',N'fa',N'بولينيسياالفرنسية',N'',N'');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1609,N'816',N'fr',N'Wallis and Futura Isl.',N'681',N'WLF');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1610,N'816',N'tr',N'Wallis and Futura Isl.',N'681',N'WLF');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1611,N'816',N'ms',N'Wallis and Futura Isl.',N'681',N'Wallis and Futura Isl.');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1612,N'816',N'fa',N'Wallis and Futura Isl.',N'681',N'WLF');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1613,N'817',N'fr',N'كاليدونيا الجديد',N'687',N'NCL');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1614,N'817',N'tr',N'كاليدونيا الجديد',N'687',N'NCL');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1615,N'817',N'ms',N'كاليدونيا الجديد',N'687',N'كاليدونيا الجديد');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1616,N'817',N'fa',N'كاليدونيا الجديد',N'687',N'NCL');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1617,N'900',N'fr',N'Unknown',N'',N'');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1618,N'900',N'tr',N'Unknown',N'',N'');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1619,N'900',N'ms',N'Unknown',N'',N'Unknown');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1620,N'900',N'fa',N'Unknown',N'',N'');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1621,N'818',N'fr',N'Madagascan',N'261',N'MDG');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1622,N'818',N'tr',N'Madagascan',N'261',N'MDG');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1623,N'818',N'ms',N'Madagascan',N'261',N'Madagascan');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1624,N'818',N'fa',N'Madagascan',N'261',N'MDG');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1625,N'126',N'fr',N'وثيقة قطرية',N'',N'');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1626,N'126',N'tr',N'وثيقة قطرية',N'',N'');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1627,N'126',N'ms',N'وثيقة قطرية',N'',N'وثيقة قطرية');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1628,N'126',N'fa',N'وثيقة قطرية',N'',N'');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1629,N'128',N'fr',N'Emirati Doct',N'',N'');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1630,N'128',N'tr',N'Emirati Doct',N'',N'');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1631,N'128',N'ms',N'Emirati Doct',N'',N'Emirati Doct');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1632,N'128',N'fa',N'Emirati Doct',N'',N'');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1633,N'116',N'fr',N'Kuwaiti Without',N'',N'');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1634,N'116',N'tr',N'Kuwaiti Without',N'',N'');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1635,N'116',N'ms',N'Kuwaiti Without',N'',N'Kuwaiti Without');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1636,N'116',N'fa',N'Kuwaiti Without',N'',N'');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1637,N'121',N'fr',N'Palestinian (Egyptian T.Doct.)',N'20',N'PS');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1638,N'121',N'tr',N'Palestinian (Egyptian T.Doct.)',N'20',N'PS');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1639,N'121',N'ms',N'Palestinian (Egyptian T.Doct.)',N'20',N'Palestinian (Egyptian T.Doct.)');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1640,N'121',N'fa',N'Palestinian (Egyptian T.Doct.)',N'20',N'PS');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1641,N'125',N'fr',N'Palestinian (Syrian T.Doct.)',N'963',N'PS');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1642,N'125',N'tr',N'Palestinian (Syrian T.Doct.)',N'963',N'PS');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1643,N'125',N'ms',N'Palestinian (Syrian T.Doct.)',N'963',N'Palestinian (Syrian T.Doct.)');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1644,N'125',N'fa',N'Palestinian (Syrian T.Doct.)',N'963',N'PS');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1645,N'352',N'fr',N'Myanmar / Passport of Pakistan',N'',N'');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1646,N'352',N'tr',N'Myanmar / Passport of Pakistan',N'',N'');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1647,N'352',N'ms',N'Myanmar / Passport of Pakistan',N'',N'Myanmar / Passport of Pakistan');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1648,N'352',N'fa',N'Myanmar / Passport of Pakistan',N'',N'');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1649,N'350',N'fr',N'without',N'',N'');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1650,N'350',N'tr',N'without',N'',N'');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1651,N'350',N'ms',N'without',N'',N'without');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1652,N'350',N'fa',N'without',N'',N'');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1653,N'353',N'fr',N'ميانمار/جوازبنجلا دش',N'95',N'MMR');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1654,N'353',N'tr',N'ميانمار/جوازبنجلا دش',N'95',N'MMR');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1655,N'353',N'ms',N'ميانمار/جوازبنجلا دش',N'95',N'ميانمار/جوازبنجلا دش');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1656,N'353',N'fa',N'ميانمار/جوازبنجلا دش',N'95',N'MMR');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1657,N'663',N'fr',N'سانت كيتس  ونافيس',N'1',N'KN');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1658,N'663',N'tr',N'سانت كيتس  ونافيس',N'1',N'KN');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1659,N'663',N'ms',N'سانت كيتس  ونافيس',N'1',N'سانت كيتس  ونافيس');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1660,N'663',N'fa',N'سانت كيتس  ونافيس',N'1',N'KN');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1661,N'351',N'fr',N'ميانمار /مقيم',N'95',N'MMR');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1662,N'351',N'tr',N'ميانمار /مقيم',N'95',N'MMR');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1663,N'351',N'ms',N'ميانمار /مقيم',N'95',N'ميانمار /مقيم');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1664,N'351',N'fa',N'ميانمار /مقيم',N'95',N'MMR');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1665,N'131',N'fr',N'قبائل نازحة/الحليفه',N'',N'');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1666,N'131',N'tr',N'قبائل نازحة/الحليفه',N'',N'');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1667,N'131',N'ms',N'قبائل نازحة/الحليفه',N'',N'قبائل نازحة/الحليفه');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1668,N'131',N'fa',N'قبائل نازحة/الحليفه',N'',N'');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1669,N'136',N'fr',N'غير قطري',N'',N'');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1670,N'136',N'tr',N'غير قطري',N'',N'');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1671,N'136',N'ms',N'غير قطري',N'',N'غير قطري');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1672,N'136',N'fa',N'غير قطري',N'',N'');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1673,N'142',N'fr',N'مقيم/أفراد القبائل',N'',N'');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1674,N'142',N'tr',N'مقيم/أفراد القبائل',N'',N'');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1675,N'142',N'ms',N'مقيم/أفراد القبائل',N'',N'مقيم/أفراد القبائل');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1676,N'142',N'fa',N'مقيم/أفراد القبائل',N'',N'');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1677,N'143',N'fr',N'مقيم/غير معروف',N'',N'');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1678,N'143',N'tr',N'مقيم/غير معروف',N'',N'');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1679,N'143',N'ms',N'مقيم/غير معروف',N'',N'مقيم/غير معروف');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1680,N'143',N'fa',N'مقيم/غير معروف',N'',N'');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1681,N'137',N'fr',N'غير اماراتي',N'',N'');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1682,N'137',N'tr',N'غير اماراتي',N'',N'');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1683,N'137',N'ms',N'غير اماراتي',N'',N'غير اماراتي');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1684,N'137',N'fa',N'غير اماراتي',N'',N'');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1685,N'129',N'fr',N'وثيقة بحرينيه',N'',N'');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1686,N'129',N'tr',N'وثيقة بحرينيه',N'',N'');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1687,N'129',N'ms',N'وثيقة بحرينيه',N'',N'وثيقة بحرينيه');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1688,N'129',N'fa',N'وثيقة بحرينيه',N'',N'');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1689,N'823',N'fr',N'قبيلة نهد',N'',N'');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1690,N'823',N'tr',N'قبيلة نهد',N'',N'');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1691,N'823',N'ms',N'قبيلة نهد',N'',N'قبيلة نهد');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1692,N'823',N'fa',N'قبيلة نهد',N'',N'');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1693,N'144',N'fr',N'مقيم/لا يحمل وثيقة',N'',N'');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1694,N'144',N'tr',N'مقيم/لا يحمل وثيقة',N'',N'');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1695,N'144',N'ms',N'مقيم/لا يحمل وثيقة',N'',N'مقيم/لا يحمل وثيقة');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1696,N'144',N'fa',N'مقيم/لا يحمل وثيقة',N'',N'');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1697,N'135',N'fr',N'غير بحريني',N'',N'');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1698,N'135',N'tr',N'غير بحريني',N'',N'');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1699,N'135',N'ms',N'غير بحريني',N'',N'غير بحريني');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1700,N'135',N'fa',N'غير بحريني',N'',N'');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1701,N'707',N'fr',N'Tokelau',N'',N'TKL');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1702,N'707',N'tr',N'Tokelau',N'',N'TKL');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1703,N'707',N'ms',N'Tokelau',N'',N'Tokelau');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1704,N'707',N'fa',N'Tokelau',N'',N'TKL');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1705,N'710',N'fr',N'فرنسا الجنوب القطبية',N'',N'');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1706,N'710',N'tr',N'فرنسا الجنوب القطبية',N'',N'');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1707,N'710',N'ms',N'فرنسا الجنوب القطبية',N'',N'فرنسا الجنوب القطبية');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1708,N'710',N'fa',N'فرنسا الجنوب القطبية',N'',N'');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1709,N'706',N'fr',N'جزر نورفولك',N'',N'NFK');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1710,N'706',N'tr',N'جزر نورفولك',N'',N'NFK');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1711,N'706',N'ms',N'جزر نورفولك',N'',N'جزر نورفولك');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1712,N'706',N'fa',N'جزر نورفولك',N'',N'NFK');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1713,N'824',N'fr',N'جزر مينور',N'',N'');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1714,N'824',N'tr',N'جزر مينور',N'',N'');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1715,N'824',N'ms',N'جزر مينور',N'',N'جزر مينور');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1716,N'824',N'fa',N'جزر مينور',N'',N'');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1717,N'134',N'fr',N'غير كويتي',N'',N'');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1718,N'134',N'tr',N'غير كويتي',N'',N'');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1719,N'134',N'ms',N'غير كويتي',N'',N'غير كويتي');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1720,N'134',N'fa',N'غير كويتي',N'',N'');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1721,N'705',N'fr',N'انتاركتيكا',N'',N'');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1722,N'705',N'tr',N'انتاركتيكا',N'',N'');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1723,N'705',N'ms',N'انتاركتيكا',N'',N'انتاركتيكا');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1724,N'705',N'fa',N'انتاركتيكا',N'',N'');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1725,N'826',N'fr',N'مقيم اجنبي - العدوان',N'',N'');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1726,N'826',N'tr',N'مقيم اجنبي - العدوان',N'',N'');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1727,N'826',N'ms',N'مقيم اجنبي - العدوان',N'',N'مقيم اجنبي - العدوان');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1728,N'826',N'fa',N'مقيم اجنبي - العدوان',N'',N'');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1729,N'825',N'fr',N'مقيم اجنبي - الاشاجعة',N'',N'');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1730,N'825',N'tr',N'مقيم اجنبي - الاشاجعة',N'',N'');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1731,N'825',N'ms',N'مقيم اجنبي - الاشاجعة',N'',N'مقيم اجنبي - الاشاجعة');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1732,N'825',N'fa',N'مقيم اجنبي - الاشاجعة',N'',N'');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1733,N'709',N'fr',N'Cocos (Keeling) Islands',N'61',N'CCK');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1734,N'709',N'tr',N'Cocos (Keeling) Islands',N'61',N'CCK');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1735,N'709',N'ms',N'Cocos (Keeling) Islands',N'61',N'Cocos (Keeling) Islands');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1736,N'709',N'fa',N'Cocos (Keeling) Islands',N'61',N'CCK');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1737,N'708',N'fr',N'جزيرةكريسماس',N'61',N'CXR');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1738,N'708',N'tr',N'جزيرةكريسماس',N'61',N'CXR');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1739,N'708',N'ms',N'جزيرةكريسماس',N'61',N'جزيرةكريسماس');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1740,N'708',N'fa',N'جزيرةكريسماس',N'61',N'CXR');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1741,N'821',N'fr',N'قبائل مجاورة للعبر',N'',N'');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1742,N'821',N'tr',N'قبائل مجاورة للعبر',N'',N'');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1743,N'821',N'ms',N'قبائل مجاورة للعبر',N'',N'قبائل مجاورة للعبر');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1744,N'821',N'fa',N'قبائل مجاورة للعبر',N'',N'');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1745,N'662',N'fr',N'البريطانية في المحيط',N'',N'');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1746,N'662',N'tr',N'البريطانية في المحيط',N'',N'');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1747,N'662',N'ms',N'البريطانية في المحيط',N'',N'البريطانية في المحيط');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1748,N'662',N'fa',N'البريطانية في المحيط',N'',N'');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1749,N'657',N'fr',N'جزر كوك',N'',N'COK');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1750,N'657',N'tr',N'جزر كوك',N'',N'COK');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1751,N'657',N'ms',N'جزر كوك',N'',N'جزر كوك');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1752,N'657',N'fa',N'جزر كوك',N'',N'COK');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1753,N'664',N'fr',N'جنوب جورجيا',N'',N'GEO');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1754,N'664',N'tr',N'جنوب جورجيا',N'',N'GEO');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1755,N'664',N'ms',N'جنوب جورجيا',N'',N'جنوب جورجيا');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1756,N'664',N'fa',N'جنوب جورجيا',N'',N'GEO');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1757,N'132',N'fr',N'اليمن - لحج',N'',N'');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1758,N'132',N'tr',N'اليمن - لحج',N'',N'');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1759,N'132',N'ms',N'اليمن - لحج',N'',N'اليمن - لحج');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1760,N'132',N'fa',N'اليمن - لحج',N'',N'');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1761,N'130',N'fr',N'عرب ثمانية وأربعون',N'',N'');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1762,N'130',N'tr',N'عرب ثمانية وأربعون',N'',N'');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1763,N'130',N'ms',N'عرب ثمانية وأربعون',N'',N'عرب ثمانية وأربعون');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1764,N'130',N'fa',N'عرب ثمانية وأربعون',N'',N'');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1765,N'555',N'fr',N'ميتروبوليتان فرنسية',N'',N'');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1766,N'555',N'tr',N'ميتروبوليتان فرنسية',N'',N'');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1767,N'555',N'ms',N'ميتروبوليتان فرنسية',N'',N'ميتروبوليتان فرنسية');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1768,N'555',N'fa',N'ميتروبوليتان فرنسية',N'',N'');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1769,N'711',N'fr',N'جزيرة هيرد وماكدونلد',N'',N'');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1770,N'711',N'tr',N'جزيرة هيرد وماكدونلد',N'',N'');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1771,N'711',N'ms',N'جزيرة هيرد وماكدونلد',N'',N'جزيرة هيرد وماكدونلد');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1772,N'711',N'fa',N'جزيرة هيرد وماكدونلد',N'',N'');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1773,N'133',N'fr',N'قبائل نازحة/الكويت',N'',N'');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1774,N'133',N'tr',N'قبائل نازحة/الكويت',N'',N'');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1775,N'133',N'ms',N'قبائل نازحة/الكويت',N'',N'قبائل نازحة/الكويت');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1776,N'133',N'fa',N'قبائل نازحة/الكويت',N'',N'');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1777,N'146',N'fr',N'المناهيل والمهرة',N'',N'');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1778,N'146',N'tr',N'المناهيل والمهرة',N'',N'');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1779,N'146',N'ms',N'المناهيل والمهرة',N'',N'المناهيل والمهرة');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1780,N'146',N'fa',N'المناهيل والمهرة',N'',N'');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1781,N'451',N'fr',N'سانت هيلانة',N'290',N'SHN');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1782,N'451',N'tr',N'سانت هيلانة',N'290',N'SHN');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1783,N'451',N'ms',N'سانت هيلانة',N'290',N'سانت هيلانة');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1784,N'451',N'fa',N'سانت هيلانة',N'290',N'SHN');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1785,N'659',N'fr',N'باربودا',N'1',N'BRB');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1786,N'659',N'tr',N'باربودا',N'1',N'BRB');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1787,N'659',N'ms',N'باربودا',N'1',N'باربودا');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1788,N'659',N'fa',N'باربودا',N'1',N'BRB');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1789,N'139',N'fr',N'مقيم/نازح',N'',N'');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1790,N'139',N'tr',N'مقيم/نازح',N'',N'');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1791,N'139',N'ms',N'مقيم/نازح',N'',N'مقيم/نازح');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1792,N'139',N'fa',N'مقيم/نازح',N'',N'');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1793,N'901',N'fr',N'اخرى',N'',N'');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1794,N'901',N'tr',N'اخرى',N'',N'');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1795,N'901',N'ms',N'اخرى',N'',N'اخرى');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1796,N'901',N'fa',N'اخرى',N'',N'');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1797,N'827',N'fr',N'جنسية غير معرفه',N'',N'');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1798,N'827',N'tr',N'جنسية غير معرفه',N'',N'');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1799,N'827',N'ms',N'جنسية غير معرفه',N'',N'جنسية غير معرفه');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1800,N'827',N'fa',N'جنسية غير معرفه',N'',N'');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1801,N'820',N'fr',N'قبيلة النسي',N'',N'');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1802,N'820',N'tr',N'قبيلة النسي',N'',N'');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1803,N'820',N'ms',N'قبيلة النسي',N'',N'قبيلة النسي');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1804,N'820',N'fa',N'قبيلة النسي',N'',N'');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1805,N'822',N'fr',N'قبيلة الحرث',N'',N'');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1806,N'822',N'tr',N'قبيلة الحرث',N'',N'');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1807,N'822',N'ms',N'قبيلة الحرث',N'',N'قبيلة الحرث');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1808,N'822',N'fa',N'قبيلة الحرث',N'',N'');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1809,N'704',N'fr',N'نيو',N'',N'');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1810,N'704',N'tr',N'نيو',N'',N'');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1811,N'704',N'ms',N'نيو',N'',N'نيو');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1812,N'704',N'fa',N'نيو',N'',N'');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1813,N'140',N'fr',N'مقيم/مولود',N'',N'');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1814,N'140',N'tr',N'مقيم/مولود',N'',N'');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1815,N'140',N'ms',N'مقيم/مولود',N'',N'مقيم/مولود');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1816,N'140',N'fa',N'مقيم/مولود',N'',N'');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1817,N'141',N'fr',N'مقيم/طالب جنسية',N'',N'');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1818,N'141',N'tr',N'مقيم/طالب جنسية',N'',N'');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1819,N'141',N'ms',N'مقيم/طالب جنسية',N'',N'مقيم/طالب جنسية');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1820,N'141',N'fa',N'مقيم/طالب جنسية',N'',N'');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1821,N'138',N'fr',N'غير عماني',N'',N'');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1822,N'138',N'tr',N'غير عماني',N'',N'');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1823,N'138',N'ms',N'غير عماني',N'',N'غير عماني');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1824,N'138',N'fa',N'غير عماني',N'',N'');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1825,N'660',N'fr',N'انتيل الهولندية',N'599',N'ANT');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1826,N'660',N'tr',N'انتيل الهولندية',N'599',N'ANT');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1827,N'660',N'ms',N'انتيل الهولندية',N'599',N'انتيل الهولندية');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1828,N'660',N'fa',N'انتيل الهولندية',N'599',N'ANT');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1829,N'454',N'fr',N'كاب فيرد',N'238',N'CPV');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1830,N'454',N'tr',N'كاب فيرد',N'238',N'CPV');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1831,N'454',N'ms',N'كاب فيرد',N'238',N'كاب فيرد');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1832,N'454',N'fa',N'كاب فيرد',N'238',N'CPV');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1833,N'712',N'fr',N'Pitcairn',N'64',N'PCN');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1834,N'712',N'tr',N'Pitcairn',N'64',N'PCN');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1835,N'712',N'ms',N'Pitcairn',N'64',N'Pitcairn');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1836,N'712',N'fa',N'Pitcairn',N'64',N'PCN');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1837,N'819',N'fr',N'قبيلة بالعبيد',N'',N'');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1838,N'819',N'tr',N'قبيلة بالعبيد',N'',N'');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1839,N'819',N'ms',N'قبيلة بالعبيد',N'',N'قبيلة بالعبيد');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1840,N'819',N'fa',N'قبيلة بالعبيد',N'',N'');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1841,N'145',N'fr',N'قبيلة الصيعر',N'',N'');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1842,N'145',N'tr',N'قبيلة الصيعر',N'',N'');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1843,N'145',N'ms',N'قبيلة الصيعر',N'',N'قبيلة الصيعر');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1844,N'145',N'fa',N'قبيلة الصيعر',N'',N'');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1845,N'127',N'fr',N'وثيقة عمانيه',N'',N'');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1846,N'127',N'tr',N'وثيقة عمانيه',N'',N'');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1847,N'127',N'ms',N'وثيقة عمانيه',N'',N'وثيقة عمانيه');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1848,N'127',N'fa',N'وثيقة عمانيه',N'',N'');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1849,N'117',N'fr',N'افراد القبائل',N'',N'');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1850,N'117',N'tr',N'افراد القبائل',N'',N'');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1851,N'117',N'ms',N'افراد القبائل',N'',N'افراد القبائل');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1852,N'117',N'fa',N'افراد القبائل',N'',N'');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1853,N'639',N'fr',N'Anguillian',N'1',N'AIA');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1854,N'639',N'tr',N'Anguillian',N'1',N'AIA');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1855,N'639',N'ms',N'Anguillian',N'1',N'Anguillian');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1856,N'639',N'fa',N'Anguillian',N'1',N'AIA');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1857,N'649',N'fr',N'سان استاتيوس',N'',N'');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1858,N'649',N'tr',N'سان استاتيوس',N'',N'');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1859,N'649',N'ms',N'سان استاتيوس',N'',N'سان استاتيوس');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1860,N'649',N'fa',N'سان استاتيوس',N'',N'');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1861,N'809',N'fr',N'Samoana',N'685',N'ASM');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1862,N'809',N'tr',N'Samoana',N'685',N'ASM');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1863,N'809',N'ms',N'Samoana',N'685',N'Samoana');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1864,N'809',N'fa',N'Samoana',N'685',N'ASM');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1865,N'2222',N'fr',N'جنسية غير معرفه',N'',N'');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1866,N'2222',N'tr',N'جنسية غير معرفه',N'',N'');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1867,N'2222',N'ms',N'جنسية غير معرفه',N'',N'جنسية غير معرفه');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1868,N'2222',N'fa',N'جنسية غير معرفه',N'',N'');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1869,N'997',N'fr',N'جميع الجنسيات',N'',N'');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1870,N'997',N'tr',N'جميع الجنسيات',N'',N'');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1871,N'997',N'ms',N'جميع الجنسيات',N'',N'جميع الجنسيات');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1872,N'997',N'fa',N'جميع الجنسيات',N'',N'');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1873,N'119',N'fr',N'قبائل مجاورة للعطفين',N'',N'');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1874,N'119',N'tr',N'قبائل مجاورة للعطفين',N'',N'');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1875,N'119',N'ms',N'قبائل مجاورة للعطفين',N'',N'قبائل مجاورة للعطفين');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1876,N'119',N'fa',N'قبائل مجاورة للعطفين',N'',N'');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1877,N'640',N'fr',N'Antiguan',N'1',N'ATG');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1878,N'640',N'tr',N'Antiguan',N'1',N'ATG');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1879,N'640',N'ms',N'Antiguan',N'1',N'Antiguan');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1880,N'640',N'fa',N'Antiguan',N'1',N'ATG');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1881,N'651',N'fr',N'سان مارتين',N'',N'');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1882,N'651',N'tr',N'سان مارتين',N'',N'');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1883,N'651',N'ms',N'سان مارتين',N'',N'سان مارتين');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1884,N'651',N'fa',N'سان مارتين',N'',N'');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1885,N'551',N'fr',N'Montenegrin',N'',N'');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1886,N'551',N'tr',N'Montenegrin',N'',N'');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1887,N'551',N'ms',N'Montenegrin',N'',N'Montenegrin');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1888,N'551',N'fa',N'Montenegrin',N'',N'');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1889,N'348',N'fr',N'Kyrgyzian',N'',N'');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1890,N'348',N'tr',N'Kyrgyzian',N'',N'');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1891,N'348',N'ms',N'Kyrgyzian',N'',N'Kyrgyzian');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1892,N'348',N'fa',N'Kyrgyzian',N'',N'');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1893,N'120',N'fr',N'Foreigner Saudi Passport',N'',N'');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1894,N'120',N'tr',N'Foreigner Saudi Passport',N'',N'');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1895,N'120',N'ms',N'Foreigner Saudi Passport',N'',N'Foreigner Saudi Passport');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1896,N'120',N'fa',N'Foreigner Saudi Passport',N'',N'');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1897,N'445',N'fr',N'Botswanian',N'267',N'BWA');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1898,N'445',N'tr',N'Botswanian',N'267',N'BWA');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1899,N'445',N'ms',N'Botswanian',N'267',N'Botswanian');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1900,N'445',N'fa',N'Botswanian',N'267',N'BWA');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1901,N'661',N'fr',N'جزر كوكوس',N'',N'');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1902,N'661',N'tr',N'جزر كوكوس',N'',N'');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1903,N'661',N'ms',N'جزر كوكوس',N'',N'جزر كوكوس');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1904,N'661',N'fa',N'جزر كوكوس',N'',N'');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1905,N'452',N'fr',N'جزيرة مايوت',N'',N'');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1906,N'452',N'tr',N'جزيرة مايوت',N'',N'');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1907,N'452',N'ms',N'جزيرة مايوت',N'',N'جزيرة مايوت');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1908,N'452',N'fa',N'جزيرة مايوت',N'',N'');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1909,N'124',N'fr',N'Palestinian (Iraqi T.Doct.)',N'964',N'PS');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1910,N'124',N'tr',N'Palestinian (Iraqi T.Doct.)',N'964',N'PS');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1911,N'124',N'ms',N'Palestinian (Iraqi T.Doct.)',N'964',N'Palestinian (Iraqi T.Doct.)');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1912,N'124',N'fa',N'Palestinian (Iraqi T.Doct.)',N'964',N'PS');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1913,N'122',N'fr',N'Palestinian (lebanese T.Doct.)',N'961',N'PS');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1914,N'122',N'tr',N'Palestinian (lebanese T.Doct.)',N'961',N'PS');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1915,N'122',N'ms',N'Palestinian (lebanese T.Doct.)',N'961',N'Palestinian (lebanese T.Doct.)');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1916,N'122',N'fa',N'Palestinian (lebanese T.Doct.)',N'961',N'PS');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1917,N'123',N'fr',N'Palestinian (Jordanian T.Doct.)',N'962',N'PS');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1918,N'123',N'tr',N'Palestinian (Jordanian T.Doct.)',N'962',N'PS');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1919,N'123',N'ms',N'Palestinian (Jordanian T.Doct.)',N'962',N'Palestinian (Jordanian T.Doct.)');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1920,N'123',N'fa',N'Palestinian (Jordanian T.Doct.)',N'962',N'PS');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1921,N'450',N'fr',N'Other Africans',N'',N'');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1922,N'450',N'tr',N'Other Africans',N'',N'');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1923,N'450',N'ms',N'Other Africans',N'',N'Other Africans');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1924,N'450',N'fa',N'Other Africans',N'',N'');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1925,N'998',N'fr',N'البهره',N'',N'');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1926,N'998',N'tr',N'البهره',N'',N'');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1927,N'998',N'ms',N'البهره',N'',N'البهره');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1928,N'998',N'fa',N'البهره',N'',N'');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1929,N'999',N'fr',N'جنسية غير معرفه',N'',N'');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1930,N'999',N'tr',N'جنسية غير معرفه',N'',N'');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1931,N'999',N'ms',N'جنسية غير معرفه',N'',N'جنسية غير معرفه');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1932,N'999',N'fa',N'جنسية غير معرفه',N'',N'');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1933,N'828',N'fr',N'جنسية غير معرفه',N'',N'');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1934,N'828',N'tr',N'جنسية غير معرفه',N'',N'');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1935,N'828',N'ms',N'جنسية غير معرفه',N'',N'جنسية غير معرفه');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1936,N'828',N'fa',N'جنسية غير معرفه',N'',N'');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1937,N'829',N'fr',N'جنسية غير معرفه',N'',N'');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1938,N'829',N'tr',N'جنسية غير معرفه',N'',N'');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1939,N'829',N'ms',N'جنسية غير معرفه',N'',N'جنسية غير معرفه');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1940,N'829',N'fa',N'جنسية غير معرفه',N'',N'');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1941,N'833',N'fr',N'جنسية غير معرفه',N'',N'');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1942,N'833',N'tr',N'جنسية غير معرفه',N'',N'');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1943,N'833',N'ms',N'جنسية غير معرفه',N'',N'جنسية غير معرفه');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1944,N'833',N'fa',N'جنسية غير معرفه',N'',N'');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1945,N'835',N'fr',N'جنسية غير معرفه',N'',N'');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1946,N'835',N'tr',N'جنسية غير معرفه',N'',N'');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1947,N'835',N'ms',N'جنسية غير معرفه',N'',N'جنسية غير معرفه');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1948,N'835',N'fa',N'جنسية غير معرفه',N'',N'');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1949,N'836',N'fr',N'جنسية غير معرفه',N'',N'');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1950,N'836',N'tr',N'جنسية غير معرفه',N'',N'');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1951,N'836',N'ms',N'جنسية غير معرفه',N'',N'جنسية غير معرفه');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1952,N'836',N'fa',N'جنسية غير معرفه',N'',N'');
+
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1953,N'802',N'fr',N'كيريباتي',N'',N'');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1954,N'802',N'tr',N'كيريباتي',N'',N'');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1955,N'802',N'ms',N'كيريباتي',N'',N'كيريباتي');
+INSERT INTO shc_portal.shc_nationality_lk(id,code,lang,label,country_phone_prefix,country_name_prefix) VALUES(1956,N'802',N'fa',N'كيريباتي',N'',N'');
+
+SET IDENTITY_INSERT shc_portal.shc_nationality_lk OFF;
+GO
+
