@@ -98,10 +98,10 @@ public class IntegrationService {
             user.setEmail(StringUtils.EMPTY);
         user.setMobileNumber(mobileNumber);
 
-        log.info("end callCRMCreateProfile for mobile number {}", mobileNumber);
         CreateUserCRMDto createUserCRMDto = callCRM(crmCreateUserProfileUrl, HttpMethod.POST, user, accessTokenWsResponse.getToken(),
                 new ParameterizedTypeReference<CreateUserCRMDto>() {
                 });
+        log.info("end callCRMCreateProfile for mobile number {} and status is: ", mobileNumber, createUserCRMDto == null ? "response is null" : createUserCRMDto.getStatus() );
     }
 
     public ComplaintUpdateCRMDto callCRMCreateTicket(ApplicantComplaintVo complaint, Integer ticketMainType, CrmAuthResponse accessTokenWsResponse) {

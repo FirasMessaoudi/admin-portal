@@ -185,7 +185,6 @@ INSERT INTO shc_portal.shc_relative_relationship_lk (id, code, lang, label) VALU
 INSERT INTO shc_portal.shc_relative_relationship_lk (id, code, lang, label) VALUES (60, 'COMPANION', 'fa', 'Companion');
 
 SET IDENTITY_INSERT shc_portal.shc_relative_relationship_lk OFF;
-
 GO
 -- insert shc_religious_occasions_day_lk
 
@@ -266,39 +265,63 @@ GO
 -- insert shc_suggested_supplication_lk
 SET IDENTITY_INSERT shc_portal.shc_supplication_lk ON;
 
-INSERT INTO shc_portal.shc_supplication_lk(id,code,lang,label,type,counter) VALUES(13,N'MORNING_SUPPLICATION_1',N'fr',N'Allah! There is no ilah (deity worthy of worship) but He The Living, The Eternal One. Neither slumber, nor sleep overtakes Him. To Him belongs whatever is in the Heavens and on the earth. Who is he that can intercede with Him but by His permission? He knows what is before and what is behind them. They encompass nothing of His knowledge which He will. His Throne extends over the Heavens and the Earth, and the preservation of both does not weary Him. He is the Exalted The Immense One.',N'Morning Supplications',3);
-INSERT INTO shc_portal.shc_supplication_lk(id,code,lang,label,type,counter) VALUES(14,N'MORNING_SUPPLICATION_1',N'tr',N'Allah! There is no ilah (deity worthy of worship) but He The Living, The Eternal One. Neither slumber, nor sleep overtakes Him. To Him belongs whatever is in the Heavens and on the earth. Who is he that can intercede with Him but by His permission? He knows what is before and what is behind them. They encompass nothing of His knowledge which He will. His Throne extends over the Heavens and the Earth, and the preservation of both does not weary Him. He is the Exalted The Immense One.',N'Morning Supplications',3);
-INSERT INTO shc_portal.shc_supplication_lk(id,code,lang,label,type,counter) VALUES(15,N'MORNING_SUPPLICATION_1',N'ms',N'Allah! There is no ilah (deity worthy of worship) but He The Living, The Eternal One. Neither slumber, nor sleep overtakes Him. To Him belongs whatever is in the Heavens and on the earth. Who is he that can intercede with Him but by His permission? He knows what is before and what is behind them. They encompass nothing of His knowledge which He will. His Throne extends over the Heavens and the Earth, and the preservation of both does not weary Him. He is the Exalted The Immense One.',N'Morning Supplications',3);
-INSERT INTO shc_portal.shc_supplication_lk(id,code,lang,label,type,counter) VALUES(16,N'MORNING_SUPPLICATION_1',N'fa',N'Allah! There is no ilah (deity worthy of worship) but He The Living, The Eternal One. Neither slumber, nor sleep overtakes Him. To Him belongs whatever is in the Heavens and on the earth. Who is he that can intercede with Him but by His permission? He knows what is before and what is behind them. They encompass nothing of His knowledge which He will. His Throne extends over the Heavens and the Earth, and the preservation of both does not weary Him. He is the Exalted The Immense One.',N'Morning Supplications',3);
+INSERT INTO shc_portal.shc_supplication_lk (id, code, lang, label, type, counter)
+VALUES (13, 'MORNING_SUPPLICATION_1', 'fr', 'Allah! There is no ilah (deity worthy of worship) but He The Living, The Eternal One. Neither slumber, nor sleep overtakes Him. To Him belongs whatever is in the Heavens and on the earth. Who is he that can intercede with Him but by His permission? He knows what is before and what is behind them. They encompass nothing of His knowledge which He will. His Throne extends over the Heavens and the Earth, and the preservation of both does not weary Him. He is the Exalted The Immense One.', 'Morning Supplications', 3);
+INSERT INTO shc_portal.shc_supplication_lk (id, code, lang, label, type, counter)
+VALUES (14, 'MORNING_SUPPLICATION_1', 'tr', 'Allah! There is no ilah (deity worthy of worship) but He The Living, The Eternal One. Neither slumber, nor sleep overtakes Him. To Him belongs whatever is in the Heavens and on the earth. Who is he that can intercede with Him but by His permission? He knows what is before and what is behind them. They encompass nothing of His knowledge which He will. His Throne extends over the Heavens and the Earth, and the preservation of both does not weary Him. He is the Exalted The Immense One.', 'Morning Supplications', 3);
+INSERT INTO shc_portal.shc_supplication_lk (id, code, lang, label, type, counter)
+VALUES (15, 'MORNING_SUPPLICATION_1', 'ms', 'Allah! There is no ilah (deity worthy of worship) but He The Living, The Eternal One. Neither slumber, nor sleep overtakes Him. To Him belongs whatever is in the Heavens and on the earth. Who is he that can intercede with Him but by His permission? He knows what is before and what is behind them. They encompass nothing of His knowledge which He will. His Throne extends over the Heavens and the Earth, and the preservation of both does not weary Him. He is the Exalted The Immense One.', 'Morning Supplications', 3);
+INSERT INTO shc_portal.shc_supplication_lk (id, code, lang, label, type, counter)
+VALUES (16, 'MORNING_SUPPLICATION_1', 'fa', 'Allah! There is no ilah (deity worthy of worship) but He The Living, The Eternal One. Neither slumber, nor sleep overtakes Him. To Him belongs whatever is in the Heavens and on the earth. Who is he that can intercede with Him but by His permission? He knows what is before and what is behind them. They encompass nothing of His knowledge which He will. His Throne extends over the Heavens and the Earth, and the preservation of both does not weary Him. He is the Exalted The Immense One.', 'Morning Supplications', 3);
 
-INSERT INTO shc_portal.shc_supplication_lk(id,code,lang,label,type,counter) VALUES(17,N'MORNING_SUPPLICATION_2',N'fr',N'O Allah, I seek Your forgiveness and Your protection in this world and the next?O Allah, I seek Your forgiveness and Your protection in my religion, in my worldly affairs, in my family and in my wealth.
-O Allah, conceal my secrets and preserve me from anguish,O Allah, guard me from what is in front of me and behind me, from my left, and from my right, and from above me. I seek refuge in Your Greatness from being struck down from beneath me.',N'Morning Supplications',1);
-INSERT INTO shc_portal.shc_supplication_lk(id,code,lang,label,type,counter) VALUES(18,N'MORNING_SUPPLICATION_2',N'tr',N'O Allah, I seek Your forgiveness and Your protection in this world and the next?O Allah, I seek Your forgiveness and Your protection in my religion, in my worldly affairs, in my family and in my wealth.
-O Allah, conceal my secrets and preserve me from anguish,O Allah, guard me from what is in front of me and behind me, from my left, and from my right, and from above me. I seek refuge in Your Greatness from being struck down from beneath me.',N'Morning Supplications',1);
-INSERT INTO shc_portal.shc_supplication_lk(id,code,lang,label,type,counter) VALUES(19,N'MORNING_SUPPLICATION_2',N'ms',N'O Allah, I seek Your forgiveness and Your protection in this world and the next?O Allah, I seek Your forgiveness and Your protection in my religion, in my worldly affairs, in my family and in my wealth.
-O Allah, conceal my secrets and preserve me from anguish,O Allah, guard me from what is in front of me and behind me, from my left, and from my right, and from above me. I seek refuge in Your Greatness from being struck down from beneath me.',N'Morning Supplications',1);
-INSERT INTO shc_portal.shc_supplication_lk(id,code,lang,label,type,counter) VALUES(20,N'MORNING_SUPPLICATION_2',N'fa',N'O Allah, I seek Your forgiveness and Your protection in this world and the next?O Allah, I seek Your forgiveness and Your protection in my religion, in my worldly affairs, in my family and in my wealth.
-O Allah, conceal my secrets and preserve me from anguish,O Allah, guard me from what is in front of me and behind me, from my left, and from my right, and from above me. I seek refuge in Your Greatness from being struck down from beneath me.',N'Morning Supplications',1);
+INSERT INTO shc_portal.shc_supplication_lk (id, code, lang, label, type, counter)
+VALUES (17, 'MORNING_SUPPLICATION_2', 'fr', 'O Allah, I seek Your forgiveness and Your protection in this world and the next?O Allah, I seek Your forgiveness and Your protection in my religion, in my worldly affairs, in my family and in my wealth.
+O Allah, conceal my secrets and preserve me from anguish,O Allah, guard me from what is in front of me and behind me, from my left, and from my right, and from above me. I seek refuge in Your Greatness from being struck down from beneath me.', 'Morning Supplications', 3);
+INSERT INTO shc_portal.shc_supplication_lk (id, code, lang, label, type, counter)
+VALUES (18, 'MORNING_SUPPLICATION_2', 'tr', 'O Allah, I seek Your forgiveness and Your protection in this world and the next?O Allah, I seek Your forgiveness and Your protection in my religion, in my worldly affairs, in my family and in my wealth.
+O Allah, conceal my secrets and preserve me from anguish,O Allah, guard me from what is in front of me and behind me, from my left, and from my right, and from above me. I seek refuge in Your Greatness from being struck down from beneath me.', 'Morning Supplications', 3);
+INSERT INTO shc_portal.shc_supplication_lk (id, code, lang, label, type, counter)
+VALUES (19, 'MORNING_SUPPLICATION_2', 'ms', 'O Allah, I seek Your forgiveness and Your protection in this world and the next?O Allah, I seek Your forgiveness and Your protection in my religion, in my worldly affairs, in my family and in my wealth.
+O Allah, conceal my secrets and preserve me from anguish,O Allah, guard me from what is in front of me and behind me, from my left, and from my right, and from above me. I seek refuge in Your Greatness from being struck down from beneath me.', 'Morning Supplications', 3);
+INSERT INTO shc_portal.shc_supplication_lk (id, code, lang, label, type, counter)
+VALUES (20, 'MORNING_SUPPLICATION_2', 'fa', 'O Allah, I seek Your forgiveness and Your protection in this world and the next?O Allah, I seek Your forgiveness and Your protection in my religion, in my worldly affairs, in my family and in my wealth.
+O Allah, conceal my secrets and preserve me from anguish,O Allah, guard me from what is in front of me and behind me, from my left, and from my right, and from above me. I seek refuge in Your Greatness from being struck down from beneath me.', 'Morning Supplications', 3);
 
-INSERT INTO shc_portal.shc_supplication_lk(id,code,lang,label,type,counter) VALUES(21,N'MORNING_SUPPLICATION_3',N'fr',N'We have reached the morning and at this very time unto Allah belongs all sovereignty, and all praise is for Allah. None has the right to be worshipped except Allah, alone, without partner, to Him belongs all sovereignty and praise and He is over all things omnipotent. My Lord, I ask You for the good of this day and the good of what follows it and I take refuge in You from the evil of this day and the evil of what follows it. My Lord, I take refuge in You from laziness and senility. My Lord, I take refuge in You from torment in the Fire and punishment in the grave.',N'Morning Supplications',1);
-INSERT INTO shc_portal.shc_supplication_lk(id,code,lang,label,type,counter) VALUES(22,N'MORNING_SUPPLICATION_3',N'tr',N'We have reached the morning and at this very time unto Allah belongs all sovereignty, and all praise is for Allah. None has the right to be worshipped except Allah, alone, without partner, to Him belongs all sovereignty and praise and He is over all things omnipotent. My Lord, I ask You for the good of this day and the good of what follows it and I take refuge in You from the evil of this day and the evil of what follows it. My Lord, I take refuge in You from laziness and senility. My Lord, I take refuge in You from torment in the Fire and punishment in the grave.',N'Morning Supplications',1);
-INSERT INTO shc_portal.shc_supplication_lk(id,code,lang,label,type,counter) VALUES(23,N'MORNING_SUPPLICATION_3',N'ms',N'We have reached the morning and at this very time unto Allah belongs all sovereignty, and all praise is for Allah. None has the right to be worshipped except Allah, alone, without partner, to Him belongs all sovereignty and praise and He is over all things omnipotent. My Lord, I ask You for the good of this day and the good of what follows it and I take refuge in You from the evil of this day and the evil of what follows it. My Lord, I take refuge in You from laziness and senility. My Lord, I take refuge in You from torment in the Fire and punishment in the grave.',N'Morning Supplications',1);
-INSERT INTO shc_portal.shc_supplication_lk(id,code,lang,label,type,counter) VALUES(24,N'MORNING_SUPPLICATION_3',N'fa',N'We have reached the morning and at this very time unto Allah belongs all sovereignty, and all praise is for Allah. None has the right to be worshipped except Allah, alone, without partner, to Him belongs all sovereignty and praise and He is over all things omnipotent. My Lord, I ask You for the good of this day and the good of what follows it and I take refuge in You from the evil of this day and the evil of what follows it. My Lord, I take refuge in You from laziness and senility. My Lord, I take refuge in You from torment in the Fire and punishment in the grave.',N'Morning Supplications',1);
+INSERT INTO shc_portal.shc_supplication_lk (id, code, lang, label, type, counter)
+VALUES (21, 'MORNING_SUPPLICATION_3', 'fr', 'We have reached the morning and at this very time unto Allah belongs all sovereignty, and all praise is for Allah. None has the right to be worshipped except Allah, alone, without partner, to Him belongs all sovereignty and praise and He is over all things omnipotent. My Lord, I ask You for the good of this day and the good of what follows it and I take refuge in You from the evil of this day and the evil of what follows it. My Lord, I take refuge in You from laziness and senility. My Lord, I take refuge in You from torment in the Fire and punishment in the grave.', 'Morning Supplications', 3);
+INSERT INTO shc_portal.shc_supplication_lk (id, code, lang, label, type, counter)
+VALUES (22, 'MORNING_SUPPLICATION_3', 'tr', 'We have reached the morning and at this very time unto Allah belongs all sovereignty, and all praise is for Allah. None has the right to be worshipped except Allah, alone, without partner, to Him belongs all sovereignty and praise and He is over all things omnipotent. My Lord, I ask You for the good of this day and the good of what follows it and I take refuge in You from the evil of this day and the evil of what follows it. My Lord, I take refuge in You from laziness and senility. My Lord, I take refuge in You from torment in the Fire and punishment in the grave.', 'Morning Supplications', 3);
+INSERT INTO shc_portal.shc_supplication_lk (id, code, lang, label, type, counter)
+VALUES (23, 'MORNING_SUPPLICATION_3', 'ms', 'We have reached the morning and at this very time unto Allah belongs all sovereignty, and all praise is for Allah. None has the right to be worshipped except Allah, alone, without partner, to Him belongs all sovereignty and praise and He is over all things omnipotent. My Lord, I ask You for the good of this day and the good of what follows it and I take refuge in You from the evil of this day and the evil of what follows it. My Lord, I take refuge in You from laziness and senility. My Lord, I take refuge in You from torment in the Fire and punishment in the grave.', 'Morning Supplications', 3);
+INSERT INTO shc_portal.shc_supplication_lk (id, code, lang, label, type, counter)
+VALUES (24, 'MORNING_SUPPLICATION_3', 'fa', 'We have reached the morning and at this very time unto Allah belongs all sovereignty, and all praise is for Allah. None has the right to be worshipped except Allah, alone, without partner, to Him belongs all sovereignty and praise and He is over all things omnipotent. My Lord, I ask You for the good of this day and the good of what follows it and I take refuge in You from the evil of this day and the evil of what follows it. My Lord, I take refuge in You from laziness and senility. My Lord, I take refuge in You from torment in the Fire and punishment in the grave.', 'Morning Supplications', 3);
 
-INSERT INTO shc_portal.shc_supplication_lk(id,code,lang,label,type,counter) VALUES(25,N'EVENING_SUPPLICATION_1',N'fr',N'We have reached the evening and at this very time unto Allah belongs all sovereignty, and all praise is for Allah. None has the right to be worshipped except Allah, alone, without partner, to Him belongs all sovereignty and praise and He is over all things omnipotent. My Lord, I ask You for the good of this night and the good of what follows it and I take refuge in You from the evil of this night and the evil of what follows it. My Lord, I take refuge in You from laziness and senility. My Lord, I take refuge in You from torment in the Fire and punishment in the grave.',N'Evening Supplications',3);
-INSERT INTO shc_portal.shc_supplication_lk(id,code,lang,label,type,counter) VALUES(26,N'EVENING_SUPPLICATION_1',N'tr',N'We have reached the evening and at this very time unto Allah belongs all sovereignty, and all praise is for Allah. None has the right to be worshipped except Allah, alone, without partner, to Him belongs all sovereignty and praise and He is over all things omnipotent. My Lord, I ask You for the good of this night and the good of what follows it and I take refuge in You from the evil of this night and the evil of what follows it. My Lord, I take refuge in You from laziness and senility. My Lord, I take refuge in You from torment in the Fire and punishment in the grave.',N'Evening Supplications',3);
-INSERT INTO shc_portal.shc_supplication_lk(id,code,lang,label,type,counter) VALUES(27,N'EVENING_SUPPLICATION_1',N'ms',N'We have reached the evening and at this very time unto Allah belongs all sovereignty, and all praise is for Allah. None has the right to be worshipped except Allah, alone, without partner, to Him belongs all sovereignty and praise and He is over all things omnipotent. My Lord, I ask You for the good of this night and the good of what follows it and I take refuge in You from the evil of this night and the evil of what follows it. My Lord, I take refuge in You from laziness and senility. My Lord, I take refuge in You from torment in the Fire and punishment in the grave.',N'Evening Supplications',3);
-INSERT INTO shc_portal.shc_supplication_lk(id,code,lang,label,type,counter) VALUES(28,N'EVENING_SUPPLICATION_1',N'fa',N'We have reached the evening and at this very time unto Allah belongs all sovereignty, and all praise is for Allah. None has the right to be worshipped except Allah, alone, without partner, to Him belongs all sovereignty and praise and He is over all things omnipotent. My Lord, I ask You for the good of this night and the good of what follows it and I take refuge in You from the evil of this night and the evil of what follows it. My Lord, I take refuge in You from laziness and senility. My Lord, I take refuge in You from torment in the Fire and punishment in the grave.',N'Evening Supplications',3);
+INSERT INTO shc_portal.shc_supplication_lk (id, code, lang, label, type, counter)
+VALUES (25, 'EVENING_SUPPLICATION_1', 'fr', 'We have reached the evening and at this very time unto Allah belongs all sovereignty, and all praise is for Allah. None has the right to be worshipped except Allah, alone, without partner, to Him belongs all sovereignty and praise and He is over all things omnipotent. My Lord, I ask You for the good of this night and the good of what follows it and I take refuge in You from the evil of this night and the evil of what follows it. My Lord, I take refuge in You from laziness and senility. My Lord, I take refuge in You from torment in the Fire and punishment in the grave.', 'Evening Supplications', 3);
+INSERT INTO shc_portal.shc_supplication_lk (id, code, lang, label, type, counter)
+VALUES (26, 'EVENING_SUPPLICATION_1', 'tr', 'We have reached the evening and at this very time unto Allah belongs all sovereignty, and all praise is for Allah. None has the right to be worshipped except Allah, alone, without partner, to Him belongs all sovereignty and praise and He is over all things omnipotent. My Lord, I ask You for the good of this night and the good of what follows it and I take refuge in You from the evil of this night and the evil of what follows it. My Lord, I take refuge in You from laziness and senility. My Lord, I take refuge in You from torment in the Fire and punishment in the grave.', 'Evening Supplications', 3);
+INSERT INTO shc_portal.shc_supplication_lk (id, code, lang, label, type, counter)
+VALUES (27, 'EVENING_SUPPLICATION_1', 'ms', 'We have reached the evening and at this very time unto Allah belongs all sovereignty, and all praise is for Allah. None has the right to be worshipped except Allah, alone, without partner, to Him belongs all sovereignty and praise and He is over all things omnipotent. My Lord, I ask You for the good of this night and the good of what follows it and I take refuge in You from the evil of this night and the evil of what follows it. My Lord, I take refuge in You from laziness and senility. My Lord, I take refuge in You from torment in the Fire and punishment in the grave.', 'Evening Supplications', 3);
+INSERT INTO shc_portal.shc_supplication_lk (id, code, lang, label, type, counter)
+VALUES (28, 'EVENING_SUPPLICATION_1', 'fa', 'We have reached the evening and at this very time unto Allah belongs all sovereignty, and all praise is for Allah. None has the right to be worshipped except Allah, alone, without partner, to Him belongs all sovereignty and praise and He is over all things omnipotent. My Lord, I ask You for the good of this night and the good of what follows it and I take refuge in You from the evil of this night and the evil of what follows it. My Lord, I take refuge in You from laziness and senility. My Lord, I take refuge in You from torment in the Fire and punishment in the grave.', 'Evening Supplications', 3);
 
-INSERT INTO shc_portal.shc_supplication_lk(id,code,lang,label,type,counter) VALUES(29,N'EVENING_SUPPLICATION_2',N'fr',N'Allah! There is no ilah (deity worthy of worship) but He The Living, The Eternal One. Neither slumber, nor sleep overtakes Him. To Him belonges whatever is in the Heavens and on the earth. Who is he that can intercede with Him but by His permission? He knows what is before and what is behind them. They encompass nothing of His knowledge which He will. His Throne extends over the Heavens and the Earth, and the preservation of both does not weary Him. He is the Exalted The Immense One.',N'Evening Supplications',3);
-INSERT INTO shc_portal.shc_supplication_lk(id,code,lang,label,type,counter) VALUES(30,N'EVENING_SUPPLICATION_2',N'tr',N'Allah! There is no ilah (deity worthy of worship) but He The Living, The Eternal One. Neither slumber, nor sleep overtakes Him. To Him belonges whatever is in the Heavens and on the earth. Who is he that can intercede with Him but by His permission? He knows what is before and what is behind them. They encompass nothing of His knowledge which He will. His Throne extends over the Heavens and the Earth, and the preservation of both does not weary Him. He is the Exalted The Immense One.',N'Evening Supplications',3);
-INSERT INTO shc_portal.shc_supplication_lk(id,code,lang,label,type,counter) VALUES(31,N'EVENING_SUPPLICATION_2',N'ms',N'Allah! There is no ilah (deity worthy of worship) but He The Living, The Eternal One. Neither slumber, nor sleep overtakes Him. To Him belonges whatever is in the Heavens and on the earth. Who is he that can intercede with Him but by His permission? He knows what is before and what is behind them. They encompass nothing of His knowledge which He will. His Throne extends over the Heavens and the Earth, and the preservation of both does not weary Him. He is the Exalted The Immense One.',N'Evening Supplications',3);
-INSERT INTO shc_portal.shc_supplication_lk(id,code,lang,label,type,counter) VALUES(32,N'EVENING_SUPPLICATION_2',N'fa',N'Allah! There is no ilah (deity worthy of worship) but He The Living, The Eternal One. Neither slumber, nor sleep overtakes Him. To Him belonges whatever is in the Heavens and on the earth. Who is he that can intercede with Him but by His permission? He knows what is before and what is behind them. They encompass nothing of His knowledge which He will. His Throne extends over the Heavens and the Earth, and the preservation of both does not weary Him. He is the Exalted The Immense One.',N'Evening Supplications',3);
+INSERT INTO shc_portal.shc_supplication_lk (id, code, lang, label, type, counter)
+VALUES (29, 'EVENING_SUPPLICATION_2', 'fr', 'Allah! There is no ilah (deity worthy of worship) but He The Living, The Eternal One. Neither slumber, nor sleep overtakes Him. To Him belonges whatever is in the Heavens and on the earth. Who is he that can intercede with Him but by His permission? He knows what is before and what is behind them. They encompass nothing of His knowledge which He will. His Throne extends over the Heavens and the Earth, and the preservation of both does not weary Him. He is the Exalted The Immense One.', 'Evening Supplications', 3);
+INSERT INTO shc_portal.shc_supplication_lk (id, code, lang, label, type, counter)
+VALUES (30, 'EVENING_SUPPLICATION_2', 'tr', 'Allah! There is no ilah (deity worthy of worship) but He The Living, The Eternal One. Neither slumber, nor sleep overtakes Him. To Him belonges whatever is in the Heavens and on the earth. Who is he that can intercede with Him but by His permission? He knows what is before and what is behind them. They encompass nothing of His knowledge which He will. His Throne extends over the Heavens and the Earth, and the preservation of both does not weary Him. He is the Exalted The Immense One.', 'Evening Supplications', 3);
+INSERT INTO shc_portal.shc_supplication_lk (id, code, lang, label, type, counter)
+VALUES (31, 'EVENING_SUPPLICATION_2', 'ms', 'Allah! There is no ilah (deity worthy of worship) but He The Living, The Eternal One. Neither slumber, nor sleep overtakes Him. To Him belonges whatever is in the Heavens and on the earth. Who is he that can intercede with Him but by His permission? He knows what is before and what is behind them. They encompass nothing of His knowledge which He will. His Throne extends over the Heavens and the Earth, and the preservation of both does not weary Him. He is the Exalted The Immense One.', 'Evening Supplications', 3);
+INSERT INTO shc_portal.shc_supplication_lk (id, code, lang, label, type, counter)
+VALUES (32, 'EVENING_SUPPLICATION_2', 'fa', 'Allah! There is no ilah (deity worthy of worship) but He The Living, The Eternal One. Neither slumber, nor sleep overtakes Him. To Him belonges whatever is in the Heavens and on the earth. Who is he that can intercede with Him but by His permission? He knows what is before and what is behind them. They encompass nothing of His knowledge which He will. His Throne extends over the Heavens and the Earth, and the preservation of both does not weary Him. He is the Exalted The Immense One.', 'Evening Supplications', 3);
 
-INSERT INTO shc_portal.shc_supplication_lk(id,code,lang,label,type,counter) VALUES(33,N'EVENING_SUPPLICATION_3',N'fr',N'He is Allah, who is One. Allah, the Perfect Self-Sufficient Master. He neither begets nor was He begotten, nor is there to Him any equivalent.',N'Evening Supplications',3);
-INSERT INTO shc_portal.shc_supplication_lk(id,code,lang,label,type,counter) VALUES(34,N'EVENING_SUPPLICATION_3',N'tr',N'He is Allah, who is One. Allah, the Perfect Self-Sufficient Master. He neither begets nor was He begotten, nor is there to Him any equivalent.',N'Evening Supplications',3);
-INSERT INTO shc_portal.shc_supplication_lk(id,code,lang,label,type,counter) VALUES(35,N'EVENING_SUPPLICATION_3',N'ms',N'He is Allah, who is One. Allah, the Perfect Self-Sufficient Master. He neither begets nor was He begotten, nor is there to Him any equivalent.',N'Evening Supplications',3);
-INSERT INTO shc_portal.shc_supplication_lk(id,code,lang,label,type,counter) VALUES(36,N'EVENING_SUPPLICATION_3',N'fa',N'He is Allah, who is One. Allah, the Perfect Self-Sufficient Master. He neither begets nor was He begotten, nor is there to Him any equivalent.',N'Evening Supplications',3);
+INSERT INTO shc_portal.shc_supplication_lk (id, code, lang, label, type, counter)
+VALUES (33, 'EVENING_SUPPLICATION_3', 'fr', 'He is Allah, who is One. Allah, the Perfect Self-Sufficient Master. He neither begets nor was He begotten, nor is there to Him any equivalent.', 'Evening Supplications', 3);
+INSERT INTO shc_portal.shc_supplication_lk (id, code, lang, label, type, counter)
+VALUES (34, 'EVENING_SUPPLICATION_3', 'tr', 'He is Allah, who is One. Allah, the Perfect Self-Sufficient Master. He neither begets nor was He begotten, nor is there to Him any equivalent.', 'Evening Supplications', 3);
+INSERT INTO shc_portal.shc_supplication_lk (id, code, lang, label, type, counter)
+VALUES (35, 'EVENING_SUPPLICATION_3', 'ms', 'He is Allah, who is One. Allah, the Perfect Self-Sufficient Master. He neither begets nor was He begotten, nor is there to Him any equivalent.', 'Evening Supplications', 3);
+INSERT INTO shc_portal.shc_supplication_lk (id, code, lang, label, type, counter)
+VALUES (36, 'EVENING_SUPPLICATION_3', 'fa', 'He is Allah, who is One. Allah, the Perfect Self-Sufficient Master. He neither begets nor was He begotten, nor is there to Him any equivalent.', 'Evening Supplications', 3);
 
 SET IDENTITY_INSERT shc_portal.shc_supplication_lk OFF;
 GO
@@ -425,22 +448,25 @@ INSERT INTO shc_portal.shc_user_notification_status_lk (id, code, lang, label) V
 SET IDENTITY_INSERT shc_portal.shc_user_notification_status_lk OFF;
 GO
 
+-- /////////////////////////////////////////////////// shc_applicant_digital_id_status_lk //////////////////////////////////////////////////////////////////
 
 SET IDENTITY_INSERT shc_portal.shc_applicant_digital_id_status_lk ON;
 
-INSERT INTO shc_portal.shc_portal.shc_applicant_digital_id_status_lk (id, code, lang, label) VALUES (5, 'VALID', 'fr', 'Active');
-INSERT INTO shc_portal.shc_portal.shc_applicant_digital_id_status_lk (id, code, lang, label) VALUES (6, 'INVALID', 'fr', 'Invalid');
+INSERT INTO shc_portal.shc_applicant_digital_id_status_lk (id, code, lang, label) VALUES (5, 'VALID', 'fr', 'Active');
+INSERT INTO shc_portal.shc_applicant_digital_id_status_lk (id, code, lang, label) VALUES (6, 'INVALID', 'fr', 'Invalid');
 
-INSERT INTO shc_portal.shc_portal.shc_applicant_digital_id_status_lk (id, code, lang, label) VALUES (7, 'VALID', 'tr', 'Active');
-INSERT INTO shc_portal.shc_portal.shc_applicant_digital_id_status_lk (id, code, lang, label) VALUES (8, 'INVALID', 'tr', 'Invalid');
+INSERT INTO shc_portal.shc_applicant_digital_id_status_lk (id, code, lang, label) VALUES (7, 'VALID', 'tr', 'Active');
+INSERT INTO shc_portal.shc_applicant_digital_id_status_lk (id, code, lang, label) VALUES (8, 'INVALID', 'tr', 'Invalid');
 
-INSERT INTO shc_portal.shc_portal.shc_applicant_digital_id_status_lk (id, code, lang, label) VALUES (9, 'VALID', 'fa', 'Active');
-INSERT INTO shc_portal.shc_portal.shc_applicant_digital_id_status_lk (id, code, lang, label) VALUES (10, 'INVALID', 'fa', 'Invalid');
+INSERT INTO shc_portal.shc_applicant_digital_id_status_lk (id, code, lang, label) VALUES (9, 'VALID', 'fa', 'Active');
+INSERT INTO shc_portal.shc_applicant_digital_id_status_lk (id, code, lang, label) VALUES (10, 'INVALID', 'fa', 'Invalid');
 
-INSERT INTO shc_portal.shc_portal.shc_applicant_digital_id_status_lk (id, code, lang, label) VALUES (11, 'VALID', 'ms', 'Active');
-INSERT INTO shc_portal.shc_portal.shc_applicant_digital_id_status_lk (id, code, lang, label) VALUES (12, 'INVALID', 'ms', 'Invalid');
+INSERT INTO shc_portal.shc_applicant_digital_id_status_lk (id, code, lang, label) VALUES (11, 'VALID', 'ms', 'Active');
+INSERT INTO shc_portal.shc_applicant_digital_id_status_lk (id, code, lang, label) VALUES (12, 'INVALID', 'ms', 'Invalid');
 SET IDENTITY_INSERT shc_portal.shc_applicant_digital_id_status_lk OFF;
+GO
 
+-- /////////////////////////////////////////////////// shc_area_layers_lk //////////////////////////////////////////////////////////////////
 SET IDENTITY_INSERT shc_portal.shc_area_layers_lk ON;
 
 INSERT INTO shc_portal.shc_area_layers_lk (id, code, lang, label) VALUES (19, 'MAKKAH', 'fr', 'Makkah');
@@ -483,7 +509,9 @@ INSERT INTO shc_portal.shc_area_layers_lk (id, code, lang, label) VALUES (52, 'M
 INSERT INTO shc_portal.shc_area_layers_lk (id, code, lang, label) VALUES (53, 'ARAFAT', 'ms', N'Arafat');
 INSERT INTO shc_portal.shc_area_layers_lk (id, code, lang, label) VALUES (54, 'JABAL_ALRAHMA', 'ms', N'Alrahma Mountain');
 SET IDENTITY_INSERT shc_portal.shc_area_layers_lk OFF;
+GO
 
+-- /////////////////////////////////////////////////// shc_card_status_lk //////////////////////////////////////////////////////////////////
 SET IDENTITY_INSERT shc_portal.shc_card_status_lk ON;
 
 INSERT INTO shc_portal.shc_card_status_lk (id, code, lang, label) VALUES (21, 'READY_TO_PRINT', 'fr', 'Ready to Print');
@@ -494,8 +522,8 @@ INSERT INTO shc_portal.shc_card_status_lk (id, code, lang, label) VALUES (25, 'A
 INSERT INTO shc_portal.shc_card_status_lk (id, code, lang, label) VALUES (26, 'SUSPENDED', 'fr', 'Suspended');
 INSERT INTO shc_portal.shc_card_status_lk (id, code, lang, label) VALUES (27, 'CANCELLED', 'fr', 'Cancelled');
 INSERT INTO shc_portal.shc_card_status_lk (id, code, lang, label) VALUES (28, 'WAITING_TO_SEND', 'fr', 'Waiting to Send');
-INSERT INTO shc_portal.shc_portal.shc_card_status_lk (id, code, lang, label) VALUES (29, 'EXPIRED', 'fr', 'Expired');
-INSERT INTO shc_portal.shc_portal.shc_card_status_lk (id, code, lang, label) VALUES (30, 'REISSUED', 'fr', 'Reissued');
+INSERT INTO shc_portal.shc_card_status_lk (id, code, lang, label) VALUES (29, 'EXPIRED', 'fr', 'Expired');
+INSERT INTO shc_portal.shc_card_status_lk (id, code, lang, label) VALUES (30, 'REISSUED', 'fr', 'Reissued');
 
 INSERT INTO shc_portal.shc_card_status_lk (id, code, lang, label) VALUES (31, 'READY_TO_PRINT', 'tr', 'Ready to Print');
 INSERT INTO shc_portal.shc_card_status_lk (id, code, lang, label) VALUES (32, 'SENT_FOR_PRINT', 'tr', 'Sent for Print');
@@ -505,8 +533,8 @@ INSERT INTO shc_portal.shc_card_status_lk (id, code, lang, label) VALUES (35, 'A
 INSERT INTO shc_portal.shc_card_status_lk (id, code, lang, label) VALUES (36, 'SUSPENDED', 'tr', 'Suspended');
 INSERT INTO shc_portal.shc_card_status_lk (id, code, lang, label) VALUES (37, 'CANCELLED', 'tr', 'Cancelled');
 INSERT INTO shc_portal.shc_card_status_lk (id, code, lang, label) VALUES (38, 'WAITING_TO_SEND', 'tr', 'Waiting to Send');
-INSERT INTO shc_portal.shc_portal.shc_card_status_lk (id, code, lang, label) VALUES (39, 'EXPIRED', 'tr', 'Expired');
-INSERT INTO shc_portal.shc_portal.shc_card_status_lk (id, code, lang, label) VALUES (40, 'REISSUED', 'tr', 'Reissued');
+INSERT INTO shc_portal.shc_card_status_lk (id, code, lang, label) VALUES (39, 'EXPIRED', 'tr', 'Expired');
+INSERT INTO shc_portal.shc_card_status_lk (id, code, lang, label) VALUES (40, 'REISSUED', 'tr', 'Reissued');
 
 INSERT INTO shc_portal.shc_card_status_lk (id, code, lang, label) VALUES (41, 'READY_TO_PRINT', 'fa', 'Ready to Print');
 INSERT INTO shc_portal.shc_card_status_lk (id, code, lang, label) VALUES (42, 'SENT_FOR_PRINT', 'fa', 'Sent for Print');
@@ -530,7 +558,9 @@ INSERT INTO shc_portal.shc_card_status_lk (id, code, lang, label) VALUES (58, 'W
 INSERT INTO shc_portal.shc_card_status_lk (id, code, lang, label) VALUES (59, 'EXPIRED', 'ms', 'Expired');
 INSERT INTO shc_portal.shc_card_status_lk (id, code, lang, label) VALUES (60, 'REISSUED', 'ms', 'Reissued');
 SET IDENTITY_INSERT shc_portal.shc_card_status_lk OFF;
+GO
 
+-- /////////////////////////////////////////////////// shc_collection_status_lk //////////////////////////////////////////////////////////////////
 SET IDENTITY_INSERT shc_portal.shc_collection_status_lk ON;
 
 INSERT INTO shc_portal.shc_collection_status_lk (id, code, lang, label) VALUES (9, 'NEW', 'fr', 'NEW');
@@ -553,7 +583,9 @@ INSERT INTO shc_portal.shc_collection_status_lk (id, code, lang, label) VALUES (
 INSERT INTO shc_portal.shc_collection_status_lk (id, code, lang, label) VALUES (23, 'FAILED', 'ms', 'Fail to generate');
 INSERT INTO shc_portal.shc_collection_status_lk (id, code, lang, label) VALUES (24, 'READY', 'ms', 'Ready');
 SET IDENTITY_INSERT shc_portal.shc_collection_status_lk OFF;
+GO
 
+-- /////////////////////////////////////////////////// shc_company_ritual_step_lk //////////////////////////////////////////////////////////////////
 SET IDENTITY_INSERT shc_portal.shc_company_ritual_step_lk ON;
 
 INSERT INTO shc_portal.shc_company_ritual_step_lk (id, code, lang, label, step_index, location_lat, location_lng) VALUES (21, 'TAWAF_AL_QUDOM', 'fr', 'Tawaf AlQudom', 1, 21.423617600219412, 39.82591208333528);
@@ -601,7 +633,8 @@ INSERT INTO shc_portal.shc_company_ritual_step_lk (id, code, lang, label, step_i
 INSERT INTO shc_portal.shc_company_ritual_step_lk (id, code, lang, label, step_index, location_lat, location_lng) VALUES (59, 'THROUGH_GAMARAT_STONES_13', 'ms', 'Through Gamarat Stones 13', 9, 21.42208621108833, 39.87105874249593);
 INSERT INTO shc_portal.shc_company_ritual_step_lk (id, code, lang, label, step_index, location_lat, location_lng) VALUES (60, 'TAWAF_AL_WADAA', 'ms', 'Tawaf Alwadaa', 10, 21.423617600219412, 39.82591208333528);
 SET IDENTITY_INSERT shc_portal.shc_company_ritual_step_lk OFF;
-
+GO
+-- /////////////////////////////////////////////////// shc_company_staff_title_lk //////////////////////////////////////////////////////////////////
 
 SET IDENTITY_INSERT shc_portal.shc_company_staff_title_lk ON;
 
@@ -623,6 +656,8 @@ INSERT INTO shc_portal.shc_company_staff_title_lk (id, code, lang, label) VALUES
 
 SET IDENTITY_INSERT shc_portal.shc_company_staff_title_lk OFF;
 GO
+
+-- /////////////////////////////////////////////////// shc_company_type_lk //////////////////////////////////////////////////////////////////
 
 SET IDENTITY_INSERT shc_portal.shc_company_type_lk ON;
 
@@ -657,6 +692,8 @@ INSERT INTO shc_portal.shc_company_type_lk (id, code, lang, label) VALUES (36, '
 SET IDENTITY_INSERT shc_portal.shc_company_type_lk OFF;
 GO
 
+-- /////////////////////////////////////////////////// shc_city_lk //////////////////////////////////////////////////////////////////
+
 SET IDENTITY_INSERT shc_portal.shc_city_lk ON;
 
 INSERT INTO shc_portal.shc_city_lk (id, code, lang, label) VALUES (11, 'MAKKAH', 'fr', 'Makkah');
@@ -685,7 +722,8 @@ INSERT INTO shc_portal.shc_city_lk (id, code, lang, label) VALUES (30, 'OTHERS',
 GO
 
 SET IDENTITY_INSERT shc_portal.shc_city_lk OFF;
-
+GO
+-- /////////////////////////////////////////////////// shc_complaint_status_lk //////////////////////////////////////////////////////////////////
 SET IDENTITY_INSERT shc_portal.shc_complaint_status_lk ON;
 
 INSERT INTO shc_portal.shc_complaint_status_lk (id, code, lang, label) VALUES (7, 'UNDER_PROCESSING', 'fr', 'Under Processing');
@@ -706,6 +744,8 @@ INSERT INTO shc_portal.shc_complaint_status_lk (id, code, lang, label) VALUES (1
 
 SET IDENTITY_INSERT shc_portal.shc_complaint_status_lk OFF;
 GO
+
+-- /////////////////////////////////////////////////// shc_complaint_type_lk //////////////////////////////////////////////////////////////////
 
 SET IDENTITY_INSERT shc_portal.shc_complaint_type_lk ON;
 
@@ -732,6 +772,7 @@ INSERT INTO shc_portal.shc_complaint_type_lk (id, code, lang, label) VALUES (24,
 SET IDENTITY_INSERT shc_portal.shc_complaint_type_lk OFF;
 GO
 
+-- /////////////////////////////////////////////////// shc_camp_site_lk //////////////////////////////////////////////////////////////////
 SET IDENTITY_INSERT shc_portal.shc_camp_site_lk ON;
 
 INSERT INTO [shc_portal].[shc_camp_site_lk](id, code, lang, label) VALUES(4, 'Mena', 'en', 'Mena');

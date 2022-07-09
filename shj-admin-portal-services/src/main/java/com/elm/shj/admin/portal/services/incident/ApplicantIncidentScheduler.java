@@ -105,7 +105,7 @@ public class ApplicantIncidentScheduler {
                 }
                 log.info("incident successfully created #{}", incident.getId());
             } catch (Exception e) {
-                e.printStackTrace();
+                log.error("Error while creating incident with {} id.", incident.getId(), e);
                 log.error("Failed create incident of #{}, exception {}", incident.getId(), e.getMessage());
 
             }

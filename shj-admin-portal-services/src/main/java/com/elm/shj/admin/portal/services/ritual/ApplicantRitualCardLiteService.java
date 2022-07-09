@@ -93,7 +93,7 @@ public class ApplicantRitualCardLiteService extends GenericService<JpaApplicantR
         returnedDto.setCardId(applicantCardDto.getId());
         returnedDto.setCardNumber(applicantCardDto.getReferenceNumber());
         returnedDto.setEstablishmentId(company.getEstablishmentRefCode() != null ? company.getEstablishmentRefCode() : 9);
-        returnedDto.setCrNumber(company.getCrNumber());
+
         CompanyLiteDto establishment = companyService.findByBasicInfo(company.getEstablishmentRefCode() != null ? company.getEstablishmentRefCode() + "" : 9 + "", 1);
         if (establishment != null) {
             log.info("found  findByBasicInfo with establishmentRefCode: {}", company.getEstablishmentRefCode());
@@ -106,6 +106,7 @@ public class ApplicantRitualCardLiteService extends GenericService<JpaApplicantR
             log.info("found  findByBasicInfo with serviceGroup Makkah : {}", applicantRitual.get().getApplicant().getServiceGroupMakkahCode());
             returnedDto.setServiceNameAr(serviceGroup.getLabelAr());
             returnedDto.setServiceNameEn(serviceGroup.getLabelEn());
+            returnedDto.setCrNumber(serviceGroup.getCrNumber());
         }
         log.info("end findCardDetailsByUinAndPackageId with uin: {} and applicantPackageId: {}", uin, applicantPackageId);
         return Optional.of(returnedDto);
