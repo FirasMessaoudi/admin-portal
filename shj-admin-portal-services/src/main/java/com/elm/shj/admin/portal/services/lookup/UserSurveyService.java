@@ -6,7 +6,9 @@ package com.elm.shj.admin.portal.services.lookup;
 import com.elm.shj.admin.portal.orm.entity.JpaUserSurvey;
 import com.elm.shj.admin.portal.orm.repository.UserSurveyRepository;
 import com.elm.shj.admin.portal.services.applicant.ApplicantPackageService;
+import com.elm.shj.admin.portal.services.applicant.ApplicantService;
 import com.elm.shj.admin.portal.services.company.CompanyRitualSeasonService;
+import com.elm.shj.admin.portal.services.dto.ApplicantDto;
 import com.elm.shj.admin.portal.services.dto.CompanyRitualSeasonDto;
 import com.elm.shj.admin.portal.services.dto.UserSurveyDto;
 import com.elm.shj.admin.portal.services.dto.UserSurveyQuestionDto;
@@ -42,6 +44,7 @@ public class UserSurveyService extends GenericService<JpaUserSurvey, UserSurveyD
     private final UserSurveyQuestionService userSurveyQuestionService;
     private final ApplicantPackageService applicantPackageService;
     private final CompanyRitualSeasonService companyRitualSeasonService;
+    private final ApplicantService applicantService;
     @Value("${daily.survey.activation.hour}")
     private int dailySurveyActivationHour;
 
@@ -70,7 +73,14 @@ public class UserSurveyService extends GenericService<JpaUserSurvey, UserSurveyD
     public boolean checkApplicantEndOfRitualDateValid(String digitalId) {
         Calendar cal = Calendar.getInstance();
         Date currentDate = cal.getInstance().getTime();
-        Date endRitualDate = applicantPackageService.findJpaApplicantPackageByApplicantUin(digitalId).getEndDate();
+        Optional<ApplicantDto> applicant = applicantService.findByUin(digitalId);
+        Long applicantId = -1L;
+        if(applicant.isPresent()){
+            applicantId = applicant.get().getId();
+        } else {
+            return false;
+        }
+        Date endRitualDate = applicantPackageService.findJpaApplicantPackageByApplicantId(applicantId).getEndDate();
         Date maxDate = new Date(endRitualDate.getTime()+ 172800000);
         Date minDate = new Date(endRitualDate.getTime()- 86400000);
         if (currentDate.after(minDate) && currentDate.before(maxDate)) {
