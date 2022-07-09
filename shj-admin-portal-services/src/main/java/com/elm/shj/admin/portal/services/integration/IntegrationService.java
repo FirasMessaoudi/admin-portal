@@ -55,7 +55,7 @@ public class IntegrationService {
 
 
     public void callCRMCreateProfile(ApplicantRitualVo ritual, String mobileNumber, CrmAuthResponse accessTokenWsResponse) {
-        log.info("start callCRMCreateProfile for mobile number {}", mobileNumber);
+        log.info("Start callCRMCreateProfile for mobile number {}", mobileNumber);
         ApplicantCreateUserVoCRM user = new ApplicantCreateUserVoCRM();
         user.setCustomerType(ECustomerTypeCRM.PILGRIM.getCrmCode());
         user.setDigitalID(ritual.getApplicant().getUin());
@@ -105,7 +105,7 @@ public class IntegrationService {
     }
 
     public ComplaintUpdateCRMDto callCRMCreateTicket(ApplicantComplaintVo complaint, Integer ticketMainType, CrmAuthResponse accessTokenWsResponse) {
-        log.info("start callCRMCreateTicket for ticketMainType {}", ticketMainType);
+        log.info("Start callCRMCreateTicket for ticketMainType {}", ticketMainType);
         ApplicantCreateComplaintVoCRM newComplaint = new ApplicantCreateComplaintVoCRM();
         newComplaint.setDigitalID(complaint.getApplicantRitual().getApplicant().getUin());
         if (complaint.getApplicantRitual().getApplicant().getIdNumber() != null )
@@ -199,14 +199,17 @@ public class IntegrationService {
     }
 
     public CrmAuthResponse callCrmAuth() {
+        log.info("Start call CRM auth.");
         CrmAuthResponse accessTokenWsResponse = webClient.post().uri(crmUrl + crmAuthUrl)
                 .body(BodyInserters.fromValue(LoginRequestCRM.builder().username(crmAccessUsername).password(crmAccessPassword).build()))
                 .retrieve().bodyToMono(CrmAuthResponse.class).block();
+        log.info("Finish call CRM auth with {} access token.", accessTokenWsResponse);
         return accessTokenWsResponse;
     }
 
     public   <B, R> R callCRM(String serviceRelativeUrl, HttpMethod httpMethod, B bodyToSend, String token,
                             ParameterizedTypeReference<R> responseTypeReference)  {
+        log.info("Start call CRM.");
         if (token == null) {
             CrmAuthResponse accessTokenWsResponse = callCrmAuth();
             token = accessTokenWsResponse.getToken();

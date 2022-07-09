@@ -70,9 +70,10 @@ public class ApplicantComplaintScheduler {
             return;
         }
 
-        log.debug("Generate applicants complaints scheduler started...");
+        log.info("Generate applicants complaints scheduler started...");
         Date date = new Date(System.currentTimeMillis() - 60 * 1000 * complaintPeriodInMinutes);
         List<ApplicantComplaintVo> complaints = applicantComplaintRepository.findByCreationDateLessThanEqualAndStatusCode(date, EComplaintStatus.UNDER_PROCESSING.name());
+        log.info("Number of retrieved complaints is {}", (complaints == null || complaints.isEmpty()) ? 0 : complaints.size() );
 
         complaints.forEach(complaint -> {
             try {
@@ -85,7 +86,7 @@ public class ApplicantComplaintScheduler {
                     integrationService.callCRMCreateProfile(complaint.getApplicantRitual(), complaint.getMobileNumber(), accessTokenWsResponse);
 
                     ComplaintUpdateCRMDto updateCRMDto = integrationService.callCRMCreateTicket(complaint, ETicketMainTypeCRM.Complaint.getId(), accessTokenWsResponse);
-
+                    log.info("CRM ticket created with {} CRM ticket number.", updateCRMDto.getCrmTicketNumber());
 
                     applicantComplaintRepository.updateCRMTicketNumber(complaint.getId(), updateCRMDto.getCrmTicketNumber());
                     complaint.setCrmTicketNumber(updateCRMDto.getCrmTicketNumber());
@@ -93,6 +94,7 @@ public class ApplicantComplaintScheduler {
 
 
                 if (complaint.getCrmTicketNumber() != null && !complaint.getStatusCode().equals(EIncidentStatus.UNDER_PROCESSING.name())  && (complaint.getCrmStatusUpdated() == null || !complaint.getCrmStatusUpdated())){
+                    log.info("CRM ticket number is {} for {} id.", complaint.getCrmTicketNumber(), complaint.getId());
                     ApplicantIncidentComplaintVoCRM applicantComplaintVoCRM = new ApplicantIncidentComplaintVoCRM();
                     applicantComplaintVoCRM.setCrmTicketNumber(complaint.getCrmTicketNumber());
                     applicantComplaintVoCRM.setStatus(EComplaintStatus.valueOf(complaint.getStatusCode()).getCode());
