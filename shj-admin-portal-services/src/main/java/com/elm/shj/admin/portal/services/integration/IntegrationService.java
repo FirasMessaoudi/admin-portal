@@ -214,10 +214,10 @@ public class IntegrationService {
         String finalToken = token;
         // check if no body
         if (bodyToSend == null) {
-
             return webClient.method(httpMethod).uri(crmUrl + serviceRelativeUrl).headers(header -> header.setBearerAuth(finalToken))
                     .retrieve().bodyToMono(responseTypeReference).block();
         }
+        log.info("Crm request body: {}", bodyToSend);
         return webClient.method(httpMethod).uri(crmUrl + serviceRelativeUrl).headers(header -> header.setBearerAuth(finalToken))
                 .body(BodyInserters.fromValue(bodyToSend)).retrieve().bodyToMono(responseTypeReference).block();
     }

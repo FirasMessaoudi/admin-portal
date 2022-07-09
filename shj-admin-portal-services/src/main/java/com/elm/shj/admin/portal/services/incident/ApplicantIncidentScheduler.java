@@ -6,13 +6,14 @@ package com.elm.shj.admin.portal.services.incident;
 import com.elm.shj.admin.portal.orm.entity.ApplicantComplaintVo;
 import com.elm.shj.admin.portal.orm.repository.ApplicantIncidentLiteRepository;
 import com.elm.shj.admin.portal.orm.repository.ApplicantIncidentRepository;
-import com.elm.shj.admin.portal.services.dto.*;
+import com.elm.shj.admin.portal.services.dto.ApplicantIncidentComplaintVoCRM;
+import com.elm.shj.admin.portal.services.dto.ComplaintUpdateCRMDto;
+import com.elm.shj.admin.portal.services.dto.EIncidentStatus;
+import com.elm.shj.admin.portal.services.dto.ETicketMainTypeCRM;
 import com.elm.shj.admin.portal.services.integration.CrmAuthResponse;
 import com.elm.shj.admin.portal.services.integration.IntegrationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import net.javacrumbs.shedlock.core.LockAssert;
-import net.javacrumbs.shedlock.spring.annotation.SchedulerLock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
@@ -72,13 +73,14 @@ public class ApplicantIncidentScheduler {
 
         log.debug("Generate applicants incidents scheduler started...");
         List<ApplicantComplaintVo> incidents = applicantIncidentRepository.findAllCrm(EIncidentStatus.UNDER_PROCESSING.name());
+        log.info("Number of retrieved incidents is {}", (incidents == null || incidents.isEmpty()) ? 0 : incidents.size() );
 
         incidents.forEach(incident -> {
             try {
                 CrmAuthResponse accessTokenWsResponse = integrationService.callCrmAuth();
                 if (CrmAuthResponse.ECrmResponseStatus.SUCCESS.getCode() != accessTokenWsResponse.getResponseCode()) {
-                    // cannot authenticate, throw an exception
-                    // TODO: handle failure of authentication .
+                    log.error("Authentication failed, cannot push incidents.");
+                    return;
                 }
                 if (incident.getCrmTicketNumber() == null) {
                     integrationService.callCRMCreateProfile(incident.getApplicantRitual(), incident.getMobileNumber(), accessTokenWsResponse);
