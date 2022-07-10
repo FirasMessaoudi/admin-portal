@@ -72,7 +72,7 @@ public class ApplicantIncidentScheduler {
         }
 
         log.debug("Generate applicants incidents scheduler started...");
-        List<ApplicantComplaintVo> incidents = applicantIncidentRepository.findAllCrm(EIncidentStatus.UNDER_PROCESSING.name());
+        List<ApplicantComplaintVo> incidents = applicantIncidentRepository.findAllCrm();
         log.info("Number of retrieved incidents is {}", (incidents == null || incidents.isEmpty()) ? 0 : incidents.size() );
 
         incidents.forEach(incident -> {
