@@ -10,14 +10,12 @@ import com.elm.shj.admin.portal.web.security.jwt.JwtAuthenticationProvider;
 import com.elm.shj.admin.portal.web.security.jwt.JwtTokenFilter;
 import com.elm.shj.admin.portal.web.security.jwt.JwtTokenService;
 import com.elm.shj.admin.portal.web.security.otp.OtpAuthenticationProvider;
-import io.netty.handler.logging.LogLevel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.client.reactive.ReactorClientHttpConnector;
 import org.springframework.mobile.device.Device;
 import org.springframework.mobile.device.LiteDeviceResolver;
 import org.springframework.security.access.event.LoggerListener;
@@ -40,8 +38,6 @@ import org.springframework.security.web.header.writers.ReferrerPolicyHeaderWrite
 import org.springframework.security.web.header.writers.StaticHeadersWriter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.reactive.function.client.WebClient;
-import reactor.netty.http.client.HttpClient;
-import reactor.netty.transport.logging.AdvancedByteBufFormat;
 
 import javax.servlet.http.HttpServletRequest;
 import java.net.URL;
@@ -97,9 +93,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
     WebClient authWebClient() {
-        return WebClient.builder().clientConnector(new ReactorClientHttpConnector(
-                HttpClient.create().wiretap("reactor.netty.http.client.HttpClient",
-                        LogLevel.INFO, AdvancedByteBufFormat.TEXTUAL))).build();
+        return WebClient.builder().build();
     }
 
     /**
