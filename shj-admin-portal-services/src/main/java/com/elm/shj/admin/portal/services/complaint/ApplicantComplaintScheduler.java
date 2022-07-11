@@ -72,7 +72,7 @@ public class ApplicantComplaintScheduler {
 
         log.info("Generate applicants complaints scheduler started...");
         Date date = new Date(System.currentTimeMillis() - 60 * 1000 * complaintPeriodInMinutes);
-        List<ApplicantComplaintVo> complaints = applicantComplaintRepository.findByCreationDateLessThanEqualAndStatusCode(date);
+        List<ApplicantComplaintVo> complaints = applicantComplaintRepository.findByCreationDateLessThanEqualAndStatusCode(date, EComplaintStatus.UNDER_PROCESSING.name());
         log.info("Number of retrieved complaints is {}", (complaints == null || complaints.isEmpty()) ? 0 : complaints.size() );
 
         complaints.forEach(complaint -> {
