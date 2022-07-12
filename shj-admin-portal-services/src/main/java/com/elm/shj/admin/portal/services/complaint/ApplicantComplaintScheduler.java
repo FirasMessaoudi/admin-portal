@@ -83,8 +83,12 @@ public class ApplicantComplaintScheduler {
                     // TODO: handle failure of authentication .
                 }
                 if (complaint.getCrmTicketNumber() == null) {
-                    integrationService.callCRMCreateProfile(complaint.getApplicantRitual(), complaint.getMobileNumber(), accessTokenWsResponse);
-
+                    try {
+                        integrationService.callCRMCreateProfile(complaint.getApplicantRitual(), complaint.getMobileNumber(), accessTokenWsResponse);
+                    } catch (Exception e){
+                        log.error("Error creating user profile {}", e);
+                    }
+                    log.info("Start creating the CRM Ticket for Complaint. {}", ETicketMainTypeCRM.Complaint.getId());
                     ComplaintUpdateCRMDto updateCRMDto = integrationService.callCRMCreateTicket(complaint, ETicketMainTypeCRM.Complaint.getId(), accessTokenWsResponse);
                     log.info("CRM ticket created with {} CRM ticket number.", updateCRMDto.getCrmTicketNumber());
 
