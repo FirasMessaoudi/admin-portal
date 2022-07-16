@@ -240,8 +240,11 @@ public class ApplicantComplaintService extends GenericService<JpaApplicantCompla
         com.elm.shj.admin.portal.orm.entity.ApplicantComplaintVo applicantComplaint = applicantComplaintLiteRepository.findOneLite(complaintId);
         String uin = applicantComplaint.getApplicantRitual().getApplicant().getUin();
         String preferredLanguage = applicantComplaint.getApplicantRitual().getApplicant().getPreferredLanguage();
+        log.info("Applicant preferred language. {}", preferredLanguage);
         if(null == preferredLanguage || preferredLanguage.equals("")){
+            log.info("Applicant preferred language not found");
             preferredLanguage = ELanguage.ARABIC.getCode();
+            log.info("Applicant preferred language set default arabic, {}", preferredLanguage);
         }
         notificationRequestService.sendComplaintNotification(notificationTemplate.get(), uin, preferredLanguage);
         log.info("Finish sendComplaintNotification with closeComplaintTemplateName: {}, complaintId: {}", closeComplaintTemplateName, complaintId);
