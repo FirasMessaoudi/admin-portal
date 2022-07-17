@@ -3,14 +3,8 @@
  */
 package com.elm.shj.admin.portal.web.lookup;
 
-import com.elm.shj.admin.portal.services.company.CompanyLiteService;
-import com.elm.shj.admin.portal.services.company.CompanyService;
-import com.elm.shj.admin.portal.services.dashboard.DashboardService;
 import com.elm.shj.admin.portal.services.dto.*;
-import com.elm.shj.admin.portal.services.lookup.*;
-import com.elm.shj.admin.portal.services.ritual.RitualSeasonService;
-import com.elm.shj.admin.portal.services.utils.MapUtils;
-import com.elm.shj.admin.portal.services.zone.AreaLayerService;
+import com.elm.shj.admin.portal.services.lookup.LookupService;
 import com.elm.shj.admin.portal.web.navigation.Navigation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -35,269 +29,424 @@ import java.util.List;
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class LookupController {
 
-    private final AuthorityLookupService authorityLookupService;
-    private final RitualTypeLookupService ritualTypeLookupService;
-    private final CardStatusLookupService cardStatusLookupService;
-    private final RelativeRelationshipLookupService relativeRelationshipLookupService;
-    private final MaritalStatusLookupService maritalStatusLookupService;
-    private final NationalityLookupService nationalityLookupService;
-    private final HealthSpecialNeedsLookupService healthSpecialNeedsLookupService;
-    private final PrintRequestStatusLookupService printRequestStatusLookupService;
-    private final PrintBatchTypeLookupService printBatchTypeLookupService;
-    private final CompanyRitualStepLookupService companyRitualStepLookupService;
-    private final CompanyStaffTitleLookupService companyStaffTitleLookupService;
-    private final HousingCategoryLookupService housingCategoryLookupService;
-    private final HousingTypeLookupService housingTypeLookupService;
-    private final PackageTypeLookupService packageTypeLookupService;
-    private final HousingSiteLookupService housingSiteLookupService;
-    private final TransportationTypeLookupService transportationTypeLookupService;
-    private final NotificationCategoryLookupService notificationCategoryLookupService;
-    private final NotificationTemplateNameLookupService notificationTemplateNameLookupService;
-    private final NotificationTemplateTypeLookupService notificationTemplateTypeLookupService;
-    private final UserNotificationStatusLookupService userNotificationStatusLookupService;
-    private final NotificationTemplateStatusLookupService notificationTemplateStatusLookupService;
-    private final HealthImmunizationLookupService healthImmunizationLookupService;
-    private final ApplicantDigitalIdStatusLookupService applicantDigitalIdStatusLookupService;
-    private final ReligiousOccasionsDayLookupService religiousOccasionsDayLookupService;
-    private final LanguageLookupService languageLookupService;
-    private final MealTypeLookupService mealTypeLookupService;
-    private final IncidentTypeLookupService incidentTypeLookupService;
-    private final IncidentStatusLookupService incidentStatusLookupService;
-    private final MapUtils mapUtils;
-    private final CompanyLiteService companyLiteService;
-    private final CompanyService companyService;
-    private final RitualSeasonService ritualSeasonService;
-    private final DashboardService dashboardService;
-    private final AreaLayerLookupService areaLayerLookupService;
-    private final AreaLayerService areaLayerService;
+    private final LookupService lookupService;
 
+    /**
+     * List Parent Authorities
+     *
+     * @return List ParentAuthorities
+     */
     @GetMapping("/authority/list/parent")
     public List<AuthorityLookupDto> listParentAuthorities(Authentication authentication) {
-        return authorityLookupService.findAllParentAuthorities();
+        return lookupService.listParentAuthorities();
     }
 
+    /**
+     * List Ritual Types
+     *
+     * @return List Ritual Types
+     */
     @GetMapping("/ritual-type/list")
     public List<RitualTypeLookupDto> listRitualTypes(Authentication authentication) {
         log.debug("list ritual types...");
-        return ritualTypeLookupService.findAll();
+        return lookupService.listRitualTypes();
     }
 
+    /**
+     * List Card Statuses
+     *
+     * @return List Card Statuses
+     */
     @GetMapping("/card-status/list")
     public List<CardStatusLookupDto> listCardStatuses(Authentication authentication) {
         log.debug("list card statuses...");
-        return cardStatusLookupService.findAll();
+        return lookupService.listCardStatuses();
     }
 
+    /**
+     * List Relative Relationships
+     *
+     * @return List Relative Relationships
+     */
     @GetMapping("/relative-relationship/list")
     public List<RelativeRelationshipLookupDto> listRelativeRelationships(Authentication authentication) {
         log.debug("list relative relationships...");
-        return relativeRelationshipLookupService.findAll();
+        return lookupService.listRelativeRelationships();
     }
 
+    /**
+     * List Marital Statuses
+     *
+     * @return List Marital Statuses
+     */
     @GetMapping("/marital-status/list")
     public List<MaritalStatusLookupDto> listMaritalStatuses(Authentication authentication) {
         log.debug("list marital statuses...");
-        return maritalStatusLookupService.findAll();
+        return lookupService.listMaritalStatuses();
     }
 
+    /**
+     * List Countries
+     *
+     * @return List Countries
+     */
     @GetMapping("/country/list")
     public List<NationalityLookupDto> listCountries(Authentication authentication) {
         log.debug("list countries...");
-        return nationalityLookupService.findAll();
+        return lookupService.listCountries();
     }
 
+    /**
+     * List Health Special Needs
+     *
+     * @return List Health Special Needs
+     */
     @GetMapping("/health-special-needs/list")
     public List<HealthSpecialNeedsTypeLookupDto> listHealthSpecialNeeds(Authentication authentication) {
         log.debug("list health special needs...");
-        return healthSpecialNeedsLookupService.findAll();
+        return lookupService.listHealthSpecialNeeds();
     }
 
+    /**
+     * List Print Request Statuses
+     *
+     * @return List Print Request Statuses
+     */
     @GetMapping("/print-request-status/list")
     public List<PrintRequestStatusLookupDto> listPrintRequestStatuses(Authentication authentication) {
         log.debug("list print request statuses...");
-        return printRequestStatusLookupService.findAll();
+        return lookupService.listPrintRequestStatuses();
     }
 
+    /**
+     * List Print Request Batch Types
+     *
+     * @return List Print Request Batch Types
+     */
     @GetMapping("/print-batch-type/list")
     public List<PrintBatchTypeLookupDto> listPrintRequestBatchTypes(Authentication authentication) {
         log.debug("list print batch types...");
-        return printBatchTypeLookupService.findBatchTypeByTarget(EPrintingRequestTarget.APPLICANT.name());
+        return lookupService.listPrintRequestBatchTypes();
     }
 
-    //TODO: remove "label" word from the method name and replace underscore in URL by dash
+    /**
+     * List Company Ritual Steps Label
+     *
+     * @return List Company Ritual Steps Label
+     */
     @GetMapping("/company_ritual_step/list")
     public List<CompanyRitualStepLookupDto> listCompanyRitualStepsLabel(Authentication authentication) {
         log.debug("list company ritual step labels...");
-        return companyRitualStepLookupService.findAll();
+        return lookupService.listCompanyRitualStepsLabel();
     }
 
+    /**
+     * List Company Staff Titles
+     *
+     * @return List Company Staff Titles
+     */
     @GetMapping("/company-staff-title/list")
     public List<CompanyStaffTitleLookupDto> listCompanyStaffTitles(Authentication authentication) {
         log.debug("list company staff title labels...");
-        return companyStaffTitleLookupService.findAll();
+        return lookupService.listCompanyStaffTitles();
     }
 
+    /**
+     * List Housing Categories
+     *
+     * @return List Housing Categories
+     */
     @GetMapping("/housing-category/list")
     public List<HousingCategoryLookupDto> listHousingCategories(Authentication authentication) {
         log.debug("list housing category...");
-        return housingCategoryLookupService.findAll();
+        return lookupService.listHousingCategories();
     }
 
+    /**
+     * List Housing Types
+     *
+     * @return List Housing Types
+     */
     @GetMapping("/housing-type/list")
     public List<HousingTypeLookupDto> listHousingTypes(Authentication authentication) {
         log.debug("list housing type...");
-        return housingTypeLookupService.findAll();
+        return lookupService.listHousingTypes();
     }
 
+    /**
+     * List Package Types
+     *
+     * @return List Package Types
+     */
     @GetMapping("/package-type/list")
     public List<PackageTypeLookupDto> listPackageTypes(Authentication authentication) {
         log.debug("list package type...");
-        return packageTypeLookupService.findAll();
+        return lookupService.listPackageTypes();
     }
 
+    /**
+     * List Housing Sites
+     *
+     * @return List Housing Sites
+     */
     @GetMapping("/housing-site/list")
     public List<HousingSiteLookupDto> listHousingSites(Authentication authentication) {
         log.debug("list housing site...");
-        return housingSiteLookupService.findAll();
+        return lookupService.listHousingSites();
     }
 
+    /**
+     * List Camp Sites
+     *
+     * @return List Camp Sites
+     */
     @GetMapping("/camp-site/list")
     public List<HousingSiteLookupDto> listCampSites(Authentication authentication) {
         log.debug("list camp sites...");
-        return housingSiteLookupService.findCampSites();
+        return lookupService.listCampSites();
     }
 
+    /**
+     * List Transportation Types
+     *
+     * @return List Transportation Types
+     */
     @GetMapping("/transportation-type/list")
     public List<TransportationTypeLookupDto> listTransportationTypes(Authentication authentication) {
         log.debug("list transportation type...");
-        return transportationTypeLookupService.findAll();
+        return lookupService.listTransportationTypes();
     }
 
+    /**
+     * List Notification Categories
+     *
+     * @return List Notification Categories
+     */
     @GetMapping("/notification-category/list")
     public List<NotificationCategoryLookupDto> listNotificationCategories(Authentication authentication) {
         log.debug("list notification category...");
-        return notificationCategoryLookupService.findAll();
+        return lookupService.listNotificationCategories();
     }
 
+    /**
+     * List Notification Template Names
+     *
+     * @return List Notification Template Names
+     */
     @GetMapping("/notification-name/list")
     public List<NotificationTemplateNameLookupDto> listNotificationTemplateNames(Authentication authentication) {
         log.debug("list notification template name...");
-        return notificationTemplateNameLookupService.findAll();
+        return lookupService.listNotificationTemplateNames();
     }
 
+    /**
+     * List Notification Template Types
+     *
+     * @return List Notification Template Types
+     */
     @GetMapping("/notification-template-type/list")
     public List<NotificationTemplateTypeLookupDto> listNotificationTemplateTypes() {
         log.debug("list notification template types...");
-        return notificationTemplateTypeLookupService.findAll();
+        return lookupService.listNotificationTemplateTypes();
     }
 
+    /**
+     * List User Notification Statuses
+     *
+     * @return List User Notification Statuses
+     */
     @GetMapping("/user-notification-status/list")
     public List<UserNotificationStatusLookupDto> listUserNotificationStatuses() {
         log.debug("list user notification statuses...");
-        return userNotificationStatusLookupService.findAll();
+        return lookupService.listUserNotificationStatuses();
     }
 
+    /**
+     * List Notification Template Statuses
+     *
+     * @return List Notification Template Statuses
+     */
     @GetMapping("/notification-template-status/list")
     public List<NotificationTemplateStatusLookupDto> listNotificationTemplateStatuses() {
         log.debug("list notification template statuses...");
-        return notificationTemplateStatusLookupService.findAll();
+        return lookupService.listNotificationTemplateStatuses();
     }
 
+    /**
+     * List Immunization
+     *
+     * @return List Immunization
+     */
     @GetMapping("/health-immunization/list")
     public List<HealthImmunizationLookupDto> listImmunization() {
         log.debug("list health immunizations...");
-        return healthImmunizationLookupService.findAll();
+        return lookupService.listImmunization();
     }
 
+    /**
+     * List Religious Occasions Day
+     *
+     * @return List Religious Occasions Day
+     */
     @GetMapping("/religious-occasions-day/list")
     public List<ReligiousOccasionsDayLookupDto> listReligiousOccasionsDay() {
         log.debug("list religious occasions day...");
-        return religiousOccasionsDayLookupService.findAll();
+        return lookupService.listReligiousOccasionsDay();
     }
 
+    /**
+     * List Meal Types
+     *
+     * @return List Meal Types
+     */
     @GetMapping("/meal-type/list")
     public List<MealTypeLookupDto> listMealTypes() {
         log.debug("list meal types...");
-        return mealTypeLookupService.findAll();
+        return lookupService.listMealTypes();
     }
 
+    /**
+     * List Digital Id Statuses
+     *
+     * @return List Digital Id Statuses
+     */
     @GetMapping("/digital-id-status/list")
     public List<ApplicantDigitalIdStatusLookupDto> listDigitalIdStatuses() {
         log.debug("list applicant digital ID statuses...");
-        return applicantDigitalIdStatusLookupService.findAll();
+        return lookupService.listDigitalIdStatuses();
     }
 
+    /**
+     * List Languages
+     *
+     * @return List Languages
+     */
     @GetMapping("/language/list")
     public List<LanguageLookupDto> listLanguages() {
         log.debug("list languages...");
-        return languageLookupService.findAll();
+        return lookupService.listLanguages();
     }
 
+    /**
+     * List Incident Types
+     *
+     * @return List Incident Types
+     */
     @GetMapping("/incident-type/list")
     public List<IncidentTypeLookupDto> listIncidentTypes() {
         log.debug("list incident types...");
-        return incidentTypeLookupService.findAll();
+        return lookupService.listIncidentTypes();
     }
 
+    /**
+     * List Incident Statuses
+     *
+     * @return List Incident Statuses
+     */
     @GetMapping("/incident-status/list")
     public List<IncidentStatusLookupDto> listIncidentStatuses() {
         log.debug("list incident statuses...");
-        return incidentStatusLookupService.findAll();
+        return lookupService.listIncidentStatuses();
     }
 
+    /**
+     * Load Google Maps ApiKey
+     *
+     * @return  Google Maps ApiKey
+     */
     @GetMapping("/google-maps/api-key")
     public String loadGoogleMapsApiKey() {
         log.debug("load google maps api key...");
-        return mapUtils.retrieveGoogleMapsApiKey();
+        return lookupService.loadGoogleMapsApiKey();
     }
 
+    /**
+     * List Company Names By SesonYear
+     *
+     * @param seasonYear
+     * @return List Company Names
+     */
     @GetMapping("/company-names/list/{seasonYear}")
     public List<CompanyLiteDto> listCompanyNames(@PathVariable("seasonYear") int seasonYear) {
         log.debug("list company names for current season ...");
-        return companyService.findCompaniesBySeason(seasonYear);
+        return lookupService.listCompanyNameBySeasonYear(seasonYear);
     }
 
+    /**
+     * List Company Names
+     *
+     * @return List Company Names
+     */
     @GetMapping("/company-names/list")
     public List<CompanyLiteDto> listCompanyNames() {
         log.debug("list company names...");
-        return companyLiteService.findAll();
+        return lookupService.listCompanyNames();
     }
 
+    /**
+     * List Ritual Seasons
+     *
+     * @return List Ritual Seasons
+     */
     @GetMapping("/ritual-seasons/list")
     public List<RitualSeasonDto> listRitualSeasons() {
         log.debug("list ritual seasons...");
-        return ritualSeasonService.findAll();
+        return lookupService.listRitualSeasons();
     }
 
+    /**
+     * List Ritual Season Years
+     *
+     * @return List Ritual Season Years
+     */
     @GetMapping("/ritual-seasons-years/list")
     public List<Integer> listRitualSeasonYears() {
         log.debug("list ritual season years...");
-        return ritualSeasonService.listRitualSeasonYears();
+        return lookupService.listRitualSeasonYears();
     }
 
+    /**
+     * List Staff Print Request Batch Types
+     *
+     * @return List Staff Print Request Batch Types
+     */
     @GetMapping("/staff-print-batch-type/list")
     public List<PrintBatchTypeLookupDto> listStaffPrintRequestBatchTypes(Authentication authentication) {
         log.debug("list print batch types...");
-        return printBatchTypeLookupService.findBatchTypeByTarget(EPrintingRequestTarget.STAFF.name());
+        return lookupService.listStaffPrintRequestBatchTypes();
     }
 
+    /**
+     * load Dashboard Refresh Interval
+     *
+     * @return Dashboard Refresh Interval
+     */
     @GetMapping("/dashboard/refresh-interval")
     public Integer loadDashboardRefreshInterval() {
         log.debug("load dashboard refresh interval...");
-        return dashboardService.getRefreshInterval();
+        return lookupService.loadDashboardRefreshInterval();
     }
 
+    /**
+     * List Area Layers
+     *
+     * @return List Area Layers
+     */
     @GetMapping("/area_layers/list")
     public List<AreaLayerDto> listAreaLayers() {
         log.debug("list area Layers...");
-        return areaLayerService.findAll();
+        return lookupService.listAreaLayers();
     }
 
+    /**
+     * List Area Layers Label
+     *
+     * @return List Area Layers Label
+     */
     @GetMapping("/area_layers_labels/list")
     public List<AreaLayerLookupDto> AreaLayersLabel() {
         log.debug("list area layer label...");
-        return areaLayerLookupService.findAll();
+        return lookupService.AreaLayersLabel();
     }
-
 
 }
