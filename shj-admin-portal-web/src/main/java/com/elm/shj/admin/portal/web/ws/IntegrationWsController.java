@@ -293,13 +293,19 @@ public class IntegrationWsController {
             SimpleDateFormat sdf = new SimpleDateFormat(ISO8601_DATE_PATTERN);
 
             if(command.getDateOfBirthGregorian() != null) {
-                if (applicant.get().getDateOfBirthGregorian() == null) {
+                if (applicant.get().getDateOfBirthGregorian() == null && applicant.get().getDateOfBirthHijri() == null) {
                     return ResponseEntity.ok(WsResponse.builder().status(WsError.EWsError.INVALID_DATE_OF_BIRTH.getCode())
                             .body(WsError.builder().error(WsError.EWsError.APPLICANT_NOT_MATCHED.getCode()).referenceNumber(command.getIdentifier()).build()).build());
+                } else {
+                    if(applicant.get().getDateOfBirthGregorian() == null) {
+                        dateOfBirthMatched = applicant.get().getDateOfBirthHijri()==command.getDateOfBirthHijri() ;
+                    }else {
+                        String applicantDateFormatted = sdf.format(applicant.get().getDateOfBirthGregorian());
+                        String commandDataOfBirthFormatted = sdf.format(command.getDateOfBirthGregorian());
+                        dateOfBirthMatched = commandDataOfBirthFormatted.equals(applicantDateFormatted);
+                    }
                 }
-                String applicantDateFormatted = sdf.format(applicant.get().getDateOfBirthGregorian());
-                String commandDataOfBirthFormatted = sdf.format(command.getDateOfBirthGregorian());
-                dateOfBirthMatched = commandDataOfBirthFormatted.equals(applicantDateFormatted);
+
             } else if (command.getDateOfBirthHijri() > 0) {
                 if (applicant.get().getDateOfBirthHijri() == null && applicant.get().getDateOfBirthHijri() <= 0) {
                     return ResponseEntity.ok(WsResponse.builder().status(WsError.EWsError.INVALID_DATE_OF_BIRTH.getCode())
