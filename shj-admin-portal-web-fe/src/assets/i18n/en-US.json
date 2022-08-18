@@ -621,7 +621,8 @@
     "dialog_close_incident_confirmation_text": "Are you sure you want to close the incident ?",
     "dialog_resolve_incident_success_text": "The incident status changed to resolved",
     "dialog_close_incident_success_text": "The incident status changed to closed",
-    "operation_date": "Operation Date"
+    "operation_date": "Operation Date",
+    "camp_number": "Camp Number"
   },
   "dashboard": {
     "general": {

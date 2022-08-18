@@ -620,7 +620,9 @@
     "dialog_close_incident_confirmation_text": "هل تريد تحويل حالة البلاغ إلى مغلق وإشعار مقدم البلاغ بذلك؟",
     "dialog_resolve_incident_success_text": "تم تحويل حالة البلاغ إلى تم الحل",
     "dialog_close_incident_success_text": "تم تحويل حالة البلاغ إلى مغلق",
-    "operation_date": "تاريخ الإجراء"
+    "operation_date": "تاريخ الإجراء", 
+    "camp_number": " عدد المخيم"
+
   },
   "dashboard": {
     "general": {

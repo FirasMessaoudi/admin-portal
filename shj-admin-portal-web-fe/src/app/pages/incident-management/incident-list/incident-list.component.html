@@ -96,6 +96,8 @@
           <th scope="col">{{'incident-management.applicant_name' | translate}}</th>
           <th scope="col">{{'incident-management.incident_type' | translate}}</th>
           <th scope="col">{{'incident-management.incident_date' | translate}}</th>
+          <th scope="col">{{'incident-management.camp_number' | translate}}</th>
+          <th scope="col">{{'address.city' | translate}}</th>
           <th scope="col">{{'incident-management.status' | translate}}</th>
           <th scope="col"></th>
         </tr>
@@ -117,6 +119,8 @@
           <td>{{formatDate(incident?.creationDate)}}
             {{incident?.creationDate | date: 'HH:mm'}}
           </td>
+          <td class="ltr">{{incident.campNumber}}</td>
+          <td class="ltr">{{incident.city}}</td>
           <td class=" d-flex align-items-baseline">
             <span class="status {{buildStatusClass(incident?.statusCode)}} mr-1"></span>
             <span>{{incident.statusCode ? lookupService().localizedLabel(incidentStatuses, incident.statusCode) : '---'}}</span>
