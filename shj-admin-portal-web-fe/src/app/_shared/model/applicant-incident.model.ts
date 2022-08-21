@@ -14,4 +14,6 @@ export class ApplicantIncident {
   incidentAttachments: IncidentAttachment[];
   creationDate: Date;
   updateDate: Date;
+  campNumber: string;
+  city: string;
 }
