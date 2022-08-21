@@ -28,6 +28,6 @@ public interface ApplicantRelativeRepository extends JpaRepository<JpaApplicantR
     int updateApplicantRelativeApplicantRitual(@Param("applicantRitualId") long applicantRitualId, @Param("applicantId") long applicantId,
                                                @Param("packageReferenceNumber") String packageReferenceNumber);
 
-    @Query(value = "SELECT ar FROM JpaApplicantRelative ar JOIN ar.applicant.digitalIds adi WHERE adi.uin = :applicantUin AND ar.packageReferenceNumber=:packageReferenceNumber")
+    @Query(value = "SELECT ar FROM JpaApplicantRelative ar JOIN ar.applicant.digitalIds adi WHERE adi.uin = :applicantUin AND ar.packageReferenceNumber=:packageReferenceNumber and ar.applicant.deleted = false")
     List<JpaApplicantRelative> findByApplicantUinAndPackageReferenceNumber(@Param("applicantUin") String applicantUin, @Param("packageReferenceNumber") String packageReferenceNumber);
 }

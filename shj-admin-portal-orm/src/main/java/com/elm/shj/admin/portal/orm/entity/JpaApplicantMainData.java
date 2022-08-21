@@ -72,6 +72,8 @@ public class JpaApplicantMainData implements Serializable {
 
     private String photo;
 
+    private boolean deleted;
+
     @LazyCollection(LazyCollectionOption.FALSE)
     @OneToMany
     @JoinColumn(name = "applicant_id", updatable = false)

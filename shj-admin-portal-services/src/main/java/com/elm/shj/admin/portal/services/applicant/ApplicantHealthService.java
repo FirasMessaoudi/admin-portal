@@ -41,7 +41,7 @@ public class ApplicantHealthService extends GenericService<JpaApplicantHealth, A
     public ApplicantHealthDto findByApplicantIdAndPackageReferenceNumber(long applicantId, String packageReferenceNumber) {
         log.info("Start findByApplicantIdAndPackageReferenceNumber applicantId:{}, packageReferenceNumber:{}", applicantId, packageReferenceNumber);
         ApplicantHealthDto applicantHealthDto = getMapper().fromEntity(applicantHealthRepository.
-                        findByApplicantIdAndPackageReferenceNumber(applicantId, packageReferenceNumber),
+                        findByApplicantIdAndPackageReferenceNumberAndApplicantDeletedFalse(applicantId, packageReferenceNumber),
                 mappingContext);
         log.info("Finish findByApplicantIdAndPackageReferenceNumber applicantId:{}, packageReferenceNumber:{}", applicantId, packageReferenceNumber);
         return applicantHealthDto;

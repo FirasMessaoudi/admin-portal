@@ -27,7 +27,7 @@ public interface ApplicantCardRepository extends JpaRepository<JpaApplicantCard,
             "WHERE (pr.statusCode <> :printRequestStatus or card2.statusCode <> :cardStatus) and pr.target='APPLICANT') AND card.id NOT IN :excludedCardsIds " +
             "AND (adi.uin LIKE '%'+:uin+'%' OR :uin IS NULL) AND (a.idNumber LIKE '%'+:idNumber+'%' OR :idNumber IS NULL) " +
             "AND (a.passportNumber LIKE '%'+:passportNumber+'%' OR :passportNumber IS NULL) " +
-            "AND (a.nationalityCode = :nationalityCode OR :nationalityCode IS NULL)")
+            "AND (a.nationalityCode = :nationalityCode OR :nationalityCode IS NULL) and a.deleted = false")
     Page<JpaApplicantCard> findPrintingCards(@Param("cardStatus") String cardStatus, @Param("printRequestStatus") String printRequestStatus,
                                              @Param("uin") String uin, @Param("idNumber") String idNumber, @Param("passportNumber") String passportNumber,
                                              @Param("nationalityCode") String nationalityCode, @Param("excludedCardsIds") List<Long> excludedCardsIds,
@@ -40,7 +40,7 @@ public interface ApplicantCardRepository extends JpaRepository<JpaApplicantCard,
             "WHERE (pr.statusCode <> :printRequestStatus OR card2.statusCode <> :cardStatus)  and pr.target='APPLICANT') AND card.id NOT IN :excludedCardsIds " +
             "AND (adi.uin LIKE '%'+:uin+'%' OR :uin IS NULL) AND (a.idNumber LIKE '%'+:idNumber+'%' OR :idNumber IS NULL) " +
             "AND (a.passportNumber LIKE '%'+:passportNumber+'%' OR :passportNumber IS NULL) " +
-            "AND (a.nationalityCode = :nationalityCode OR :nationalityCode IS NULL)")
+            "AND (a.nationalityCode = :nationalityCode OR :nationalityCode IS NULL) and a.deleted = false")
     List<JpaApplicantCard> findAllPrintingCards(@Param("cardStatus") String cardStatus, @Param("printRequestStatus") String printRequestStatus, @Param("uin") String uin, @Param("idNumber") String idNumber, @Param("passportNumber") String passportNumber, @Param("nationalityCode") String nationalityCode, @Param("excludedCardsIds") List<Long> excludedCardsIds);
 
     /*this method is used find all Applicant Cards with status Not Equals REISSUED */
@@ -68,7 +68,7 @@ public interface ApplicantCardRepository extends JpaRepository<JpaApplicantCard,
             "join JpaPrintRequestBatchCard printRequestBatchCard on printRequestBatchCard.cardId = applicantCard.id " +
             "join printRequestBatchCard.printRequestBatch printRequestBatch " +
             "where printRequestBatch.id = :batchId " +
-            "and applicantDigitalId.uin in :digitalIdList ")
+            "and applicantDigitalId.uin in :digitalIdList and applicant.deleted = false ")
     List<JpaApplicantCard> findApplicantCardsByPrintRequestBatchIdAndDigitalIds(@Param("digitalIdList") List<String> digitalIdList , @Param("batchId") long batchId);
 
     JpaApplicantCard findByApplicantRitualIdAndStatusCodeNotIn(long applicantRitualId, List<String> cardsStatus);

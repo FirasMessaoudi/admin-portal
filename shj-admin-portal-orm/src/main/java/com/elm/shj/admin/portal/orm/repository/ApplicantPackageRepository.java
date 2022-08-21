@@ -21,22 +21,22 @@ public interface ApplicantPackageRepository extends JpaRepository<JpaApplicantPa
 
     Optional<JpaApplicantPackage> findByApplicantUinAndRitualPackageReferenceNumber(Long uin, String referenceNumber);
 
-    @Query("SELECT ap.id FROM JpaApplicantPackage ap WHERE ap.applicantRitual.id = :applicantRitualId")
+    @Query("SELECT ap.id FROM JpaApplicantPackage ap WHERE ap.applicantRitual.id = :applicantRitualId and ap.applicantRitual.applicant.deleted = false")
     Optional<Long> findIdByApplicantRitualId(@Param("applicantRitualId") Long applicantRitualId);
 
     @Query("select New com.elm.shj.admin.portal.orm.entity.ApplicantRitualPackageVo(a.id, a.applicantUin, a.startDate, a.endDate," +
             " a.ritualPackage.companyRitualSeason.ritualSeason.ritualTypeCode," +
             "a.ritualPackage.companyRitualSeason.ritualSeason.seasonYear, a.ritualPackage.companyRitualSeason.id,a.applicantRitual.id,a.ritualPackage.referenceNumber)" +
-            " from JpaApplicantPackage a where a.applicantUin = :applicantUin order by a.startDate desc, a.creationDate desc")
+            " from JpaApplicantPackage a where a.applicantUin = :applicantUin and a.applicantRitual.applicant.deleted = false  order by a.startDate desc, a.creationDate desc")
     List<ApplicantRitualPackageVo> findApplicantRitualPackageByUin(@Param("applicantUin") long applicantUin);
 
     Optional<JpaApplicantPackage> findByIdAndApplicantUin(Long id, Long applicantUin);
 
-    @Query("SELECT ap.id FROM JpaApplicantPackage ap WHERE ap.applicantUin = :applicantUin ORDER BY ap.creationDate DESC")
+    @Query("SELECT ap.id FROM JpaApplicantPackage ap WHERE ap.applicantUin = :applicantUin and ap.applicantRitual.applicant.deleted = false ORDER BY ap.creationDate DESC")
     Page<Long> findLastIdByApplicantUin(@Param("applicantUin") Long applicantUin, Pageable pageable);
 
-    Optional<JpaApplicantPackage> findJpaApplicantPackageByApplicantUin(long applicantUin);
+    Optional<JpaApplicantPackage> findJpaApplicantPackageByApplicantUinAndApplicantRitualApplicantDeletedFalse(long applicantUin);
 
-    Optional<JpaApplicantPackage> findTopByApplicantRitualApplicantIdOrderByCreationDateDesc(long applicantId);
+    Optional<JpaApplicantPackage> findTopByApplicantRitualApplicantIdAndApplicantRitualApplicantDeletedFalseOrderByCreationDateDesc(long applicantId);
 
 }

@@ -155,4 +155,14 @@ public class BadgeController {
     }
 
 
+    @GetMapping("/staff/back/{digitalId}")
+    public BadgeVO generateStaffBadgeBack(@PathVariable String digitalId) {
+        if (digitalId.length() == 12) {
+            // valid suin
+            return badgeService.generateStaffBackBadge(digitalId, false);
+        }
+        return null;
+    }
+
+
 }

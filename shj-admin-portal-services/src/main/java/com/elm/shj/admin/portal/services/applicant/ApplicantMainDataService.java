@@ -52,7 +52,7 @@ public class ApplicantMainDataService extends GenericService<JpaApplicantMainDat
     @Transactional
     public Optional<ApplicantMainDataDto> findByUin(String uin, long applicantPackageId) {
         log.debug("Start findByUin uin:{} , applicantPackageId:{}", uin, applicantPackageId);
-        JpaApplicantMainData applicant = applicantMainDataRepository.findByDigitalIdsUin(uin);
+        JpaApplicantMainData applicant = applicantMainDataRepository.findByDigitalIdsUinAndDeletedFalse(uin);
 
         if (applicant == null) {
             log.debug("Finish findByUin not found with uin:{} , applicantPackageId:{}", uin, applicantPackageId);

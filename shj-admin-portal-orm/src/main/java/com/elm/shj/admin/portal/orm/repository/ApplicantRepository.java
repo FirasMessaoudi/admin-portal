@@ -3,7 +3,10 @@
  */
 package com.elm.shj.admin.portal.orm.repository;
 
-import com.elm.shj.admin.portal.orm.entity.*;
+import com.elm.shj.admin.portal.orm.entity.ApplicantMobileTrackingVo;
+import com.elm.shj.admin.portal.orm.entity.CountVo;
+import com.elm.shj.admin.portal.orm.entity.JpaApplicant;
+import com.elm.shj.admin.portal.orm.entity.LocalizedCountVo;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -25,112 +28,112 @@ public interface ApplicantRepository extends JpaRepository<JpaApplicant, Long>, 
 
     @Query(value = "select a from JpaApplicant a where " +
             "(a.idNumber = :idNumber and a.dateOfBirthHijri = :dateOfBirthHijri) or " +
-            "(a.passportNumber = :passportNumber and a.dateOfBirthGregorian = :dateOfBirthGregorian)")
+            "(a.passportNumber = :passportNumber and a.dateOfBirthGregorian = :dateOfBirthGregorian) and a.deleted = false")
     JpaApplicant findByBasicInfo(@Param("idNumber") String idNumber, @Param("dateOfBirthHijri") Long dateOfBirthHijri,
                                  @Param("passportNumber") String passportNumber, @Param("dateOfBirthGregorian") Date dateOfBirthGregorian);
 
     @Query(value = "select a.id from JpaApplicant a where " +
             "(a.idNumber = :idNumber and a.dateOfBirthHijri = :dateOfBirthHijri) or " +
-            "(a.passportNumber = :passportNumber and a.dateOfBirthGregorian = :dateOfBirthGregorian)")
+            "(a.passportNumber = :passportNumber and a.dateOfBirthGregorian = :dateOfBirthGregorian) and a.deleted = false")
     Long findIdByBasicInfo(@Param("idNumber") String idNumber, @Param("dateOfBirthHijri") Long dateOfBirthHijri,
                            @Param("passportNumber") String passportNumber, @Param("dateOfBirthGregorian") Date dateOfBirthGregorian);
 
     @Query(value = "select a.id from JpaApplicant a where " +
             "(a.idNumber = :idNumber) or " +
-            "(a.passportNumber = :passportNumber and a.nationalityCode = :nationalityCode)")
+            "(a.passportNumber = :passportNumber and a.nationalityCode = :nationalityCode) and a.deleted = false ")
     Long findIdByBasicInfo(@Param("idNumber") String idNumber,
                            @Param("passportNumber") String passportNumber, @Param("nationalityCode") String nationalityCode);
 
     @Query(value = "SELECT CASE WHEN COUNT(a)> 0 THEN TRUE ELSE FALSE END " +
             "FROM JpaApplicant a WHERE " +
             "(a.idNumber = :idNumber AND a.dateOfBirthHijri = :dateOfBirthHijri) OR " +
-            "(a.passportNumber = :passportNumber AND a.dateOfBirthGregorian = :dateOfBirthGregorian)")
+            "(a.passportNumber = :passportNumber AND a.dateOfBirthGregorian = :dateOfBirthGregorian) and a.deleted = false")
     boolean existsByBasicInfo(@Param("idNumber") String idNumber, @Param("dateOfBirthHijri") Long dateOfBirthHijri,
                               @Param("passportNumber") String passportNumber, @Param("dateOfBirthGregorian") Date dateOfBirthGregorian);
 
-    @Query(value = "SELECT a FROM JpaApplicant a JOIN a.digitalIds adi WHERE adi.uin = :uin")
+    @Query(value = "SELECT a FROM JpaApplicant a JOIN a.digitalIds adi WHERE adi.uin = :uin and a.deleted = false")
     JpaApplicant findByUin(@Param("uin") String uin);
 
-    @Query("SELECT a FROM JpaApplicant a LEFT JOIN a.rituals ar JOIN ar.applicantPackage ap WHERE (:today >= ap.startDate AND :today <= ap.endDate AND a.registered = TRUE)")
+    @Query("SELECT a FROM JpaApplicant a LEFT JOIN a.rituals ar JOIN ar.applicantPackage ap WHERE (:today >= ap.startDate AND :today <= ap.endDate AND a.registered = TRUE and a.deleted = false)")
     List<JpaApplicant> findAllApplicantsRegisteredAndHavingActiveRitual(@Param("today") Date today);
 
-    @Query("SELECT COUNT(a) FROM JpaApplicant a LEFT JOIN a.rituals ar JOIN ar.applicantPackage ap WHERE (:today >= ap.startDate AND :today <= ap.endDate AND a.registered = TRUE)")
+    @Query("SELECT COUNT(a) FROM JpaApplicant a LEFT JOIN a.rituals ar JOIN ar.applicantPackage ap WHERE (:today >= ap.startDate AND :today <= ap.endDate AND a.registered = TRUE and a.deleted = false)")
     long countHavingActiveRitual(@Param("today") Date today);
 
     //TODO: To be deleted
     @Query("SELECT CASE WHEN COUNT(a)> 0 THEN TRUE ELSE FALSE END FROM JpaApplicant a JOIN a.rituals ar JOIN ar.applicantPackage ap JOIN ap.ritualPackage rp WHERE " +
             "((a.idNumber = :idNumber AND a.dateOfBirthHijri = :dateOfBirthHijri) OR " +
-            "(a.passportNumber = :passportNumber AND a.dateOfBirthGregorian = :dateOfBirthGregorian)) AND rp.referenceNumber = :packageCode")
+            "(a.passportNumber = :passportNumber AND a.dateOfBirthGregorian = :dateOfBirthGregorian)) AND rp.referenceNumber = :packageCode and a.deleted = false")
     boolean findByBasicInfoAndPackageCode(@Param("idNumber") String idNumber, @Param("dateOfBirthHijri") Long dateOfBirthHijri,
                                           @Param("passportNumber") String passportNumber, @Param("dateOfBirthGregorian") Date dateOfBirthGregorian, @Param("packageCode") String packageCode);
 
-    @Query("SELECT a FROM JpaApplicant a WHERE a.id IN :selectedApplicants")
+    @Query("SELECT a FROM JpaApplicant a WHERE a.id IN :selectedApplicants and a.deleted = false")
     List<JpaApplicant> findAllByIds(@Param("selectedApplicants") List<Long> selectedApplicants);
 
-    @Query("SELECT a FROM JpaApplicant a WHERE a.id IN :selectedApplicants")
+    @Query("SELECT a FROM JpaApplicant a WHERE a.id IN :selectedApplicants and a.deleted = false")
     Page<JpaApplicant> findByIds(@Param("selectedApplicants") List<Long> selectedApplicants, Pageable pageable);
 
     @Modifying
-    @Query("UPDATE JpaApplicant a SET a.preferredLanguage = :lang, a.updateDate = CURRENT_TIMESTAMP WHERE a.id = :applicantId")
+    @Query("UPDATE JpaApplicant a SET a.preferredLanguage = :lang, a.updateDate = CURRENT_TIMESTAMP WHERE a.id = :applicantId and a.deleted = false")
     void updatePreferredLanguage(@Param("applicantId") long applicantId, @Param("lang") String lang);
 
     @Modifying
-    @Query("UPDATE JpaApplicant a SET a.registered = TRUE, a.updateDate = CURRENT_TIMESTAMP, a.channel = :channel WHERE a.id = :applicantId")
+    @Query("UPDATE JpaApplicant a SET a.registered = TRUE, a.updateDate = CURRENT_TIMESTAMP, a.channel = :channel WHERE a.id = :applicantId and a.deleted = false")
     int markAsRegistered(@Param("applicantId") long applicantId, @Param("channel") String channel);
 
     @Query("SELECT COUNT(a) FROM JpaApplicant a JOIN a.rituals ar JOIN ar.applicantPackage ap JOIN ap.ritualPackage rp JOIN rp.companyRitualSeason crs " +
             "JOIN crs.ritualSeason rs WHERE rs.seasonYear = :hijriSeason " +
-            "AND rs.ritualTypeCode IN ('INTERNAL_HAJJ', 'EXTERNAL_HAJJ', 'COURTESY_HAJJ')")
+            "AND rs.ritualTypeCode IN ('INTERNAL_HAJJ', 'EXTERNAL_HAJJ', 'COURTESY_HAJJ') and a.deleted = false")
     long countAllApplicantsByHijriSeason(@Param("hijriSeason") int hijriSeason);
 
     @Query("SELECT COUNT(a) FROM JpaApplicant a JOIN a.rituals ar JOIN ar.applicantPackage ap JOIN ap.ritualPackage rp JOIN rp.companyRitualSeason crs " +
             "JOIN crs.ritualSeason rs WHERE rs.seasonYear = :hijriSeason " +
-            "AND rs.ritualTypeCode IN ('INTERNAL_HAJJ', 'EXTERNAL_HAJJ', 'COURTESY_HAJJ') AND a.gender = :gender")
+            "AND rs.ritualTypeCode IN ('INTERNAL_HAJJ', 'EXTERNAL_HAJJ', 'COURTESY_HAJJ') AND a.gender = :gender and a.deleted = false")
     long countAllApplicantsByGenderByHijriSeason(@Param("gender") String gender, @Param("hijriSeason") int hijriSeason);
 
     @Query("SELECT COUNT(a) FROM JpaApplicant a JOIN a.rituals ar JOIN ar.applicantPackage ap JOIN ap.ritualPackage rp JOIN rp.companyRitualSeason crs " +
             "JOIN crs.ritualSeason rs WHERE rs.seasonYear = :seasonYear " +
-            "AND (a.dateOfBirthGregorian BETWEEN :to AND :from) AND rs.ritualTypeCode IN (:ritualTypeCodeList)")
+            "AND (a.dateOfBirthGregorian BETWEEN :to AND :from) AND rs.ritualTypeCode IN (:ritualTypeCodeList) and a.deleted = false")
     long countPilgrimsFromCurrentSeasonByAgeRange(@Param("from") Date from, @Param("to") Date to, @Param("seasonYear") int seasonYear, @Param("ritualTypeCodeList") List<String> ritualTypeCodeList);
 
     @Query("SELECT COUNT(a) FROM JpaApplicant a JOIN a.rituals ar JOIN ar.applicantPackage ap JOIN ap.ritualPackage rp JOIN rp.companyRitualSeason crs " +
-            "JOIN crs.ritualSeason rs WHERE rs.seasonYear = :seasonYear AND rs.ritualTypeCode IN (:ritualTypeCodeList)")
+            "JOIN crs.ritualSeason rs WHERE rs.seasonYear = :seasonYear AND rs.ritualTypeCode IN (:ritualTypeCodeList) and a.deleted = false")
     long countTotalApplicantsFromCurrentSeason(@Param("seasonYear") int seasonYear, @Param("ritualTypeCodeList") List<String> ritualTypeCodeList);
 
     @Query("SELECT COUNT(a) FROM JpaApplicant a JOIN a.rituals ar JOIN ar.applicantPackage ap JOIN ap.ritualPackage rp JOIN rp.companyRitualSeason crs " +
             "JOIN crs.ritualSeason rs WHERE rs.seasonYear = :seasonYear " +
-            "AND rs.ritualTypeCode IN (:ritualTypeCodeList) ")
+            "AND rs.ritualTypeCode IN (:ritualTypeCodeList) and a.deleted = false ")
     long countAllApplicantBySeasonAndRitualType(@Param("seasonYear") int seasonYear, @Param("ritualTypeCodeList") List<String> ritualTypeCodeList);
 
     @Query("SELECT COUNT(a) FROM JpaApplicant a JOIN a.rituals ar JOIN ar.applicantPackage ap JOIN ap.ritualPackage rp JOIN rp.companyRitualSeason crs " +
-            "JOIN crs.ritualSeason rs WHERE rs.seasonYear = :seasonYear and rs.ritualTypeCode IN ('INTERNAL_HAJJ', 'EXTERNAL_HAJJ', 'COURTESY_HAJJ') and a.nationalityCode =:nationalityCode")
+            "JOIN crs.ritualSeason rs WHERE rs.seasonYear = :seasonYear and rs.ritualTypeCode IN ('INTERNAL_HAJJ', 'EXTERNAL_HAJJ', 'COURTESY_HAJJ') and a.nationalityCode =:nationalityCode and a.deleted = false")
     long countTotalApplicantsFromCurrentSeasonByNationality(@Param("nationalityCode") String nationalityCode, @Param("seasonYear") int seasonYear);
 
     @Query("SELECT NEW com.elm.shj.admin.portal.orm.entity.CountVo(a.nationalityCode, 0, COUNT(a),'') FROM JpaApplicant a JOIN a.rituals ar JOIN ar.applicantPackage ap JOIN ap.ritualPackage rp JOIN rp.companyRitualSeason crs " +
-            "JOIN crs.ritualSeason rs WHERE rs.seasonYear = :seasonYear and rs.ritualTypeCode IN ('INTERNAL_HAJJ', 'EXTERNAL_HAJJ', 'COURTESY_HAJJ') GROUP BY a.nationalityCode")
+            "JOIN crs.ritualSeason rs WHERE rs.seasonYear = :seasonYear and rs.ritualTypeCode IN ('INTERNAL_HAJJ', 'EXTERNAL_HAJJ', 'COURTESY_HAJJ') and a.deleted = false GROUP BY a.nationalityCode")
     List<CountVo> countApplicantsByNationality(@Param("seasonYear") int seasonYear);
 
     @Query("select distinct (a.nationalityCode) from JpaApplicant a JOIN a.rituals ar JOIN ar.applicantPackage ap JOIN ap.ritualPackage rp JOIN rp.companyRitualSeason crs " +
-            "JOIN crs.ritualSeason rs where rs.ritualTypeCode IN ('INTERNAL_HAJJ', 'EXTERNAL_HAJJ', 'COURTESY_HAJJ')")
+            "JOIN crs.ritualSeason rs where rs.ritualTypeCode IN ('INTERNAL_HAJJ', 'EXTERNAL_HAJJ', 'COURTESY_HAJJ') and a.deleted = false")
     List<String> findAllNationalities();
 
     @Query("SELECT COUNT(a) FROM JpaApplicant a JOIN a.rituals ar JOIN ar.applicantPackage ap JOIN ap.ritualPackage rp JOIN rp.companyRitualSeason crs " +
-            "JOIN crs.ritualSeason rs WHERE rs.seasonYear = :seasonYear AND rs.ritualTypeCode IN (:ritualTypeCodeList) AND (a.mobileLoggedIn IS NOT NULL OR a.channel='MOBILE')")
+            "JOIN crs.ritualSeason rs WHERE rs.seasonYear = :seasonYear AND rs.ritualTypeCode IN (:ritualTypeCodeList) AND (a.mobileLoggedIn IS NOT NULL OR a.channel='MOBILE') and a.deleted = false")
     long countAllByMobileLoggedInIsNotNull(@Param("seasonYear") int seasonYear, @Param("ritualTypeCodeList") List<String> ritualTypeCodeList);
 
     @Query("SELECT COUNT(a) FROM JpaApplicant a JOIN a.rituals ar JOIN ar.applicantPackage ap JOIN ap.ritualPackage rp JOIN rp.companyRitualSeason crs " +
-            "JOIN crs.ritualSeason rs WHERE rs.seasonYear = :seasonYear AND rs.ritualTypeCode IN (:ritualTypeCodeList) AND a.mobileLoggedIn = TRUE")
+            "JOIN crs.ritualSeason rs WHERE rs.seasonYear = :seasonYear AND rs.ritualTypeCode IN (:ritualTypeCodeList) AND a.mobileLoggedIn = TRUE and a.deleted = false")
     long countAllByMobileLoggedInTrue(@Param("seasonYear") int seasonYear, @Param("ritualTypeCodeList") List<String> ritualTypeCodeList);
 
     @Modifying
-    @Query("UPDATE JpaApplicant a SET a.mobileLoggedIn = :mobileLoggedIn, a.updateDate = CURRENT_TIMESTAMP WHERE a.id = :applicantId")
+    @Query("UPDATE JpaApplicant a SET a.mobileLoggedIn = :mobileLoggedIn, a.updateDate = CURRENT_TIMESTAMP WHERE a.id = :applicantId and a.deleted = false")
     void updateLoggedInFromMobileAppFlag(@Param("applicantId") long applicantId, @Param("mobileLoggedIn") boolean mobileLoggedIn);
 
     @Query("SELECT NEW com.elm.shj.admin.portal.orm.entity.LocalizedCountVo(c.labelAr,c.labelEn,COUNT(a)) " +
             "FROM JpaApplicant a JOIN a.rituals ar JOIN ar.applicantPackage ap JOIN ap.ritualPackage rp " +
             "JOIN rp.companyRitualSeason crs JOIN crs.company c JOIN crs.ritualSeason rs " +
             "WHERE  rs.ritualTypeCode IN ('INTERNAL_HAJJ', 'EXTERNAL_HAJJ', 'COURTESY_HAJJ') AND " +
-            "c.labelAr is NOT NULL AND (a.mobileLoggedIn IS NOT NULL OR a.channel='MOBILE') AND rs.seasonYear= :seasonYear " +
+            "c.labelAr is NOT NULL AND (a.mobileLoggedIn IS NOT NULL OR a.channel='MOBILE') AND rs.seasonYear= :seasonYear and a.deleted = false " +
             "GROUP BY c.labelAr, c.labelEn ORDER BY COUNT(c.labelAr) DESC")
     Page<LocalizedCountVo> loadCompaniesWithMaxApplicantsRegisteredCount(@Param("seasonYear") int seasonYear, Pageable pageable);
 
@@ -138,14 +141,14 @@ public interface ApplicantRepository extends JpaRepository<JpaApplicant, Long>, 
             "FROM JpaApplicant a JOIN a.rituals ar JOIN ar.applicantPackage ap JOIN ap.ritualPackage rp " +
             "JOIN rp.companyRitualSeason crs JOIN crs.company c JOIN crs.ritualSeason rs " +
             "WHERE rs.ritualTypeCode IN ('INTERNAL_HAJJ', 'EXTERNAL_HAJJ', 'COURTESY_HAJJ') AND " +
-            "c.labelAr is NOT NULL AND (a.mobileLoggedIn IS NOT NULL OR a.channel='MOBILE') AND rs.seasonYear= :seasonYear " +
+            "c.labelAr is NOT NULL AND (a.mobileLoggedIn IS NOT NULL OR a.channel='MOBILE') AND rs.seasonYear= :seasonYear and a.deleted = false " +
             "GROUP BY c.labelAr, c.labelEn ORDER BY COUNT(c.labelAr)")
     Page<LocalizedCountVo> loadCompaniesWithMinApplicantsRegisteredCount(@Param("seasonYear") int seasonYear, Pageable pageable);
 
     @Query("SELECT NEW com.elm.shj.admin.portal.orm.entity.ApplicantMobileTrackingVo(crs.company.code, a.nationalityCode, ul.gpsTime, adi.uin, ul.latitude, ul.longitude) " +
             "FROM JpaApplicant a INNER JOIN JpaApplicantDigitalId adi ON adi.applicantId = a.id JOIN JpaUserLocation ul ON ul.userId = adi.uin " +
             "JOIN a.rituals ar JOIN ar.applicantPackage ap JOIN ap.ritualPackage rp JOIN rp.companyRitualSeason crs " +
-            "JOIN crs.ritualSeason rs WHERE rs.seasonYear = :seasonYear AND ul.userType= 'APPLICANT' AND ul.gpsTime = (SELECT MAX(l.gpsTime) FROM JpaUserLocation l WHERE l.userId  = adi.uin) ")
+            "JOIN crs.ritualSeason rs WHERE rs.seasonYear = :seasonYear AND ul.userType= 'APPLICANT' AND ul.gpsTime = (SELECT MAX(l.gpsTime) FROM JpaUserLocation l WHERE l.userId  = adi.uin) and a.deleted = false ")
     List<ApplicantMobileTrackingVo> findActiveApplicantWithLocationBySeason(@Param("seasonYear") int seasonYear);
 
     @Modifying
@@ -182,7 +185,7 @@ public interface ApplicantRepository extends JpaRepository<JpaApplicant, Long>, 
                                           @Param("establishmentRefCode") long establishmentRefCode, @Param("missionRefCode") long missionRefCode,
                                           @Param("serviceGroupRefCode") long serviceGroupRefCode,  @Param("companyFullCode") String companyFullCode, Pageable pageable);
 
-    @Query("SELECT a FROM JpaApplicant a JOIN a.digitalIds di JOIN JpaGroupApplicantList ga On di.uin=ga.applicantUin WHERE ga.applicantGroup.id=:groupId")
+    @Query("SELECT a FROM JpaApplicant a JOIN a.digitalIds di JOIN JpaGroupApplicantList ga On di.uin=ga.applicantUin WHERE ga.applicantGroup.id=:groupId and a.deleted = false")
     List<JpaApplicant> findAllApplicantByGroupId(@Param("groupId") Long groupId);
 
     @Query("SELECT a  " +

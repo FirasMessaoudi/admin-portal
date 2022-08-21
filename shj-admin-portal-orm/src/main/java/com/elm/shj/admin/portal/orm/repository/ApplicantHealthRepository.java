@@ -18,10 +18,10 @@ import org.springframework.data.repository.query.Param;
 public interface ApplicantHealthRepository extends JpaRepository<JpaApplicantHealth, Long> {
 
     @Query(value = "SELECT ah FROM JpaApplicantHealth ah JOIN ah.applicant a JOIN a.digitalIds adi " +
-            "WHERE adi.uin = :uin AND ah.applicantRitual.id = :ritualId")
+            "WHERE adi.uin = :uin AND ah.applicantRitual.id = :ritualId and a.deleted = false")
     JpaApplicantHealth findByUinAndRitualId(@Param("uin") String uin, @Param("ritualId") Long ritualId);
 
-    JpaApplicantHealth findByApplicantIdAndPackageReferenceNumber(long applicantId, String referenceNumber);
+    JpaApplicantHealth findByApplicantIdAndPackageReferenceNumberAndApplicantDeletedFalse(long applicantId, String referenceNumber);
 
     @Query("SELECT ah.id FROM JpaApplicantHealth ah WHERE ah.applicant.id = :applicantId AND ah.packageReferenceNumber = :packageReferenceNumber")
     Long findIdByApplicantIdAndPackageReferenceNumber(@Param("applicantId") long applicantId, @Param("packageReferenceNumber") String packageReferenceNumber);

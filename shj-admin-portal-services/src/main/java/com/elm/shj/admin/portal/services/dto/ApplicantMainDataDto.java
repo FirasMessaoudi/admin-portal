@@ -60,4 +60,5 @@ public class ApplicantMainDataDto implements Serializable {
 
     private String preferredLanguage;
     private String groupNumber;
+    private boolean deleted;
 }

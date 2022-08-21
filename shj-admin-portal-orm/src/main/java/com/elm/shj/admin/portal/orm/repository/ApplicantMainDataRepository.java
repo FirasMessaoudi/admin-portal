@@ -11,5 +11,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
  */
 public interface ApplicantMainDataRepository extends JpaRepository<JpaApplicantMainData, Long> {
 
-    JpaApplicantMainData findByDigitalIdsUin(String uin);
+    JpaApplicantMainData findByDigitalIdsUinAndDeletedFalse(String uin);
 }
