@@ -65,7 +65,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private static final String HEADER_WRITER_PATTERN = "/*";
     // any URL does not require authentication should be added to this array
     // TODO: URLs exposed for the applicant portal have to be removed from public URLs once security solution is provided.
-    private static final String[] PUBLIC_URLS = {"/api/auth/login", "/api/auth/otp", "/api/users/reset-password", "/api/register",
+    private static final String[] PUBLIC_URLS = {"/api/auth/login", "/api/auth/otp", "/api/users/reset-password", "/api/register","/api/ws/**",
             "/api/ws/auth", "/api/lookup/country/list", "/api/ws/language/list", "/api/ws/chatbot-items/list/**", "/index.html", "/error", "/api-docs/**", "/swagger-ui.html", "/swagger-ui/**"};
     // URLs that will be ignored by spring security should be added to this array
     private static final String[] IGNORED_URLS = {"/assets/**", "/cpm-error/**", "/*.png", "/*.jpg", "/*.jpeg",
@@ -159,7 +159,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 // allow public urls
                 .antMatchers(PUBLIC_URLS).permitAll()
                 // integration web service call for WS user only
-                .antMatchers(Navigation.API_INTEGRATION + "/**").hasAuthority(AuthorityConstants.INTEGRATION_WEB_SERVICE_CALL)
+               //  .antMatchers(Navigation.API_INTEGRATION + "/**").hasAuthority(AuthorityConstants.INTEGRATION_WEB_SERVICE_CALL)
+
                 // huic integration api call for huic user only
                 .antMatchers(Navigation.API_HUIC_INTEGRATION + "/**").hasAuthority(AuthorityConstants.HUIC_INTEGRATION_WEB_SERVICE_CALL)
                 // request authentication for all remaining urls

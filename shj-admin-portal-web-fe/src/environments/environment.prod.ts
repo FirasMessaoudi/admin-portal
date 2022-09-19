@@ -8,7 +8,7 @@ export const environment = {
   recaptchaSiteKey: '6LeKPfsfAAAAAMVpDKiCul4Huulvobe-72cVqtQP',
   invisibleRecaptchaSiteKey: '6LcqP_sfAAAAADX0lVo04bIKnSn0_avnuxMq3hAN',
   version: env.npm_package_version,
-  backendMappings: [{mapping:'/core', url:'https://admin.shp.haj.gov.sa/'}],
+  backendMappings: [{mapping:'/core', url:''}],
   websocketConnection: [{url: ''}],
   defaultLanguage: 'ar-SA',
   termsAndConditionsUrl: '',
